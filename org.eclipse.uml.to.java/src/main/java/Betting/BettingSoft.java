@@ -1,6 +1,7 @@
 /*******************************************************************************
  * 2016, All rights reserved.
  *******************************************************************************/
+package Betting;
 
 // Start of user code (user defined imports)
 
@@ -11,7 +12,7 @@
  * 
  * @author Robin
  */
-public class BettingSoft implements Betting {
+public class BettingSoft {
 	/**
 	 * Description of the property unregisteredCompetitors.
 	 */
@@ -20,7 +21,12 @@ public class BettingSoft implements Betting {
 	/**
 	 * Description of the property managers.
 	 */
-	public Manager managers = null;
+	public HashSet<Manager> managers = new HashSet<Manager>();
+
+	/**
+	 * Description of the property competitors.
+	 */
+	public HashSet<Competitor> competitors = new HashSet<Competitor>();
 
 	/**
 	 * Description of the property subscribers.
@@ -55,19 +61,16 @@ public class BettingSoft implements Betting {
 	 * Returns managers.
 	 * @return managers 
 	 */
-	public Manager getManagers() {
+	public HashSet<Manager> getManagers() {
 		return this.managers;
 	}
 
 	/**
-	 * Sets a value to attribute managers. 
-	 * @param newManagers 
+	 * Returns competitors.
+	 * @return competitors 
 	 */
-	public void setManagers(Manager newManagers) {
-		if (this.managers != null) {
-			this.managers.set(null);
-		}
-		this.managers.set(this);
+	public HashSet<Competitor> getCompetitors() {
+		return this.competitors;
 	}
 
 	/**

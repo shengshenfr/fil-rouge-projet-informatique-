@@ -1,7 +1,9 @@
 /*******************************************************************************
  * 2016, All rights reserved.
  *******************************************************************************/
+package Individual;
 
+import Competitor;
 // Start of user code (user defined imports)
 
 // End of user code
@@ -15,7 +17,7 @@ public abstract class AbstractCompetitor implements Competitor {
 	/**
 	 * Description of the property abstractCompetitorName.
 	 */
-	public String abstractCompetitorName = "";
+	public EString abstractCompetitorName = null;
 
 	// Start of user code (user defined attributes for AbstractCompetitor)
 
@@ -37,7 +39,7 @@ public abstract class AbstractCompetitor implements Competitor {
 	 * Returns abstractCompetitorName.
 	 * @return abstractCompetitorName 
 	 */
-	public String getAbstractCompetitorName() {
+	public EString getAbstractCompetitorName() {
 		return this.abstractCompetitorName;
 	}
 
@@ -45,7 +47,7 @@ public abstract class AbstractCompetitor implements Competitor {
 	 * Sets a value to attribute abstractCompetitorName. 
 	 * @param newAbstractCompetitorName 
 	 */
-	public void setAbstractCompetitorName(String newAbstractCompetitorName) {
+	public void setAbstractCompetitorName(EString newAbstractCompetitorName) {
 		this.abstractCompetitorName = newAbstractCompetitorName;
 	}
 

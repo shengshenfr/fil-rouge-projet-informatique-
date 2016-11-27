@@ -1,7 +1,9 @@
 /*******************************************************************************
  * 2016, All rights reserved.
  *******************************************************************************/
+package Individual;
 
+import Individual.Player;
 // Start of user code (user defined imports)
 
 // End of user code

@@ -1,7 +1,9 @@
 /*******************************************************************************
  * 2016, All rights reserved.
  *******************************************************************************/
+package Individual;
 
+import Individual.AbstractCompetitor;
 // Start of user code (user defined imports)
 
 // End of user code
@@ -13,14 +15,14 @@
  */
 public class Team extends AbstractCompetitor {
 	/**
+	 * Description of the property teamName.
+	 */
+	public EString teamName = null;
+
+	/**
 	 * Description of the property players.
 	 */
 	public HashSet<Player> players = new HashSet<Player>();
-
-	/**
-	 * Description of the property teamName.
-	 */
-	public String teamName = "";
 
 	// Start of user code (user defined attributes for Team)
 
@@ -39,18 +41,10 @@ public class Team extends AbstractCompetitor {
 
 	// End of user code
 	/**
-	 * Returns players.
-	 * @return players 
-	 */
-	public HashSet<Player> getPlayers() {
-		return this.players;
-	}
-
-	/**
 	 * Returns teamName.
 	 * @return teamName 
 	 */
-	public String getTeamName() {
+	public EString getTeamName() {
 		return this.teamName;
 	}
 
@@ -58,8 +52,16 @@ public class Team extends AbstractCompetitor {
 	 * Sets a value to attribute teamName. 
 	 * @param newTeamName 
 	 */
-	public void setTeamName(String newTeamName) {
+	public void setTeamName(EString newTeamName) {
 		this.teamName = newTeamName;
+	}
+
+	/**
+	 * Returns players.
+	 * @return players 
+	 */
+	public HashSet<Player> getPlayers() {
+		return this.players;
 	}
 
 }
