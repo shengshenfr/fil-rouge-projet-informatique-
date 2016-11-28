@@ -17,12 +17,12 @@ public abstract class Player extends AbstractCompetitor {
 	/**
 	 * Description of the property playerFirstName.
 	 */
-	public EString playerFirstName = null;
+	private EString playerFirstName = null;
 
 	/**
 	 * Description of the property playerLastName.
 	 */
-	public EString playerLastName = null;
+	private EString playerLastName = null;
 
 	// Start of user code (user defined attributes for Player)
 

@@ -14,14 +14,14 @@ package Bet;
  */
 public class Entry {
 	/**
-	 * Description of the property enumerations.
-	 */
-	public Enumeration enumerations = null;
-
-	/**
 	 * Description of the property podiumBets.
 	 */
 	public HashSet<PodiumBet> podiumBets = new HashSet<PodiumBet>();
+
+	/**
+	 * Description of the property enumerations.
+	 */
+	public Enumeration enumerations = null;
 
 	/**
 	 * Description of the property winnerBets.
@@ -45,6 +45,14 @@ public class Entry {
 
 	// End of user code
 	/**
+	 * Returns podiumBets.
+	 * @return podiumBets 
+	 */
+	public HashSet<PodiumBet> getPodiumBets() {
+		return this.podiumBets;
+	}
+
+	/**
 	 * Returns enumerations.
 	 * @return enumerations 
 	 */
@@ -58,14 +66,6 @@ public class Entry {
 	 */
 	public void setEnumerations(Enumeration newEnumerations) {
 		this.enumerations = newEnumerations;
-	}
-
-	/**
-	 * Returns podiumBets.
-	 * @return podiumBets 
-	 */
-	public HashSet<PodiumBet> getPodiumBets() {
-		return this.podiumBets;
 	}
 
 	/**

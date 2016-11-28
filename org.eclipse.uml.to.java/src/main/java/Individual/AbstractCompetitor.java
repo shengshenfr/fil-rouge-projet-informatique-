@@ -17,7 +17,7 @@ public abstract class AbstractCompetitor implements Competitor {
 	/**
 	 * Description of the property abstractCompetitorName.
 	 */
-	public EString abstractCompetitorName = null;
+	private EString abstractCompetitorName = null;
 
 	// Start of user code (user defined attributes for AbstractCompetitor)
 

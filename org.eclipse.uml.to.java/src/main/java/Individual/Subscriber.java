@@ -15,24 +15,34 @@ import Individual.Player;
  */
 public class Subscriber extends Player {
 	/**
-	 * Description of the property LONG_USERNAME.
+	 * Description of the property password.
 	 */
-	public static int LONG_USERNAME = 0;
+	private EString password = null;
 
 	/**
 	 * Description of the property balance.
 	 */
-	public long balance = 0L;
+	private long balance = 0L;
+
+	/**
+	 * Description of the property REGEX_USERNAME.
+	 */
+	private static EString REGEX_USERNAME = null;
+
+	/**
+	 * Description of the property LONG_USERNAME.
+	 */
+	private static int LONG_USERNAME = 0;
+
+	/**
+	 * Description of the property bornDate.
+	 */
+	private EDate bornDate = null;
 
 	/**
 	 * Description of the property username.
 	 */
-	public EString username = null;
-
-	/**
-	 * Description of the property password.
-	 */
-	public EString password = null;
+	private EString username = null;
 
 	/**
 	 * Description of the property bets.
@@ -40,30 +50,29 @@ public class Subscriber extends Player {
 	public HashSet<Bet> bets = new HashSet<Bet>();
 
 	/**
-	 * Description of the property bornDate.
-	 */
-	public EDate bornDate = null;
-
-	/**
 	 * Description of the property REGEX_NAME.
 	 */
-	public static EString REGEX_NAME = null;
-
-	/**
-	 * Description of the property REGEX_USERNAME.
-	 */
-	public static EString REGEX_USERNAME = null;
+	private static EString REGEX_NAME = null;
 
 	// Start of user code (user defined attributes for Subscriber)
 
 	// End of user code
 
 	/**
-	 * The constructor.
+	 * Description of the method authenticate.
+	 * @param pwd 
 	 */
-	public Subscriber() {
-		// Start of user code constructor for Subscriber)
-		super();
+	public void authenticate(EString pwd) {
+		// Start of user code for method authenticate
+		// End of user code
+	}
+
+	/**
+	 * Description of the method getBalance.
+	 * @param username 
+	 */
+	public void getBalance(EString username) {
+		// Start of user code for method getBalance
 		// End of user code
 	}
 
@@ -71,19 +80,19 @@ public class Subscriber extends Player {
 
 	// End of user code
 	/**
-	 * Returns LONG_USERNAME.
-	 * @return LONG_USERNAME 
+	 * Returns password.
+	 * @return password 
 	 */
-	public static int getLONG_USERNAME() {
-		return LONG_USERNAME;
+	public EString getPassword() {
+		return this.password;
 	}
 
 	/**
-	 * Sets a value to attribute LONG_USERNAME. 
-	 * @param newLONG_USERNAME 
+	 * Sets a value to attribute password. 
+	 * @param newPassword 
 	 */
-	public static void setLONG_USERNAME(int newLONG_USERNAME) {
-		LONG_USERNAME = newLONG_USERNAME;
+	public void setPassword(EString newPassword) {
+		this.password = newPassword;
 	}
 
 	/**
@@ -103,43 +112,35 @@ public class Subscriber extends Player {
 	}
 
 	/**
-	 * Returns username.
-	 * @return username 
+	 * Returns REGEX_USERNAME.
+	 * @return REGEX_USERNAME 
 	 */
-	public EString getUsername() {
-		return this.username;
+	public static EString getREGEX_USERNAME() {
+		return REGEX_USERNAME;
 	}
 
 	/**
-	 * Sets a value to attribute username. 
-	 * @param newUsername 
+	 * Sets a value to attribute REGEX_USERNAME. 
+	 * @param newREGEX_USERNAME 
 	 */
-	public void setUsername(EString newUsername) {
-		this.username = newUsername;
+	public static void setREGEX_USERNAME(EString newREGEX_USERNAME) {
+		REGEX_USERNAME = newREGEX_USERNAME;
 	}
 
 	/**
-	 * Returns password.
-	 * @return password 
+	 * Returns LONG_USERNAME.
+	 * @return LONG_USERNAME 
 	 */
-	public EString getPassword() {
-		return this.password;
+	public static int getLONG_USERNAME() {
+		return LONG_USERNAME;
 	}
 
 	/**
-	 * Sets a value to attribute password. 
-	 * @param newPassword 
+	 * Sets a value to attribute LONG_USERNAME. 
+	 * @param newLONG_USERNAME 
 	 */
-	public void setPassword(EString newPassword) {
-		this.password = newPassword;
-	}
-
-	/**
-	 * Returns bets.
-	 * @return bets 
-	 */
-	public HashSet<Bet> getBets() {
-		return this.bets;
+	public static void setLONG_USERNAME(int newLONG_USERNAME) {
+		LONG_USERNAME = newLONG_USERNAME;
 	}
 
 	/**
@@ -159,6 +160,30 @@ public class Subscriber extends Player {
 	}
 
 	/**
+	 * Returns username.
+	 * @return username 
+	 */
+	public EString getUsername() {
+		return this.username;
+	}
+
+	/**
+	 * Sets a value to attribute username. 
+	 * @param newUsername 
+	 */
+	public void setUsername(EString newUsername) {
+		this.username = newUsername;
+	}
+
+	/**
+	 * Returns bets.
+	 * @return bets 
+	 */
+	public HashSet<Bet> getBets() {
+		return this.bets;
+	}
+
+	/**
 	 * Returns REGEX_NAME.
 	 * @return REGEX_NAME 
 	 */
@@ -172,22 +197,6 @@ public class Subscriber extends Player {
 	 */
 	public static void setREGEX_NAME(EString newREGEX_NAME) {
 		REGEX_NAME = newREGEX_NAME;
-	}
-
-	/**
-	 * Returns REGEX_USERNAME.
-	 * @return REGEX_USERNAME 
-	 */
-	public static EString getREGEX_USERNAME() {
-		return REGEX_USERNAME;
-	}
-
-	/**
-	 * Sets a value to attribute REGEX_USERNAME. 
-	 * @param newREGEX_USERNAME 
-	 */
-	public static void setREGEX_USERNAME(EString newREGEX_USERNAME) {
-		REGEX_USERNAME = newREGEX_USERNAME;
 	}
 
 }

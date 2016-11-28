@@ -17,7 +17,7 @@ public class Team extends AbstractCompetitor {
 	/**
 	 * Description of the property teamName.
 	 */
-	public EString teamName = null;
+	private EString teamName = null;
 
 	/**
 	 * Description of the property players.
