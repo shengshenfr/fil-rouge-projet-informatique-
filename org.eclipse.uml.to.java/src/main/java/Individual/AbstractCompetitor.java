@@ -3,8 +3,7 @@
  *******************************************************************************/
 package Individual;
 
-import Competitor;
-// Start of user code (user defined imports)
+import Interface.Competitor;
 
 // End of user code
 

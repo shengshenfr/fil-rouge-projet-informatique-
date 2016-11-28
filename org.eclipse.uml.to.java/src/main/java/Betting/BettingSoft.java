@@ -4,7 +4,15 @@
 package Betting;
 
 // Start of user code (user defined imports)
-
+import java.sql.*;
+import java.util.*;
+import Interface.*;
+import Betting.Manager;
+import Individual.*;
+import Bet.*;
+import dbManager.*;
+import Betting.Exceptions.*;
+import utils.*;
 // End of user code
 
 /**
@@ -12,206 +20,210 @@ package Betting;
  * 
  * @author Robin.
  */
-public class BettingSoft {
-	/**
-	 * Description of the property competitorManagers.
-	 */
-	public CompetitorManager competitorManagers = null;
+public class BettingSoft implements Betting {
+
+	
+	private final String MANAGER_PASSWORD = "root";
+
+	//-----------------------Methods------------------------------\\
 
 	/**
-	 * Description of the property unregisteredCompetitors.
+	 * Constructor for bet Bettingsoft 
+	 * @throws SQLException 
 	 */
-	public HashSet<UnregisteredCompetitor> unregisteredCompetitors = new HashSet<UnregisteredCompetitor>();
-
-	/**
-	 * Description of the property managers.
-	 */
-	public HashSet<Manager> managers = new HashSet<Manager>();
-
-	/**
-	 * Description of the property class1s.
-	 */
-	public SubscriberManager class1s = null;
-
-	/**
-	 * Description of the property competitors.
-	 */
-	public HashSet<Competitor> competitors = new HashSet<Competitor>();
-
-	/**
-	 * Description of the property subscribers.
-	 */
-	public HashSet<Subscriber> subscribers = new HashSet<Subscriber>();
-
-	/**
-	 * Description of the property teamManagers.
-	 */
-	public TeamManager teamManagers = null;
-
-	/**
-	 * Description of the property entryManagers.
-	 */
-	public HashSet<EntryManager> entryManagers = new HashSet<EntryManager>();
-
-	/**
-	 * Description of the property class5s.
-	 */
-	public CompetitionManager class5s = null;
-
-	/**
-	 * Description of the property class3s.
-	 */
-	public BetManager class3s = null;
-
-	// Start of user code (user defined attributes for BettingSoft)
-
-	// End of user code
-
-	/**
-	 * The constructor.
-	 */
-	public BettingSoft() {
-		// Start of user code constructor for BettingSoft)
-		super();
-		// End of user code
+	public BettingSoft() throws BadParametersException{
+		
 	}
 
-	// Start of user code (user defined methods for BettingSoft)
-
-	// End of user code
+	//-----------------------Attributes------------------------------\\
 	/**
-	 * Returns competitorManagers.
-	 * @return competitorManagers 
+	 * @uml.property  name="manager"
 	 */
-	public CompetitorManager getCompetitorManagers() {
-		return this.competitorManagers;
+	public Manager manager=null;
+
+	//-----------------------Methods------------------------------\\
+	/**
+	 *  create a manager
+	 * @param username
+	 *            the name of manager.
+	 * @param managerPwd
+	 *            the name of manager.
+	 * @throws ExistingCompetitorException  
+	 */
+	public void createManager(String manager_username,String managerPwd) throws BadParametersException {
+		// manager should exist
+		if (manager!=null)
+			throw new BadParametersException("manager is existed");
+		 this.manager.setUsername(manager_username);
+		 this.manager.setPassword(managerPwd);
 	}
 
-	/**
-	 * Sets a value to attribute competitorManagers. 
-	 * @param newCompetitorManagers 
-	 */
-	public void setCompetitorManagers(CompetitorManager newCompetitorManagers) {
-		if (this.competitorManagers != null) {
-			this.competitorManagers.set(null);
-		}
-		this.competitorManagers.set(this);
+	@Override
+	public void addCompetition(String competition, Calendar closingDate, Collection<Competitor> competitors,
+			String managerPwd) throws AuthentificationException, BadParametersException, CompetitionException,
+			ExistingCompetitionException {
+		// TODO Auto-generated method stub
+		
 	}
 
-	/**
-	 * Returns unregisteredCompetitors.
-	 * @return unregisteredCompetitors 
-	 */
-	public HashSet<UnregisteredCompetitor> getUnregisteredCompetitors() {
-		return this.unregisteredCompetitors;
+	@Override
+	public void addCompetitor(String competition, Competitor competitor, String managerPwd)
+			throws AuthentificationException, ExistingCompetitionException, CompetitionException,
+			ExistingCompetitorException, BadParametersException {
+		// TODO Auto-generated method stub
+		
 	}
 
-	/**
-	 * Returns managers.
-	 * @return managers 
-	 */
-	public HashSet<Manager> getManagers() {
-		return this.managers;
+	@Override
+	public void authenticateMngr(String managerPwd) throws AuthentificationException {
+		// TODO Auto-generated method stub
+		
 	}
 
-	/**
-	 * Returns class1s.
-	 * @return class1s 
-	 */
-	public SubscriberManager getClass1s() {
-		return this.class1s;
+	@Override
+	public void betOnPodium(long numberTokens, String competition, Competitor winner, Competitor second,
+			Competitor third, String username, String pwdSubs) throws AuthentificationException, CompetitionException,
+			ExistingCompetitionException, SubscriberException, BadParametersException {
+		// TODO Auto-generated method stub
+		
 	}
 
-	/**
-	 * Sets a value to attribute class1s. 
-	 * @param newClass1s 
-	 */
-	public void setClass1s(SubscriberManager newClass1s) {
-		if (this.class1s != null) {
-			this.class1s.set(null);
-		}
-		this.class1s.set(this);
+	@Override
+	public void betOnWinner(long numberTokens, String competition, Competitor winner, String username, String pwdSubs)
+			throws AuthentificationException, CompetitionException, ExistingCompetitionException, SubscriberException,
+			BadParametersException {
+		// TODO Auto-generated method stub
+		
 	}
 
-	/**
-	 * Returns competitors.
-	 * @return competitors 
-	 */
-	public HashSet<Competitor> getCompetitors() {
-		return this.competitors;
+	@Override
+	public void cancelCompetition(String competition, String managerPwd)
+			throws AuthentificationException, ExistingCompetitionException, CompetitionException {
+		// TODO Auto-generated method stub
+		
 	}
 
-	/**
-	 * Returns subscribers.
-	 * @return subscribers 
-	 */
-	public HashSet<Subscriber> getSubscribers() {
-		return this.subscribers;
+	@Override
+	public void changeSubsPwd(String username, String newPwd, String currentPwd)
+			throws AuthentificationException, BadParametersException {
+		// TODO Auto-generated method stub
+		
 	}
 
-	/**
-	 * Returns teamManagers.
-	 * @return teamManagers 
-	 */
-	public TeamManager getTeamManagers() {
-		return this.teamManagers;
+	@Override
+	public ArrayList<String> consultBetsCompetition(String competition) throws ExistingCompetitionException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	/**
-	 * Sets a value to attribute teamManagers. 
-	 * @param newTeamManagers 
-	 */
-	public void setTeamManagers(TeamManager newTeamManagers) {
-		if (this.teamManagers != null) {
-			this.teamManagers.set(null);
-		}
-		this.teamManagers.set(this);
+	@Override
+	public ArrayList<Competitor> consultResultsCompetition(String competition) throws ExistingCompetitionException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	/**
-	 * Returns entryManagers.
-	 * @return entryManagers 
-	 */
-	public HashSet<EntryManager> getEntryManagers() {
-		return this.entryManagers;
+	@Override
+	public Competitor createCompetitor(String name, String managerPwd)
+			throws AuthentificationException, BadParametersException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	/**
-	 * Returns class5s.
-	 * @return class5s 
-	 */
-	public CompetitionManager getClass5s() {
-		return this.class5s;
+	@Override
+	public Competitor createCompetitor(String lastName, String firstName, String borndate, String managerPwd)
+			throws AuthentificationException, BadParametersException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	/**
-	 * Sets a value to attribute class5s. 
-	 * @param newClass5s 
-	 */
-	public void setClass5s(CompetitionManager newClass5s) {
-		if (this.class5s != null) {
-			this.class5s.set(null);
-		}
-		this.class5s.set(this);
+	@Override
+	public void creditSubscriber(String username, long numberTokens, String managerPwd)
+			throws AuthentificationException, ExistingSubscriberException, BadParametersException {
+		// TODO Auto-generated method stub
+		
 	}
 
-	/**
-	 * Returns class3s.
-	 * @return class3s 
-	 */
-	public BetManager getClass3s() {
-		return this.class3s;
+	@Override
+	public void debitSubscriber(String username, long numberTokens, String managerPwd)
+			throws AuthentificationException, ExistingSubscriberException, SubscriberException, BadParametersException {
+		// TODO Auto-generated method stub
+		
 	}
 
-	/**
-	 * Sets a value to attribute class3s. 
-	 * @param newClass3s 
-	 */
-	public void setClass3s(BetManager newClass3s) {
-		if (this.class3s != null) {
-			this.class3s.set(null);
-		}
-		this.class3s.set(this);
+	@Override
+	public void deleteBetsCompetition(String competition, String username, String pwdSubs)
+			throws AuthentificationException, CompetitionException, ExistingCompetitionException {
+		// TODO Auto-generated method stub
+		
 	}
+
+	@Override
+	public void deleteCompetition(String competition, String managerPwd)
+			throws AuthentificationException, ExistingCompetitionException, CompetitionException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteCompetitor(String competition, Competitor competitor, String managerPwd)
+			throws AuthentificationException, ExistingCompetitionException, CompetitionException,
+			ExistingCompetitorException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ArrayList<String> infosSubscriber(String username, String pwdSubs) throws AuthentificationException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<List<String>> listCompetitions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<Competition> listCompetitors(String competition)
+			throws ExistingCompetitionException, CompetitionException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<List<String>> listSubscribers(String managerPwd) throws AuthentificationException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void settlePodium(String competition, Competitor winner, Competitor second, Competitor third,
+			String managerPwd) throws AuthentificationException, ExistingCompetitionException, CompetitionException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void settleWinner(String competition, Competitor winner, String managerPwd)
+			throws AuthentificationException, ExistingCompetitionException, CompetitionException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String subscribe(String lastName, String firstName, String username, String borndate, String managerPwd)
+			throws AuthentificationException, ExistingSubscriberException, SubscriberException, BadParametersException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public long unsubscribe(String username, String managerPwd)
+			throws AuthentificationException, ExistingSubscriberException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 
 }

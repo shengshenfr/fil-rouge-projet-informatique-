@@ -2,6 +2,13 @@
  * 2016, All rights reserved.
  *******************************************************************************/
 package Betting;
+import Betting.BettingSoft;
+import Betting.Exceptions.AuthentificationException;
+import Betting.Exceptions.BadParametersException;
+
+/*******************************************************************************
+ * 2016, All rights reserved.
+ *******************************************************************************/
 
 // Start of user code (user defined imports)
 
@@ -14,103 +21,78 @@ package Betting;
  */
 public class Manager {
 	/**
-	 * Description of the property username.
+	 * Description of the property LONG_USERNAME.
 	 */
-	public EString username = null;
-
-	/**
-	 * Description of the property password.
-	 */
-	public EString password = null;
+	public int LONG_USERNAME = 4;
 
 	/**
 	 * Description of the property REGEX_USERNAME.
 	 */
-	public static EString REGEX_USERNAME = null;
+	public String REGEX_USERNAME = new String("[a-zA-Z0-9]*");
 
 	/**
-	 * Description of the property LONG_USERNAME.
+	 * Description of the property username.
 	 */
-	public static int LONG_USERNAME = 0;
+	public String username;
 
-	// Start of user code (user defined attributes for Manager)
+	/**
+	 * Description of the property password.
+	 */
+	public String password;
 
-	// End of user code
 
 	/**
 	 * The constructor.
 	 */
-	public Manager() {
+	public Manager(String username, String password) {
 		// Start of user code constructor for Manager)
-		super();
+		this.username = username;
+		this.password = password;
 		// End of user code
 	}
 
-	// Start of user code (user defined methods for Manager)
-
-	// End of user code
 	/**
 	 * Returns username.
 	 * @return username 
 	 */
-	public EString getUsername() {
+	public String getUsername() {
 		return this.username;
 	}
 
 	/**
 	 * Sets a value to attribute username. 
-	 * @param newUsername 
+	 * @param username 
 	 */
-	public void setUsername(EString newUsername) {
-		this.username = newUsername;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	/**
 	 * Returns password.
 	 * @return password 
 	 */
-	public EString getPassword() {
+	public String getPassword() {
 		return this.password;
 	}
 
 	/**
 	 * Sets a value to attribute password. 
 	 * @param newPassword 
+	 * @return 
 	 */
-	public void setPassword(EString newPassword) {
-		this.password = newPassword;
+	public String setPassword(String newPassword) {
+		return this.password = newPassword;
 	}
+	
+	public BettingSoft Bsport;
+	public void changeManagerPwd(String currentPwd,String newPwd) 
+			throws BadParametersException, AuthentificationException {
 
-	/**
-	 * Returns REGEX_USERNAME.
-	 * @return REGEX_USERNAME 
-	 */
-	public static EString getREGEX_USERNAME() {
-		return REGEX_USERNAME;
-	}
-
-	/**
-	 * Sets a value to attribute REGEX_USERNAME. 
-	 * @param newREGEX_USERNAME 
-	 */
-	public static void setREGEX_USERNAME(EString newREGEX_USERNAME) {
-		REGEX_USERNAME = newREGEX_USERNAME;
-	}
-
-	/**
-	 * Returns LONG_USERNAME.
-	 * @return LONG_USERNAME 
-	 */
-	public static int getLONG_USERNAME() {
-		return LONG_USERNAME;
-	}
-
-	/**
-	 * Sets a value to attribute LONG_USERNAME. 
-	 * @param newLONG_USERNAME 
-	 */
-	public static void setLONG_USERNAME(int newLONG_USERNAME) {
-		LONG_USERNAME = newLONG_USERNAME;
-	}
+		Bsport.authenticateMngr(currentPwd);
+		if (newPwd.equals(currentPwd))
+			throw new BadParametersException("New password is the same with old password");
+		this.setPassword(newPwd);
+	}	
 
 }
+

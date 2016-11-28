@@ -1,3 +1,4 @@
+package Interface;
 /*******************************************************************************
  * 2016, All rights reserved.
  *******************************************************************************/
@@ -7,16 +8,16 @@
 // End of user code
 
 /**
- * Description of Betting.
+ * Description of Competitor.
  * 
  * @author Robin
  */
-public interface Betting {
-	// Start of user code (user defined attributes for Betting)
+public interface Competitor {
+	// Start of user code (user defined attributes for Competitor)
 
 	// End of user code
 
-	// Start of user code (user defined methods for Betting)
+	// Start of user code (user defined methods for Competitor)
 
 	// End of user code
 
