@@ -10,7 +10,7 @@ package Betting;
 /**
  * Description of BettingSoft.
  * 
- * @author Robin
+ * @author Robin.
  */
 public class BettingSoft {
 	/**
