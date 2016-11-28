@@ -3,6 +3,8 @@
  *******************************************************************************/
 package Individual;
 
+import java.util.HashSet;
+
 import Individual.AbstractCompetitor;
 // Start of user code (user defined imports)
 
@@ -17,7 +19,7 @@ public class Team extends AbstractCompetitor {
 	/**
 	 * Description of the property teamName.
 	 */
-	private EString teamName = null;
+	private String teamName = null;
 
 	/**
 	 * Description of the property players.
@@ -44,7 +46,7 @@ public class Team extends AbstractCompetitor {
 	 * Returns teamName.
 	 * @return teamName 
 	 */
-	public EString getTeamName() {
+	public String getTeamName() {
 		return this.teamName;
 	}
 
@@ -52,7 +54,7 @@ public class Team extends AbstractCompetitor {
 	 * Sets a value to attribute teamName. 
 	 * @param newTeamName 
 	 */
-	public void setTeamName(EString newTeamName) {
+	public void setTeamName(String newTeamName) {
 		this.teamName = newTeamName;
 	}
 

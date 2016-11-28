@@ -6,7 +6,11 @@ package Bet;
 // Start of user code (user defined imports)
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 // End of user code
+import java.util.HashSet;
+
+import Interface.Competitor;
 
 /**
  * Description of Competition.
@@ -27,27 +31,27 @@ public class Competition {
 	/**
 	 * Description of the property name.
 	 */
-	public EString name = null;
+	public String name = null;
 
 	/**
 	 * Description of the property closingDate.
 	 */
-	public EDate closingDate = null;
+	public Date closingDate = null;
 
 	/**
 	 * Description of the property competitors.
 	 */
-	public HashSet<Competitor> competitors = new HashSet<Competitor>();
+	public HashSet<Competitor> competitor = new HashSet<Competitor>();
 
 	/**
 	 * Description of the property competitors.
 	 */
-	public HashSet<Competitor> competitors = new HashSet<Competitor>();
+	public HashSet<Competitor> competitor = new HashSet<Competitor>();
 
 	/**
 	 * Description of the property startingDate.
 	 */
-	public EDate startingDate = null;
+	public Date startingDate = null;
 
 	// Start of user code (user defined attributes for Competition)
 
@@ -101,7 +105,7 @@ public class Competition {
 	 * Returns name.
 	 * @return name 
 	 */
-	public EString getName() {
+	public String getName() {
 		return this.name;
 	}
 
@@ -109,7 +113,7 @@ public class Competition {
 	 * Sets a value to attribute name. 
 	 * @param newName 
 	 */
-	public void setName(EString newName) {
+	public void setName(String newName) {
 		this.name = newName;
 	}
 
@@ -117,7 +121,7 @@ public class Competition {
 	 * Returns closingDate.
 	 * @return closingDate 
 	 */
-	public EDate getClosingDate() {
+	public Date getClosingDate() {
 		return this.closingDate;
 	}
 
@@ -125,7 +129,7 @@ public class Competition {
 	 * Sets a value to attribute closingDate. 
 	 * @param newClosingDate 
 	 */
-	public void setClosingDate(EDate newClosingDate) {
+	public void setClosingDate(Date newClosingDate) {
 		this.closingDate = newClosingDate;
 	}
 
@@ -134,7 +138,7 @@ public class Competition {
 	 * @return competitors 
 	 */
 	public HashSet<Competitor> getCompetitors() {
-		return this.competitors;
+		return this.competitor;
 	}
 
 	/**
@@ -142,14 +146,14 @@ public class Competition {
 	 * @return competitors 
 	 */
 	public HashSet<Competitor> getCompetitors() {
-		return this.competitors;
+		return this.competitor;
 	}
 
 	/**
 	 * Returns startingDate.
 	 * @return startingDate 
 	 */
-	public EDate getStartingDate() {
+	public Date getStartingDate() {
 		return this.startingDate;
 	}
 
@@ -157,7 +161,7 @@ public class Competition {
 	 * Sets a value to attribute startingDate. 
 	 * @param newStartingDate 
 	 */
-	public void setStartingDate(EDate newStartingDate) {
+	public void setStartingDate(Date newStartingDate) {
 		this.startingDate = newStartingDate;
 	}
 

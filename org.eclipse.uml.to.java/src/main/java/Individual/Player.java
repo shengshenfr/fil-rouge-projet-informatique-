@@ -17,12 +17,12 @@ public abstract class Player extends AbstractCompetitor {
 	/**
 	 * Description of the property playerFirstName.
 	 */
-	private EString playerFirstName = null;
+	private String playerFirstName = null;
 
 	/**
 	 * Description of the property playerLastName.
 	 */
-	private EString playerLastName = null;
+	private String playerLastName = null;
 
 	// Start of user code (user defined attributes for Player)
 
@@ -44,7 +44,7 @@ public abstract class Player extends AbstractCompetitor {
 	 * Returns playerFirstName.
 	 * @return playerFirstName 
 	 */
-	public EString getPlayerFirstName() {
+	public String getPlayerFirstName() {
 		return this.playerFirstName;
 	}
 
@@ -52,7 +52,7 @@ public abstract class Player extends AbstractCompetitor {
 	 * Sets a value to attribute playerFirstName. 
 	 * @param newPlayerFirstName 
 	 */
-	public void setPlayerFirstName(EString newPlayerFirstName) {
+	public void setPlayerFirstName(String newPlayerFirstName) {
 		this.playerFirstName = newPlayerFirstName;
 	}
 
@@ -60,7 +60,7 @@ public abstract class Player extends AbstractCompetitor {
 	 * Returns playerLastName.
 	 * @return playerLastName 
 	 */
-	public EString getPlayerLastName() {
+	public String getPlayerLastName() {
 		return this.playerLastName;
 	}
 
@@ -68,7 +68,7 @@ public abstract class Player extends AbstractCompetitor {
 	 * Sets a value to attribute playerLastName. 
 	 * @param newPlayerLastName 
 	 */
-	public void setPlayerLastName(EString newPlayerLastName) {
+	public void setPlayerLastName(String newPlayerLastName) {
 		this.playerLastName = newPlayerLastName;
 	}
 

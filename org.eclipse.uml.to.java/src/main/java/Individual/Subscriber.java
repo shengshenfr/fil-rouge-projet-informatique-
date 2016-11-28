@@ -3,6 +3,10 @@
  *******************************************************************************/
 package Individual;
 
+import java.util.Date;
+import java.util.HashSet;
+
+import Bet.Bet;
 import Individual.Player;
 // Start of user code (user defined imports)
 
@@ -17,7 +21,7 @@ public class Subscriber extends Player {
 	/**
 	 * Description of the property password.
 	 */
-	private EString password = null;
+	private String password = null;
 
 	/**
 	 * Description of the property balance.
@@ -27,7 +31,7 @@ public class Subscriber extends Player {
 	/**
 	 * Description of the property REGEX_USERNAME.
 	 */
-	private static EString REGEX_USERNAME = null;
+	private static String REGEX_USERNAME = null;
 
 	/**
 	 * Description of the property LONG_USERNAME.
@@ -37,12 +41,12 @@ public class Subscriber extends Player {
 	/**
 	 * Description of the property bornDate.
 	 */
-	private EDate bornDate = null;
+	private Date bornDate = null;
 
 	/**
 	 * Description of the property username.
 	 */
-	private EString username = null;
+	private String username = null;
 
 	/**
 	 * Description of the property bets.
@@ -52,7 +56,7 @@ public class Subscriber extends Player {
 	/**
 	 * Description of the property REGEX_NAME.
 	 */
-	private static EString REGEX_NAME = null;
+	private static String REGEX_NAME = null;
 
 	// Start of user code (user defined attributes for Subscriber)
 
@@ -62,7 +66,7 @@ public class Subscriber extends Player {
 	 * Description of the method authenticate.
 	 * @param pwd 
 	 */
-	public void authenticate(EString pwd) {
+	public void authenticate(String pwd) {
 		// Start of user code for method authenticate
 		// End of user code
 	}
@@ -71,7 +75,7 @@ public class Subscriber extends Player {
 	 * Description of the method getBalance.
 	 * @param username 
 	 */
-	public void getBalance(EString username) {
+	public void getBalance(String username) {
 		// Start of user code for method getBalance
 		// End of user code
 	}
@@ -83,7 +87,7 @@ public class Subscriber extends Player {
 	 * Returns password.
 	 * @return password 
 	 */
-	public EString getPassword() {
+	public String getPassword() {
 		return this.password;
 	}
 
@@ -91,7 +95,7 @@ public class Subscriber extends Player {
 	 * Sets a value to attribute password. 
 	 * @param newPassword 
 	 */
-	public void setPassword(EString newPassword) {
+	public void setPassword(String newPassword) {
 		this.password = newPassword;
 	}
 
@@ -115,7 +119,7 @@ public class Subscriber extends Player {
 	 * Returns REGEX_USERNAME.
 	 * @return REGEX_USERNAME 
 	 */
-	public static EString getREGEX_USERNAME() {
+	public static String getREGEX_USERNAME() {
 		return REGEX_USERNAME;
 	}
 
@@ -123,7 +127,7 @@ public class Subscriber extends Player {
 	 * Sets a value to attribute REGEX_USERNAME. 
 	 * @param newREGEX_USERNAME 
 	 */
-	public static void setREGEX_USERNAME(EString newREGEX_USERNAME) {
+	public static void setREGEX_USERNAME(String newREGEX_USERNAME) {
 		REGEX_USERNAME = newREGEX_USERNAME;
 	}
 
@@ -147,7 +151,7 @@ public class Subscriber extends Player {
 	 * Returns bornDate.
 	 * @return bornDate 
 	 */
-	public EDate getBornDate() {
+	public Date getBornDate() {
 		return this.bornDate;
 	}
 
@@ -155,7 +159,7 @@ public class Subscriber extends Player {
 	 * Sets a value to attribute bornDate. 
 	 * @param newBornDate 
 	 */
-	public void setBornDate(EDate newBornDate) {
+	public void setBornDate(Date newBornDate) {
 		this.bornDate = newBornDate;
 	}
 
@@ -163,7 +167,7 @@ public class Subscriber extends Player {
 	 * Returns username.
 	 * @return username 
 	 */
-	public EString getUsername() {
+	public String getUsername() {
 		return this.username;
 	}
 
@@ -171,7 +175,7 @@ public class Subscriber extends Player {
 	 * Sets a value to attribute username. 
 	 * @param newUsername 
 	 */
-	public void setUsername(EString newUsername) {
+	public void setUsername(String newUsername) {
 		this.username = newUsername;
 	}
 
@@ -187,7 +191,7 @@ public class Subscriber extends Player {
 	 * Returns REGEX_NAME.
 	 * @return REGEX_NAME 
 	 */
-	public static EString getREGEX_NAME() {
+	public static String getREGEX_NAME() {
 		return REGEX_NAME;
 	}
 
@@ -195,7 +199,7 @@ public class Subscriber extends Player {
 	 * Sets a value to attribute REGEX_NAME. 
 	 * @param newREGEX_NAME 
 	 */
-	public static void setREGEX_NAME(EString newREGEX_NAME) {
+	public static void setREGEX_NAME(String newREGEX_NAME) {
 		REGEX_NAME = newREGEX_NAME;
 	}
 

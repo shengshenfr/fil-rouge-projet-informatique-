@@ -1,8 +1,11 @@
 package utils;
 
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
+
 
 /**
  * Utility class for managing the connection to the database.
@@ -23,7 +26,7 @@ public class DatabaseConnection
 	  {
 	    try
 	    {
-	      DriverManager.registerDriver(new org.postgresql.Driver());
+	      DriverManager.registerDriver(new Driver());
 	    }
 	    catch (SQLException e)
 	    {

@@ -16,7 +16,7 @@ public abstract class AbstractCompetitor implements Competitor {
 	/**
 	 * Description of the property abstractCompetitorName.
 	 */
-	private EString abstractCompetitorName = null;
+	private String abstractCompetitorName = null;
 
 	// Start of user code (user defined attributes for AbstractCompetitor)
 
@@ -38,7 +38,7 @@ public abstract class AbstractCompetitor implements Competitor {
 	 * Returns abstractCompetitorName.
 	 * @return abstractCompetitorName 
 	 */
-	public EString getAbstractCompetitorName() {
+	public String getAbstractCompetitorName() {
 		return this.abstractCompetitorName;
 	}
 
@@ -46,7 +46,7 @@ public abstract class AbstractCompetitor implements Competitor {
 	 * Sets a value to attribute abstractCompetitorName. 
 	 * @param newAbstractCompetitorName 
 	 */
-	public void setAbstractCompetitorName(EString newAbstractCompetitorName) {
+	public void setAbstractCompetitorName(String newAbstractCompetitorName) {
 		this.abstractCompetitorName = newAbstractCompetitorName;
 	}
 

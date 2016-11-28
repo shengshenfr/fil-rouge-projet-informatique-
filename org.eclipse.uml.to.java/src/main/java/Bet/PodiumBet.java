@@ -3,6 +3,8 @@
  *******************************************************************************/
 package Bet;
 
+import java.util.HashSet;
+
 import Bet.Bet;
 // Start of user code (user defined imports)
 
