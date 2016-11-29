@@ -62,16 +62,60 @@ public class BettingSoft implements Betting {
 	public void addCompetition(String competition, Calendar closingDate, Collection<Competitor> competitors,
 			String managerPwd) throws AuthentificationException, BadParametersException, CompetitionException,
 			ExistingCompetitionException {
-		// TODO Auto-generated method stub
-		
+		try{
+			// Authenticate manager
+			authenticateMngr(managerPwd);
+
+			//Check if the competition has not been in the system
+			if (CompetitionManager.findByName(competition) != 0)
+				throw new ExistingCompetitionException("Competition "+competition+" is already in the system");			
+
+			//Check if the closing date is in the future
+			Calendar today = new GregorianCalendar();
+			if (closingDate == null) 
+				throw new BadParametersException();
+			if(closingDate.before(today))
+				throw new CompetitionException ("The closedate should be after today ");
+
+			
+			//Create a competition
+			Competition c = new Competition(competition, closingDate);	
+
+			// Add competiton to SQL
+			CompetitionManager.persist(c);
+		}
+		catch (SQLException e){
+			System.out.println(e);
+		}
 	}
 
 	@Override
 	public void addCompetitor(String competition, Competitor competitor, String managerPwd)
 			throws AuthentificationException, ExistingCompetitionException, CompetitionException,
 			ExistingCompetitorException, BadParametersException {
-		// TODO Auto-generated method stub
+		try{
+			// Authenticate manager
+			authenticateMngr(managerPwd);
+
+			Competition c = CompetitionManager.findById(CompetitionManager.findByName(competition));
+			//check if the competition is existed
+			if (c == null)
+				throw new ExistingCompetitionException("Competition is not exist");
+
+			//check if the competition is still open
+			Calendar today = new GregorianCalendar();
+			if (c.getclosedate_calendar().before(today))
+				throw new CompetitionException ("This competition is already close");			
+
 		
+			c.add_competitor(competitor);
+
+			//Add to SQL
+			CompetitionManager.addCompetitor(c, competitor);
+		}
+		catch(SQLException e){
+			System.out.println(e);
+		}
 	}
 
 	@Override
