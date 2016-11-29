@@ -1,10 +1,8 @@
 package utils;
 
 import java.sql.Connection;
-import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
 
 
 /**
@@ -26,7 +24,7 @@ public class DatabaseConnection
 	  {
 	    try
 	    {
-	      DriverManager.registerDriver(new Driver());
+	      DriverManager.registerDriver(new org.postgresql.Driver());
 	    }
 	    catch (SQLException e)
 	    {

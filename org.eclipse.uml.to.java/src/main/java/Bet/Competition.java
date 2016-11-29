@@ -4,8 +4,7 @@
 package Bet;
 
 // Start of user code (user defined imports)
-import java.util.Calendar;
-import java.util.Collection;
+
 import java.util.Date;
 // End of user code
 import java.util.HashSet;
@@ -136,7 +135,7 @@ public class Competition {
 	 * Returns competitors.
 	 * @return competitors 
 	 */
-	public HashSet<Competitor> getCompetitors() {
+	public HashSet<Competitor> getCompetitors1() {
 		return this.competitor;
 	}
 
