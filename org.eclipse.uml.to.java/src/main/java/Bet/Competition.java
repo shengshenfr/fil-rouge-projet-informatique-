@@ -21,37 +21,36 @@ public class Competition {
 	/**
 	 * Description of the property settled.
 	 */
-	public boolean settled = false;
+	private boolean settled = false;
 
 	/**
 	 * Description of the property isDraw.
 	 */
-	public boolean isDraw = false;
+	private boolean isDraw = false;
 
 	/**
 	 * Description of the property name.
 	 */
-	public String name = null;
+	private String name = null;
 
 	/**
 	 * Description of the property closingDate.
 	 */
-	public Date closingDate = null;
+	private Date closingDate = null;
 
 	/**
 	 * Description of the property competitors.
 	 */
-	public HashSet<Competitor> competitor = new HashSet<Competitor>();
-
-	/**
-	 * Description of the property competitors.
-	 */
-	public HashSet<Competitor> competitor = new HashSet<Competitor>();
+	private HashSet<Competitor> competitor = new HashSet<Competitor>();
 
 	/**
 	 * Description of the property startingDate.
 	 */
-	public Date startingDate = null;
+	private Date startingDate = null;
+	
+	private long totalToken = 0L;
+	
+	private long winnerToken = 0L;
 
 	// Start of user code (user defined attributes for Competition)
 
@@ -142,14 +141,6 @@ public class Competition {
 	}
 
 	/**
-	 * Returns competitors.
-	 * @return competitors 
-	 */
-	public HashSet<Competitor> getCompetitors() {
-		return this.competitor;
-	}
-
-	/**
 	 * Returns startingDate.
 	 * @return startingDate 
 	 */
@@ -163,6 +154,10 @@ public class Competition {
 	 */
 	public void setStartingDate(Date newStartingDate) {
 		this.startingDate = newStartingDate;
+	}
+	
+	public boolean isOver() {
+		return this.getSettled();
 	}
 
 }
