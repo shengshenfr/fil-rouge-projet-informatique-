@@ -18,19 +18,13 @@ public class Driver implements java.sql.Driver {
 	}
 
 	@Override
-	public boolean acceptsURL(String url) throws BadParametersException {
+	public boolean acceptsURL(String url) throws SQLException {
 		// TODO Auto-generated method stub
-		try
-		{
-			if (url == "jdbc:postgresql://localhost:54321/")
-				return true;
-		}
-		catch(SQLException ex)
-		{
-			throw new BadParametersException("rg");
+		if (url == "jdbc:postgresql://localhost:54321/")
+			return true;
+		else
 			return false;
 			
-		}
 	}
 
 	@Override

@@ -3,7 +3,7 @@
  *******************************************************************************/
 package Individual;
 
-import java.util.Date;
+import java.sql.Date;
 import java.util.HashSet;
 
 import Bet.Bet;
@@ -51,7 +51,12 @@ public class Subscriber extends Player {
 	/**
 	 * Description of the property bets.
 	 */
+	private String firstname;
+
+	private String lastname;
+	
 	public HashSet<Bet> bets = new HashSet<Bet>();
+
 
 	/**
 	 * Description of the property REGEX_NAME.
@@ -66,6 +71,16 @@ public class Subscriber extends Player {
 	 * Description of the method authenticate.
 	 * @param pwd 
 	 */
+	
+	public Subscriber(String username, String firstname, String lastname, Date bornDate, long balance){
+		System.out.println("creation d'un subscriber");
+		this.username = username;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.bornDate = bornDate;
+		this.balance = balance;
+	}
+	
 	public void authenticate(String pwd) {
 		// Start of user code for method authenticate
 		// End of user code
@@ -203,4 +218,16 @@ public class Subscriber extends Player {
 		REGEX_NAME = newREGEX_NAME;
 	}
 
+	public String getFirstname(){
+		return firstname;
+	}
+	public String getLastname(){
+		return lastname;
+	}
+	public void setFirstname(String newFirstname) {
+		this.firstname = newFirstname;
+	}
+	public void setLastname(String newLastname) {
+		this.lastname = newLastname;
+	}
 }
