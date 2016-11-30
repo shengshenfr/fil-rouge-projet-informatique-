@@ -3,6 +3,10 @@
  *******************************************************************************/
 package Bet;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+
 // Start of user code (user defined imports)
 
 import java.util.Date;
@@ -65,6 +69,10 @@ public class Competition {
 	}
 
 	// Start of user code (user defined methods for Competition)
+
+	public Competition(String competition, Calendar closingDate) {
+		// TODO Auto-generated constructor stub
+	}
 
 	// End of user code
 	/**
@@ -131,13 +139,6 @@ public class Competition {
 		this.closingDate = newClosingDate;
 	}
 
-	/**
-	 * Returns competitors.
-	 * @return competitors 
-	 */
-	public HashSet<Competitor> getCompetitors1() {
-		return this.competitor;
-	}
 
 	/**
 	 * Returns startingDate.
@@ -158,5 +159,39 @@ public class Competition {
 	public boolean isOver() {
 		return this.getSettled();
 	}
+
+	public Calendar getclosedate_calendar() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void add_competitor(Competitor competitor2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public Collection<Competition> getCompetitors(){
+
+		return getCompetitors();
+	}
+	
+
+
+
+	public String getName_competition() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public int getRankCompetitor(Competitor competitor2) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public void deleteCompetitor(Competitor competitor2) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

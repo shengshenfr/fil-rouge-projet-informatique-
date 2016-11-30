@@ -5,6 +5,7 @@ package Individual;
 
 import Individual.AbstractCompetitor;
 // Start of user code (user defined imports)
+import utils.MyCalendar;
 
 // End of user code
 
@@ -38,7 +39,9 @@ public abstract class Player extends AbstractCompetitor {
 	}
 
 	// Start of user code (user defined methods for Player)
-
+	public Player(String lastName, String firstName, MyCalendar change_date) {
+		// TODO Auto-generated constructor stub
+	}
 	// End of user code
 	/**
 	 * Returns playerFirstName.

@@ -4,6 +4,7 @@
 package Bet;
 
 import Individual.Subscriber;
+import Interface.Competitor;
 
 // Start of user code (user defined imports)
 
@@ -49,6 +50,19 @@ public class Bet {
 	}
 
 	// Start of user code (user defined methods for Bet)
+//bet on podium
+	public Bet(String username, String name_competition, long numberTokens, Competitor winner, Competitor second,
+			Competitor third) {
+		// TODO Auto-generated constructor stub
+	}
+//bet on winner
+	public Bet(String username, String name_competition, long numberTokens, Competitor winner) {
+		// TODO Auto-generated constructor stub
+	}
+//bet on draw
+	public Bet(String username, String name_competition, long numberTokens) {
+		// TODO Auto-generated constructor stub
+	}
 
 	// End of user code
 	/**
@@ -113,6 +127,41 @@ public class Bet {
 	 */
 	public void setIdBet(int newIdBet) {
 		this.idBet = newIdBet;
+	}
+
+	public long getBalance() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String get_competition() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object get_idBet() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object getSecond() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object getThird() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object getWinner() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

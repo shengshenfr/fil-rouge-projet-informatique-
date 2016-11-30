@@ -3,6 +3,9 @@
  *******************************************************************************/
 package dbManager;
 
+import Bet.Entry;
+import Betting.list;
+
 // Start of user code (user defined imports)
 
 // End of user code
@@ -25,6 +28,13 @@ public class EntryManager {
 		super();
 		// End of user code
 	}
+
+	public static Entry findAllByCompetition(String competition) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 
 	// Start of user code (user defined methods for EntryManager)
 

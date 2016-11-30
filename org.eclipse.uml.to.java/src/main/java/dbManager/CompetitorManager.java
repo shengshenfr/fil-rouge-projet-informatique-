@@ -3,6 +3,13 @@
  *******************************************************************************/
 package dbManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import Individual.Player;
+import Individual.Team;
+import Interface.Competitor;
+
 // Start of user code (user defined imports)
 
 // End of user code
@@ -24,6 +31,51 @@ public class CompetitorManager {
 		// Start of user code constructor for CompetitorManager)
 		super();
 		// End of user code
+	}
+
+
+
+
+
+	public static ArrayList<Competitor> findCompetitorinTeam(String teamName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+
+
+	public static List<Competitor> findAllByCompetition(String competition) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+
+
+	public static Object findCompetitorByName(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+
+
+	public static void persist(Team team) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+
+	public static void persist(Player player) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	// Start of user code (user defined methods for CompetitorManager)

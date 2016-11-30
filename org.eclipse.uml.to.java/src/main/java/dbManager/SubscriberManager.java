@@ -49,7 +49,7 @@ public class SubscriberManager {
 		psPersist.setString(1,  subscriber.getUsername());
 		psPersist.setString(2,  subscriber.getPlayerFirstName());
 		psPersist.setString(3, subscriber.getPlayerLastName());
-		psPersist.setDate(4, subscriber.getBornDate());
+		psPersist.setString(4, subscriber.getBornDate());
 		psPersist.setLong(5, subscriber.getBalance());
 		
 		psPersist.executeUpdate();
@@ -109,7 +109,7 @@ public static Subscriber findByUsername(String username) throws SQLException
 	while(resultSet.next())
 	{
 		subscriber = new Subscriber(resultSet.getString("username"),resultSet.getString("firstname"),
-				resultSet.getString("lastname"), resultSet.getDate("bornDate"), resultSet.getLong("balance"));
+				resultSet.getString("lastname"), resultSet.getString("bornDate"), resultSet.getLong("balance"));
 		
 	}
 	
@@ -144,7 +144,7 @@ public static List<Subscriber> findAll() throws SQLException
     	subscribers.add(new Subscriber(resultSet.getString("username"),
     								   resultSet.getString("firstname"),
     								   resultSet.getString("lastname"),
-    								   resultSet.getDate("bornDate"),
+    								   resultSet.getString("bornDate"),
     								   resultSet.getLong("balance")));
     	
     }
@@ -179,7 +179,7 @@ public static void update(Subscriber subscriber) throws SQLException
   
   psUpdate.setString(1,  subscriber.getFirstname());
   psUpdate.setString(2, subscriber.getLastname());
-  psUpdate.setDate(3,  subscriber.getBornDate());
+  psUpdate.setString(3,  subscriber.getBornDate());
   psUpdate.setLong(4, subscriber.getBalance());
   psUpdate.setString(5, subscriber.getUsername());
   

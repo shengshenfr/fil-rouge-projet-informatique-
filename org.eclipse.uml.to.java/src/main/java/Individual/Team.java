@@ -41,6 +41,10 @@ public class Team extends AbstractCompetitor {
 
 	// Start of user code (user defined methods for Team)
 
+	public Team(String name) {
+		// TODO Auto-generated constructor stub
+	}
+
 	// End of user code
 	/**
 	 * Returns teamName.
@@ -65,5 +69,7 @@ public class Team extends AbstractCompetitor {
 	public HashSet<Player> getPlayers() {
 		return this.players;
 	}
+
+
 
 }

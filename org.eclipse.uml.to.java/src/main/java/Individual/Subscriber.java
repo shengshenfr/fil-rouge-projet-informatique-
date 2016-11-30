@@ -4,11 +4,14 @@
 package Individual;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import Bet.Bet;
 import Individual.Player;
 // Start of user code (user defined imports)
+import Interface.Competitor;
+import utils.MyCalendar;
 
 // End of user code
 
@@ -81,6 +84,10 @@ public class Subscriber extends Player {
 		this.balance = balance;
 	}
 	
+	public Subscriber(String lastName2, String firstName2, String username2, MyCalendar change_date) {
+		// TODO Auto-generated constructor stub
+	}
+
 	public void authenticate(String pwd) {
 		// Start of user code for method authenticate
 		// End of user code
@@ -229,5 +236,30 @@ public class Subscriber extends Player {
 	}
 	public void setLastname(String newLastname) {
 		this.lastname = newLastname;
+	}
+
+	public boolean equalsPlayer(Competitor competitor) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void debit(long numberTokens) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void change_subcriber_password(String username2, String currentPwd, String newPwd) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void credit(long numberTokens) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public ArrayList<String> consult_user(String username2, String pwdSubs) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

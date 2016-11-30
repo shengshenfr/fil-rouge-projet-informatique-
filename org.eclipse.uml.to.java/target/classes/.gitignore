@@ -1,6 +1,5 @@
-/Bet/
 /Betting/
-/Individual/
-/Interface/
-/dbManager/
 /utils/
+/dbManager/
+/Individual/
+/Bet/
