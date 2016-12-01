@@ -33,7 +33,7 @@ public class CompetitionManager {
 
 	public static Competition findByName(String competition) {
 		// TODO Auto-generated method stub
-		return 0;
+		return null;
 	}
 
 	public static void persist(Competition c) {

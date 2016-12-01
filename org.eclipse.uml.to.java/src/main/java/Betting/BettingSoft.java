@@ -5,7 +5,10 @@ package Betting;
 
 // Start of user code (user defined imports)
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
+
 import Interface.*;
 import Betting.Manager;
 import Individual.*;
@@ -84,9 +87,17 @@ public class BettingSoft implements Betting {
 			// Add competiton to SQL
 			CompetitionManager.persist(c);
 		}
-		catch (SQLException e){
-			System.out.println(e);
+		catch (SQLException e) {
+			try {
+				System.out.println("competition not added");
+				
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			throw e;
+			
 		}
+		
 	}
 
 	@Override
@@ -544,7 +555,7 @@ public class BettingSoft implements Betting {
 				throw new CompetitionException("The competition is closed");
 
 			//Get bets of subscriber
-			Collection<Bet> bets = BetManager.findBySubscriber(username);
+			List<Bet> bets = BetManager.findByUsername(username);
 
 			for (Bet bet : bets) {
 				if (bet.get_competition() == c.getName_competition()){
@@ -666,6 +677,9 @@ public class BettingSoft implements Betting {
 	}
 
 	@Override
+	
+
+	
 	public List<List<String>> listSubscribers(String managerPwd) throws AuthentificationException {
 		try{
 			// Authenticate manager
@@ -682,7 +696,7 @@ public class BettingSoft implements Betting {
 				subscriber_Data.add(s.getLastname());
 				subscriber_Data.add(s.getFirstname());
 				subscriber_Data.add(s.getUsername());
-				subscriber_Data.add(s.getBornDate());
+				subscriber_Data.add(""+s.getBornDate());
 
 				result.add(subscriber_Data);
 			}
@@ -692,7 +706,11 @@ public class BettingSoft implements Betting {
 		// catch (SQLException | BadParametersException | SubscriberException  e)
 		catch (AuthentificationException  e){
 			return null;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		return null;
 	}
 
 	@Override

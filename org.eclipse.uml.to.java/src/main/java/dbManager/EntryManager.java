@@ -4,7 +4,6 @@
 package dbManager;
 
 import Bet.Entry;
-import Betting.list;
 
 // Start of user code (user defined imports)
 

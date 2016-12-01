@@ -3,11 +3,13 @@
  *******************************************************************************/
 package dbManager;
 
-import java.util.ArrayList;
-import java.util.Collection;
 
+import java.sql.*;
+import java.util.*;
+import utils.DatabaseConnection;
 import Bet.Bet;
 import Bet.Competition;
+
 
 // Start of user code (user defined imports)
 
@@ -16,6 +18,16 @@ import Bet.Competition;
 /**
  * Description of BetManager.
  * 
+ * DAO class (<i>Data Access Object</i>) for the {@link Bet} class. This class
+ * provides the CRUD functionalities :<br>
+ * <ul>
+ * <li><b>C</b>: create a new bet in the database.
+ * <li><b>R</b>: retrieve (or read) a (list of)bet(s) from the database.
+ * <li><b>U</b>: update the values stored in the database for a bet.
+ * <li><b>D</b>: delete a bet in the database.
+ * </ul>
+ * 
+ *
  * @author Robin
  */
 public class BetManager {
@@ -24,36 +36,182 @@ public class BetManager {
 	// End of user code
 
 	/**
-	 * The constructor.
+	 * Store a bet in the database for a specific subscriber (the subscriber is
+	 * included inside the Bet object). This bet is not stored yet, so his
+	 * <code>id</code> value is <code>NULL</code>. Once the bet is stored, the
+	 * method returns the bet with the <code>id</code> value setted.
+	 * 
+	 * @param bet
+	 *            the bet to be stored.
+	 * @return the bet with the updated value for the id.
+	 * @throws SQLException
 	 */
-	public BetManager() {
-		// Start of user code constructor for BetManager)
-		super();
-		// End of user code
+	
+	public static Bet persist(Bet bet) throws SQLException {
+		
+		// Two steps in this method which must be managed in an atomic
+		// (unique) transaction:
+		// 1 - insert the new bet;
+		// 2 - once the insertion is OK, in order to set up the value
+		// of the id, a request is done to get this value by
+		// requesting the sequence (bets_id_seq) in the
+		// database.
+		Connection c = DatabaseConnection.getConnection();
+		try {
+			c.setAutoCommit(false);
+			PreparedStatement psPersist = c.prepareStatement("insert into bets(username, amount) values(?,?)");
+			psPersist.setString(1, bet.getUsername());
+			psPersist.setLong(2, bet.getAmount());
+			
+			psPersist.executeUpdate();
+
+			psPersist.close();
+
+			// Retrieving the value of the id with a request on the
+			// sequence (subscribers_id_seq).
+			
+			PreparedStatement psIdValue = c.prepareStatement("select currval('brts_id_seq') as value_id");
+			ResultSet resultSet = psIdValue.executeQuery();
+			Integer idBet = null;
+			while (resultSet.next()){
+				idBet = resultSet.getInt("value_id");
+			}
+			resultSet.close();
+			psIdValue.close();
+			c.commit();
+			bet.setIdBet(idBet);
+		}
+		
+		catch (SQLException e) {
+			try {
+				c.rollback();
+				
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+			c.setAutoCommit(true);
+			throw e;
+			
+		}
+		
+		c.setAutoCommit(true);
+		c.close();
+
+		return bet;		
 	}
 
-	public static void persist(Bet bet) {
-		// TODO Auto-generated method stub
+	// -----------------------------------------------------------------------------
+		/**
+		 * Find a bet by his id.
+		 * 
+		 * @param id
+		 *            the id of the bet to retrieve.
+		 * @return the bet or null if the id does not exist in the database.
+		 * @throws SQLException
+		 */
+	
+	public static Bet findById(Integer idBet) throws SQLException {
+		Connection c = DatabaseConnection.getConnection();
+		PreparedStatement psSelect = c
+				.prepareStatement("select * from bets where idBet=?");
+		ResultSet resultSet = psSelect.executeQuery();
+		Bet bet = null;
+		while (resultSet.next()) {
+			bet = new Bet(resultSet.getInt("idBet"),
+					resultSet.getString("username"),
+					resultSet.getLong("amount"));
+		}
+		
+		resultSet.close();
+		psSelect.close();
+		c.close();
+
+		return bet;
+	}
+	
+
+	public static void delete(Bet bet) throws SQLException {
+		Connection c = DatabaseConnection.getConnection();
+		PreparedStatement psUpdate = c
+				.prepareStatement("delete from bets where idBet=?");
+		psUpdate.setInt(1, bet.getIdBet());
+		psUpdate.executeUpdate();
+		psUpdate.close();
+		c.close();
 		
 	}
 
 
 
-	public static void delete(Bet bet) {
-		// TODO Auto-generated method stub
+	public static List<Bet> findByUsername(String username) 
+		throws SQLException {
+		Connection c = DatabaseConnection.getConnection();
+		PreparedStatement psSelect = c.prepareStatement("select * from"
+				+ "bets where username=? order by idBet");
+		psSelect.setString(1, username);
 		
+		ResultSet resultSet = psSelect.executeQuery();
+		List<Bet> bets = new ArrayList<Bet>();
+		while (resultSet.next()) {
+			bets.add(new Bet(resultSet.getInt("idBet"), resultSet
+					.getString("username"), resultSet
+					.getInt("amount")));
+		}
+		resultSet.close();
+		psSelect.close();
+		c.close();
+
+		return bets;
 	}
 
+	
+	public static void update(Bet bet) throws SQLException {
+		Connection c = DatabaseConnection.getConnection();
+		PreparedStatement psUpdate = c
+				.prepareStatement("update bets set username=?, amount=? where idBet=?");
+		psUpdate.setString(1, bet.getUsername());
+		psUpdate.setLong(2, bet.getAmount());
+		psUpdate.setInt(3, bet.getIdBet());
+		psUpdate.executeUpdate();
+		psUpdate.close();
+		c.close();
+	}
+	
+	
+	// -----------------------------------------------------------------------------
+		/**
+		 * Find all the bets in the database.
+		 * 
+		 * @return
+		 * @throws SQLException
+		 */
+		public static List<Bet> findAll() throws SQLException {
+			Connection c = DatabaseConnection.getConnection();
+			PreparedStatement psSelect = c
+					.prepareStatement("select * from bets order by id_subscriber,id");
+			ResultSet resultSet = psSelect.executeQuery();
+			List<Bet> bets = new ArrayList<Bet>();
+			while (resultSet.next()) {
+				bets.add(new Bet(resultSet.getInt("idBet"), resultSet
+						.getString("username"), resultSet
+						.getLong("amount")));
+			}
+			resultSet.close();
+			psSelect.close();
+			c.close();
+
+			return bets;
+		}
+	
+	
+	
+	
+	
 	public static ArrayList<Bet> findAllByCompetition(String competition) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	public static Collection<Bet> findBySubscriber(String username) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	}	
+	
 	public static void deleleAllBetsOnCompetition(Competition c) {
 		// TODO Auto-generated method stub
 		

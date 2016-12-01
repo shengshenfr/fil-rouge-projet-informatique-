@@ -193,5 +193,29 @@ public class Competition {
 		
 	}
 
+	public long getTotalToken() {
+		return totalToken;
+	}
+
+	public void setTotalToken(long totalToken) {
+		this.totalToken = totalToken;
+	}
+
+	public long getWinnerToken() {
+		return winnerToken;
+	}
+
+	public void setWinnerToken(long winnerToken) {
+		this.winnerToken = winnerToken;
+	}
+
+	public HashSet<Competitor> getCompetitor() {
+		return competitor;
+	}
+
+	public void setCompetitor(HashSet<Competitor> competitor) {
+		this.competitor = competitor;
+	}
+
 
 }

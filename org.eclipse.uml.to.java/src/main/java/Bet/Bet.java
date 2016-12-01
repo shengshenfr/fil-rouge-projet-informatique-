@@ -3,8 +3,8 @@
  *******************************************************************************/
 package Bet;
 
-import Individual.Subscriber;
 import Interface.Competitor;
+import Bet.Entry;
 
 // Start of user code (user defined imports)
 
@@ -24,17 +24,19 @@ public class Bet {
 	/**
 	 * Description of the property subscribers.
 	 */
-	public Subscriber subscribers = null;
+	public String username = null;
 
 	/**
 	 * Description of the property betNextId.
 	 */
-	public static int betNextId = 0;
+	public static int betNextId = 1;
 
 	/**
 	 * Description of the property idBet.
 	 */
-	public int idBet = 0;
+	public Integer idBet = 0;
+
+	private Entry entry;
 
 	// Start of user code (user defined attributes for Bet)
 
@@ -43,11 +45,31 @@ public class Bet {
 	/**
 	 * The constructor.
 	 */
-	public Bet() {
+	public Bet(String username , long amount) {
 		// Start of user code constructor for Bet)
-		super();
+		this.idBet = null;
+		this.username = username;
+		this.amount = amount;
 		// End of user code
 	}
+	
+
+	public Bet(String username , long amount, Entry entry) {
+		// Start of user code constructor for Bet)
+		this.idBet = null;
+		this.username = username;
+		this.amount = amount;
+		// End of user code
+	}
+	
+	
+	
+	public Bet(Integer idBet, String username , long amount) {
+		this.idBet = idBet;
+		this.amount = amount;
+		this.username = username;
+	}
+
 
 	// Start of user code (user defined methods for Bet)
 //bet on podium
@@ -81,20 +103,13 @@ public class Bet {
 		this.amount = newAmount;
 	}
 
-	/**
-	 * Returns subscribers.
-	 * @return subscribers 
-	 */
-	public Subscriber getSubscribers() {
-		return this.subscribers;
-	}
 
 	/**
 	 * Sets a value to attribute subscribers. 
 	 * @param newSubscribers 
 	 */
-	public void setSubscribers(Subscriber newSubscribers) {
-		this.subscribers = newSubscribers;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	/**
@@ -164,4 +179,17 @@ public class Bet {
 		return null;
 	}
 
+
+	public Entry getEntry() {
+		return entry;
+	}
+
+
+	public void setEntry(Entry entry) {
+		this.entry = entry;
+	}
+
+
+	
+	
 }
