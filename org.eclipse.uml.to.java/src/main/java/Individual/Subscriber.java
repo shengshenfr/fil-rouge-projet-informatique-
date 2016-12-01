@@ -98,13 +98,7 @@ public class Subscriber extends Player {
 	}
 
 	/**
-	 * Description of the method getBalance.
-	 * @param username 
-	 */
-	public void getBalance(String username) {
-		// Start of user code for method getBalance
-		// End of user code
-	}
+
 
 	// Start of user code (user defined methods for Subscriber)
 
@@ -209,7 +203,7 @@ public class Subscriber extends Player {
 	 * Returns bets.
 	 * @return bets 
 	 */
-	public HashSet<Bet> getBets() {
+	public HashSet<Bet> listBet() {
 		return this.bets;
 	}
 
@@ -249,7 +243,7 @@ public class Subscriber extends Player {
 
 	public void debit(long numberTokens) {
 		// TODO Auto-generated method stub
-		
+        
 	}
 
 	public void change_subcriber_password(String username2, String currentPwd, String newPwd) {
@@ -264,11 +258,22 @@ public class Subscriber extends Player {
 
 	public void credit(long numberTokens) {
 		// TODO Auto-generated method stub
-		
+        if(numberTokens<0)
+        {
+            println("Please give me a number positive!")
+        }
+        else if(this.balance<numberTokens){
+            println("You didn't have enough money for this bet!")
+        }
+        else{
+            this.balance=this.balance-numberTokens;
+        }
 	}
 
 	public ArrayList<String> consult_user(String username2, String pwdSubs) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+    
+    
 }
