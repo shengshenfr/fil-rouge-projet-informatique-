@@ -88,9 +88,13 @@ public class Subscriber extends Player {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void authenticate(String pwd) {
+	public boolean authenticate(String pwd) {
 		// Start of user code for method authenticate
 		// End of user code
+        if(this.password==pwd){
+            return true;
+        }
+        return false;
 	}
 
 	/**
@@ -250,7 +254,12 @@ public class Subscriber extends Player {
 
 	public void change_subcriber_password(String username2, String currentPwd, String newPwd) {
 		// TODO Auto-generated method stub
-		
+        if(this.authenticate(currentPwd)){
+            this.pwd=newPwd;
+        }
+        else{
+            println("You didn't have the right pass word, this change is wrong!")
+        }
 	}
 
 	public void credit(long numberTokens) {
