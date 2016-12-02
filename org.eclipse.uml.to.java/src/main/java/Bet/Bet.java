@@ -15,6 +15,7 @@ import Bet.Entry;
  * 
  * @author Robin
  */
+@SuppressWarnings("unused")
 public class Bet {
 	/**
 	 * Description of the property amount.
@@ -24,7 +25,7 @@ public class Bet {
 	/**
 	 * Description of the property subscribers.
 	 */
-	public String username = null;
+	private String betOwner ;
 
 	/**
 	 * Description of the property betNextId.
@@ -36,7 +37,12 @@ public class Bet {
 	 */
 	public Integer idBet = 0;
 
-	private Entry entry;
+	private int idEntry;
+	private int idEntry2;
+	private int idEntry3;
+	private String competitionName;
+
+	
 
 	// Start of user code (user defined attributes for Bet)
 
@@ -45,46 +51,73 @@ public class Bet {
 	/**
 	 * The constructor.
 	 */
-	public Bet(String username , long amount) {
-		// Start of user code constructor for Bet)
+	//bet on winner without the idBet
+	public Bet(String betOwner , long amount , int idEntry) {
+		// Start of user code constructor for Bet Winner !!!
 		this.idBet = null;
-		this.username = username;
+		this.betOwner = betOwner;
 		this.amount = amount;
+		this.idEntry = idEntry;
 		// End of user code
 	}
 	
-
-	public Bet(String username , long amount, Entry entry) {
-		// Start of user code constructor for Bet)
-		this.idBet = null;
-		this.username = username;
+	//bet on winner with the idBet
+	public Bet(Integer idBet, String betOwner , long amount , int idEntry) {
+		// Start of user code constructor for Bet Winner !!!
+		this.idBet = idBet;
+		this.betOwner = betOwner;
 		this.amount = amount;
+		this.idEntry = idEntry;
 		// End of user code
 	}
 	
 	
+	//bet on podium without the idBet
+	public Bet(String betOwner , long amount, int idEntry, int idEntry2, int idEntry3) {
+		// Start of user code constructor for Bet Podium !!!
+		this.idBet = null;
+		this.betOwner = betOwner;
+		this.amount = amount;
+		this.idEntry = idEntry;
+		this.idEntry2 = idEntry2;
+		this.idEntry3 = idEntry3;
+		// End of user code
+	}
 	
-	public Bet(Integer idBet, String username , long amount) {
+	
+	//bet on podium with the idBet
+	public Bet(Integer idBet, String betOwner , long amount, int idEntry, int idEntry2, int idEntry3) {
+		// Start of user code constructor for Bet Podium !!!
+		this.idBet = idBet;
+		this.betOwner = betOwner;
+		this.amount = amount;
+		this.idEntry = idEntry;
+		this.idEntry2 = idEntry2;
+		this.idEntry3 = idEntry3;
+		// End of user code
+	}
+	
+	
+	//bet on draw without the idBet
+	public Bet(String betOwner, long amount, String competitionName) {
+		this.idBet = null;
+		this.amount = amount;
+		this.betOwner = betOwner;
+		this.competitionName = competitionName;
+	}
+	
+	//bet on draw with the idBet
+	public Bet(Integer idBet,String betOwner,  long amount, String competitionName) {
 		this.idBet = idBet;
 		this.amount = amount;
-		this.username = username;
+		this.betOwner = betOwner;
+		this.competitionName =competitionName;
 	}
-
+	
 
 	// Start of user code (user defined methods for Bet)
 //bet on podium
-	public Bet(String username, String name_competition, long numberTokens, Competitor winner, Competitor second,
-			Competitor third) {
-		// TODO Auto-generated constructor stub
-	}
-//bet on winner
-	public Bet(String username, String name_competition, long numberTokens, Competitor winner) {
-		// TODO Auto-generated constructor stub
-	}
-//bet on draw
-	public Bet(String username, String name_competition, long numberTokens) {
-		// TODO Auto-generated constructor stub
-	}
+
 
 	// End of user code
 	/**
@@ -108,8 +141,8 @@ public class Bet {
 	 * Sets a value to attribute subscribers. 
 	 * @param newSubscribers 
 	 */
-	public void setUsername(String username) {
-		this.username = username;
+	public void setBetOwner(String betOwner) {
+		this.betOwner = betOwner;
 	}
 
 	/**
@@ -144,52 +177,48 @@ public class Bet {
 		this.idBet = newIdBet;
 	}
 
-	public long getBalance() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public String getUsername() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public String get_competition() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object get_idBet() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object getSecond() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object getThird() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	public Object getWinner() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	public int getIdEntry() {
+		return idEntry;
+	}
 
-	public Entry getEntry() {
-		return entry;
+	public void setIdEntry(int idEntry) {
+		this.idEntry = idEntry;
+	}
+
+	public int getIdEntry2() {
+		return idEntry2;
+	}
+
+	public void setIdEntry2(int idEntry2) {
+		this.idEntry2 = idEntry2;
+	}
+
+	public int getIdEntry3() {
+		return idEntry3;
+	}
+
+	public void setIdEntry3(int idEntry3) {
+		this.idEntry3 = idEntry3;
+	}
+
+	public String getCompetitionName() {
+		return competitionName;
+	}
+
+	public void setCompetitionName(String competitionName) {
+		this.competitionName = competitionName;
 	}
 
 
-	public void setEntry(Entry entry) {
-		this.entry = entry;
+	public String getBetOwner() {
+		return betOwner;
 	}
-
-
 	
 	
 }

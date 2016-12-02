@@ -30,44 +30,49 @@ import Bet.Competition;
  *
  * @author Robin
  */
-public class BetManager {
+
+
+@SuppressWarnings("unused")
+
+public class BetDrawManager {
+
+	
 	// Start of user code (user defined attributes for BetManager)
 
-	// End of user code
+		// End of user code
 
-	/**
-	 * Store a bet in the database for a specific subscriber (the subscriber is
-	 * included inside the Bet object). This bet is not stored yet, so his
-	 * <code>id</code> value is <code>NULL</code>. Once the bet is stored, the
-	 * method returns the bet with the <code>id</code> value setted.
-	 * 
-	 * @param betWinner
-	 *            the betWinner to be stored.
-	 * @return the bet with the updated value for the id.
-	 * @throws SQLException
-	 */
-	
-	/*******************************************************************/
-	
-	
-		//persist for BetWinner
-	
-	public static Bet persist(Bet betWinner) throws SQLException {
+		/**
+		 * Store a bet in the database for a specific subscriber (the subscriber is
+		 * included inside the Bet object). This bet is not stored yet, so his
+		 * <code>id</code> value is <code>NULL</code>. Once the bet is stored, the
+		 * method returns the bet with the <code>id</code> value setted.
+		 * 
+		 * @param betDraw
+		 *            the betDraw to be stored.
+		 * @return the bet with the updated value for the id.
+		 * @throws SQLException
+		 */
+		
+		/*******************************************************************/
+		
+		
+		//persist for betDraw
+	public static Bet persist(Bet betDraw) throws SQLException {
 		
 		// Two steps in this method which must be managed in an atomic
 		// (unique) transaction:
-		// 1 - insert the new betWinner;
+		// 1 - insert the new betDraw;
 		// 2 - once the insertion is OK, in order to set up the value
 		// of the id, a request is done to get this value by
-		// requesting the sequence (betsWinner_id_seq) in the
+		// requesting the sequence (betsDraw_id_seq) in the
 		// database.
 		Connection c = DatabaseConnection.getConnection();
 		try {
 			c.setAutoCommit(false);
-			PreparedStatement psPersist = c.prepareStatement("insert into betsWinner(betOwner, amount,idEntry) values(?,?,?)");
-			psPersist.setString(1, betWinner.getBetOwner());
-			psPersist.setLong(2, betWinner.getAmount());
-			psPersist.setInt(3, betWinner.getIdEntry());
+			PreparedStatement psPersist = c.prepareStatement("insert into betsDraw(betOwner, amount,competitionName) values(?,?,?)");
+			psPersist.setString(1, betDraw.getBetOwner());
+			psPersist.setLong(2, betDraw.getAmount());
+			psPersist.setString(3, betDraw.getCompetitionName());
 			
 			psPersist.executeUpdate();
 
@@ -76,7 +81,7 @@ public class BetManager {
 			// Retrieving the value of the id with a request on the
 			// sequence (subscribers_id_seq).
 			
-			PreparedStatement psIdValue = c.prepareStatement("select currval('betsWinner_id_seq') as value_id");
+			PreparedStatement psIdValue = c.prepareStatement("select currval('betsDraw_id_seq') as value_id");
 			ResultSet resultSet = psIdValue.executeQuery();
 			Integer idBet = null;
 			while (resultSet.next()){
@@ -85,7 +90,7 @@ public class BetManager {
 			resultSet.close();
 			psIdValue.close();
 			c.commit();
-			betWinner.setIdBet(idBet);
+			betDraw.setIdBet(idBet);
 		}
 		
 		catch (SQLException e) {
@@ -103,18 +108,18 @@ public class BetManager {
 		c.setAutoCommit(true);
 		c.close();
 
-		return betWinner;		
+		return betDraw;		
 	}
 
-	// ----------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
 	
 	
 	
 	
 	
-	// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 		/**
-		 * Find a betWinner by his id.
+		 * Find a betDraw by his id.
 		 * 
 		 * @param id
 		 *            the id of the bet to retrieve.
@@ -125,67 +130,81 @@ public class BetManager {
 	public static Bet findById(Integer idBet) throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psSelect = c
-				.prepareStatement("select * from betsWinner where idBet=?");
+				.prepareStatement("select * from betsDraw where idBet=?");
 		ResultSet resultSet = psSelect.executeQuery();
-		Bet betWinner = null;
+		Bet betDraw = null;
 		while (resultSet.next()) {
-			betWinner = new Bet(resultSet.getInt("idBet"),
+			betDraw = new Bet(resultSet.getInt("idBet"),
 					resultSet.getString("betOwner"),
 					resultSet.getLong("amount"),
-					resultSet.getInt("idEntry"));
+					resultSet.getString("competitionName"));
 		}
 		
 		resultSet.close();
 		psSelect.close();
 		c.close();
 
-		return betWinner;
+		return betDraw;
 	}
-	
 
-	public static void delete(Bet betWinner) throws SQLException {
+	
+//--------------------------------------------------------------------------	
+	
+	/**
+	 * function which delete a betDraw in the betPodium table
+	 * @param betDraw
+	 * @throws SQLException
+	 */
+
+	public static void delete(Bet betDraw) throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psUpdate = c
-				.prepareStatement("delete from betsWinner where idBet=?");
-		psUpdate.setInt(1, betWinner.getIdBet());
+				.prepareStatement("delete from betsDraw where idBet=?");
+		psUpdate.setInt(1, betDraw.getIdBet());
 		psUpdate.executeUpdate();
 		psUpdate.close();
 		c.close();
 		
 	}
 
-
+//-------------------------------------------------------------------------	
+	
+	/**
+	 * function which list all the betDraw of an owner
+	 * @param betOwner
+	 * @throws SQLException
+	 */
 
 	public static List<Bet> findByOwner(String betOwner) 
 		throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psSelect = c.prepareStatement("select * from"
-				+ "betsWinner where betOwner=? order by idBet");
+				+ "betsDraw where betOwner=? order by idBet");
 		psSelect.setString(1, betOwner);
 		
 		ResultSet resultSet = psSelect.executeQuery();
-		List<Bet> betsWinner = new ArrayList<Bet>();
+		List<Bet> betsDraw = new ArrayList<Bet>();
 		while (resultSet.next()) {
-			betsWinner.add(new Bet(resultSet.getInt("idBet"), resultSet
+			betsDraw.add(new Bet(resultSet.getInt("idBet"), resultSet
 					.getString("betOwner"), resultSet
-					.getLong("amount"), resultSet.getInt("idEntry")));
+					.getLong("amount"), resultSet.getString("competitionName")));
 		}
 		resultSet.close();
 		psSelect.close();
 		c.close();
 
-		return betsWinner;
+		return betsDraw;
 	}
 
-	
-	public static void update(Bet betWinner) throws SQLException {
+//------------------------------------------------------------------------	
+	public static void update(Bet betDraw) throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psUpdate = c
-				.prepareStatement("update betsWinner set betOwner=?, amount=?, idEntry = ? where idBet=?");
-		psUpdate.setString(1, betWinner.getBetOwner());
-		psUpdate.setLong(2, betWinner.getAmount());
-		psUpdate.setInt(4, betWinner.getIdBet());
-		psUpdate.setInt(3,  betWinner.getIdEntry());
+				.prepareStatement("update betsDraw set betOwner=?, amount=?, competitionName = ? where idBet=?");
+		psUpdate.setString(1, betDraw.getBetOwner());
+		psUpdate.setLong(2, betDraw.getAmount());
+		psUpdate.setInt(4, betDraw.getIdBet());
+		psUpdate.setString(3,  betDraw.getCompetitionName());
 		psUpdate.executeUpdate();
 		psUpdate.close();
 		c.close();
@@ -194,7 +213,7 @@ public class BetManager {
 	
 	// -----------------------------------------------------------------------------
 		/**
-		 * Find all the betsWinner in the database.
+		 * Find all the betsDraw in the database.
 		 * 
 		 * @return
 		 * @throws SQLException
@@ -202,43 +221,19 @@ public class BetManager {
 		public static List<Bet> findAll() throws SQLException {
 			Connection c = DatabaseConnection.getConnection();
 			PreparedStatement psSelect = c
-					.prepareStatement("select * from betsWinner order by betOwner,idBet");
+					.prepareStatement("select * from betsDraw order by betOwner,idBet");
 			ResultSet resultSet = psSelect.executeQuery();
-			List<Bet> betsWinner = new ArrayList<Bet>();
+			List<Bet> betsDraw = new ArrayList<Bet>();
 			while (resultSet.next()) {
-				betsWinner.add(new Bet(resultSet.getInt("idBet"), resultSet
+				betsDraw.add(new Bet(resultSet.getInt("idBet"), resultSet
 						.getString("betOwner"), resultSet
-						.getLong("amount"), resultSet.getInt("idEntry")));
+						.getLong("amount"), resultSet.getString("competitionName")));
 			}
 			resultSet.close();
 			psSelect.close();
 			c.close();
 
-			return betsWinner;
+			return betsDraw;
 		}
 	
-	
-	
-	
-	
-	public static ArrayList<Bet> findAllByCompetition(String competition) {
-		// TODO Auto-generated method stub
-		return null;
-	}	
-	
-	public static void deleleAllBetsOnCompetition(Competition c) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	public static Collection<Bet> findWinnerByCompetition(String competition) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	// Start of user code (user defined methods for BetManager)
-
-	// End of user code
-
 }
