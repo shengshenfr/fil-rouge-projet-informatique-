@@ -5,13 +5,14 @@ package Bet;
 
 import Bet.Bet;
 // Start of user code (user defined imports)
+import Individual.Subscriber;
 
 // End of user code
 
 /**
  * Description of DrawBet.
  * 
- * @author Robin
+ * @author Robin, Rémy
  */
 public class DrawBet extends Bet {
 	/**
@@ -26,7 +27,7 @@ public class DrawBet extends Bet {
 	/**
 	 * The constructor.
 	 */
-	public DrawBet(long amount, String betOwner, Competition competition) {
+	public DrawBet(long amount, Subscriber betOwner, Competition competition) {
 		super(amount, betOwner);
 		this.competition = competition;
 	}

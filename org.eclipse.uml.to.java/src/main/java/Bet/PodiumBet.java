@@ -7,6 +7,7 @@ import java.util.HashSet;
 
 import Bet.Bet;
 // Start of user code (user defined imports)
+import Individual.Subscriber;
 
 // End of user code
 
@@ -24,7 +25,7 @@ public class PodiumBet extends Bet {
 	/**
 	 * The constructor.
 	 */
-	public PodiumBet(long amount, String betOwner, Entry first, Entry second, Entry third) {
+	public PodiumBet(long amount, Subscriber betOwner, Entry first, Entry second, Entry third) {
 		super(amount, betOwner);
 		this.setPodium(first, second, third);
 	}

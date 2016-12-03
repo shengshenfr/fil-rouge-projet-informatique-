@@ -30,7 +30,7 @@ public class Competition {
 	/**
 	 * Description of the property isDraw.
 	 */
-	private boolean isDraw = false;
+	private boolean draw = false;
 
 	/**
 	 * Description of the property name.
@@ -88,7 +88,7 @@ public class Competition {
 	 * Returns settled.
 	 * @return settled 
 	 */
-	public boolean getSettled() {
+	public boolean isSettled() {
 		return this.settled;
 	}
 
@@ -104,16 +104,16 @@ public class Competition {
 	 * Returns isDraw.
 	 * @return isDraw 
 	 */
-	public boolean getIsDraw() {
-		return this.isDraw;
+	public boolean isDraw() {
+		return this.draw;
 	}
 
 	/**
 	 * Sets a value to attribute isDraw. 
 	 * @param newIsDraw 
 	 */
-	public void setIsDraw(boolean newIsDraw) {
-		this.isDraw = newIsDraw;
+	public void setDraw(boolean newIsDraw) {
+		this.draw = newIsDraw;
 	}
 
 	/**
@@ -166,7 +166,7 @@ public class Competition {
 	}
 	
 	public boolean isOver() {
-		return this.getSettled();
+		return this.isSettled();
 	}
 
 	public Calendar getclosedate_calendar() {
@@ -179,27 +179,8 @@ public class Competition {
 		
 	}
 
-	public Collection<Competition> getCompetitors(){
-
-		return getCompetitors();
-	}
-	
-
-
-
-	public String getName_competition() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public int getRankCompetitor(Competitor competitor2) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public void deleteCompetitor(Competitor competitor2) {
-		// TODO Auto-generated method stub
-		
+	public Collection<Competition> consultBet(){
+		return null; // TODO
 	}
 
 	public long getTotalToken() {

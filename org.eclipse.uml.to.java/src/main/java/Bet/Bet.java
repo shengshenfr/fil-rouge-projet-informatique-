@@ -5,6 +5,7 @@ package Bet;
 
 import Interface.Competitor;
 import Bet.Entry;
+import Individual.Subscriber;
 
 // Start of user code (user defined imports)
 
@@ -25,7 +26,7 @@ public class Bet {
 	/**
 	 * Description of the property subscribers.
 	 */
-	private String betOwner;
+	private Subscriber betOwner;
 
 	/**
 	 * Description of the property betNextId.
@@ -56,7 +57,7 @@ public class Bet {
 		return this.amount;
 	}
 
-	public Bet(long amount, String betOwner) {
+	public Bet(long amount, Subscriber betOwner) {
 		this.amount = amount;
 		this.betOwner = betOwner;
 		this.idBet = betNextId++;
@@ -75,7 +76,7 @@ public class Bet {
 	 * Sets a value to attribute subscribers. 
 	 * @param newSubscribers 
 	 */
-	public void setBetOwner(String betOwner) {
+	public void setBetOwner(Subscriber betOwner) {
 		this.betOwner = betOwner;
 	}
 
@@ -111,13 +112,7 @@ public class Bet {
 		this.idBet = newIdBet;
 	}
 
-
-	public Object getWinner() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public String getBetOwner() {
+	public Subscriber getBetOwner() {
 		return betOwner;
 	}
 	

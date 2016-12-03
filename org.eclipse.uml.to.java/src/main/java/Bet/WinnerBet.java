@@ -5,6 +5,7 @@ package Bet;
 
 import Bet.Bet;
 // Start of user code (user defined imports)
+import Individual.Subscriber;
 
 // End of user code
 
@@ -26,7 +27,7 @@ public class WinnerBet extends Bet {
 	/**
 	 * The constructor.
 	 */
-	public WinnerBet(long amount, String betOwner, Entry winner) {
+	public WinnerBet(long amount, Subscriber betOwner, Entry winner) {
 		super(amount, betOwner);
 		this.winner = winner;
 	}
