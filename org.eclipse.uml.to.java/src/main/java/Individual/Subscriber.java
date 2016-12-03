@@ -238,11 +238,23 @@ public class Subscriber extends Player {
 
 	public boolean equalsPlayer(Competitor competitor) {
 		// TODO Auto-generated method stub
-		return false;
+        if(this.username==competitor.username){
+            return true;
+        }
+        else{
+            return false;
+        }
 	}
 
 	public void debit(long numberTokens) {
 		// TODO Auto-generated method stub
+        if(numberTokens<0)
+        {
+            println("Please give me a number positive!")
+        }
+        else{
+            this.balance=this.balance+numberTokens;
+        }
         
 	}
 
@@ -274,6 +286,17 @@ public class Subscriber extends Player {
 		// TODO Auto-generated method stub
 		return null;
 	}
+    public void betOnPodium(long numberTokens, Competition competition, Competitor firstCompetitor, Competitor secondCompetitor, Competitor thirdCompetitor){
+        if(numberTokens<0)
+        {
+            println("Please give me a number positive!")
+        }
+        else if(isEntry(Competition competition, Competitor firstCompetitor)&){
+            
+        }
+    }
+    + betOnWinner(long numberTokens, Competition competition,  Competitor competitor) : void
+    + betOnDraw(long numberTokens, Competition competition) : void
     
     
 }
