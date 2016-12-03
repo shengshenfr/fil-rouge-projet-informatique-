@@ -5,19 +5,20 @@ package Bet;
 
 import Bet.Bet;
 // Start of user code (user defined imports)
+import Individual.Subscriber;
 
 // End of user code
 
 /**
  * Description of WinnerBet.
  * 
- * @author Robin
+ * @author Robin, Rémy
  */
 public class WinnerBet extends Bet {
 	/**
 	 * Description of the property entrys.
 	 */
-	public Entry entrys = null;
+	public Entry winner = null;
 
 	// Start of user code (user defined attributes for WinnerBet)
 
@@ -26,29 +27,17 @@ public class WinnerBet extends Bet {
 	/**
 	 * The constructor.
 	 */
-	public WinnerBet() {
-		// Start of user code constructor for WinnerBet)
-		super();
-		// End of user code
+	public WinnerBet(long amount, Subscriber betOwner, Entry winner) {
+		super(amount, betOwner);
+		this.winner = winner;
 	}
 
-	// Start of user code (user defined methods for WinnerBet)
-
-	// End of user code
-	/**
-	 * Returns entrys.
-	 * @return entrys 
-	 */
-	public Entry getEntrys() {
-		return this.entrys;
+	public Entry getWinner() {
+		return winner;
 	}
 
-	/**
-	 * Sets a value to attribute entrys. 
-	 * @param newEntrys 
-	 */
-	public void setEntrys(Entry newEntrys) {
-		this.entrys = newEntrys;
+	public void setWinner(Entry winner) {
+		this.winner = winner;
 	}
 
 }

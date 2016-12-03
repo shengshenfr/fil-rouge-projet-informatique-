@@ -7,42 +7,42 @@ import java.util.HashSet;
 
 import Bet.Bet;
 // Start of user code (user defined imports)
+import Individual.Subscriber;
 
 // End of user code
 
 /**
  * Description of PodiumBet.
  * 
- * @author Robin
+ * @author Robin, Rémy
  */
 public class PodiumBet extends Bet {
 	/**
 	 * Description of the property entrys.
 	 */
-	public HashSet<Entry> entrys = new HashSet<Entry>();
-
-	// Start of user code (user defined attributes for PodiumBet)
-
-	// End of user code
+	public HashSet<Entry> podium = new HashSet<Entry>();
 
 	/**
 	 * The constructor.
 	 */
-	public PodiumBet() {
-		// Start of user code constructor for PodiumBet)
-		super();
-		// End of user code
+	public PodiumBet(long amount, Subscriber betOwner, Entry first, Entry second, Entry third) {
+		super(amount, betOwner);
+		this.setPodium(first, second, third);
 	}
 
-	// Start of user code (user defined methods for PodiumBet)
-
-	// End of user code
 	/**
 	 * Returns entrys.
 	 * @return entrys 
 	 */
-	public HashSet<Entry> getEntrys() {
-		return this.entrys;
+	public HashSet<Entry> getPodium() {
+		return this.podium;
+	}
+	
+	public void setPodium(Entry first, Entry second, Entry third) {
+		podium.clear();
+		podium.add(first);
+		podium.add(second);
+		podium.add(third);
 	}
 
 }

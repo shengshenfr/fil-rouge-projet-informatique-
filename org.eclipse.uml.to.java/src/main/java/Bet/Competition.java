@@ -9,16 +9,18 @@ import java.util.Collection;
 
 // Start of user code (user defined imports)
 
-import java.sql.Date;
+
 // End of user code
 import java.util.HashSet;
 
+import Betting.Exceptions.BadParametersException;
+import Betting.Exceptions.NotExistingCompetitorException;
 import Interface.Competitor;
 
 /**
  * Description of Competition.
  * 
- * @author Robin
+ * @author Robin, Rémy
  */
 @SuppressWarnings("unused")
 public class Competition {
@@ -30,7 +32,7 @@ public class Competition {
 	/**
 	 * Description of the property isDraw.
 	 */
-	private boolean isDraw = false;
+	private boolean draw = false;
 
 	/**
 	 * Description of the property name.
@@ -40,17 +42,17 @@ public class Competition {
 	/**
 	 * Description of the property closingDate.
 	 */
-	private Date closingDate = null;
+	private Calendar closingDate = null;
 
 	/**
 	 * Description of the property competitors.
 	 */
-	private HashSet<Competitor> competitor = new HashSet<Competitor>();
+	private HashSet<Entry> entries = new HashSet<Entry>();
 
 	/**
 	 * Description of the property startingDate.
 	 */
-	private Date startingDate = null;
+	private Calendar startingDate = null;
 	
 	private long totalToken = 0L;
 	
@@ -62,17 +64,25 @@ public class Competition {
 
 	/**
 	 * The constructor.
+	 * @throws BadParametersException 
 	 */
-	public Competition() {
-		// Start of user code constructor for Competition)
-		super();
-		// End of user code
+	public Competition(String competitionName, Calendar closingDate) throws BadParametersException {
+		if (competitionName == "") {
+			throw new BadParametersException("Competition name cannot be empty!");
+		}
+		this.name = competitionName;
+		
+		if (closingDate.before(Calendar.getInstance())) {
+			throw new BadParametersException("The closing date must be in the future!");
+		}
+		this.closingDate = closingDate; 
 	}
 
 	// Start of user code (user defined methods for Competition)
 
-	public Competition(String competition, Calendar closingDate) {
-		// TODO Auto-generated constructor stub
+	public Competition(String competitionName, Calendar startingDate, Calendar closingDate) throws BadParametersException {
+		this(competitionName, closingDate);
+		this.startingDate = startingDate;
 	}
 
 	// End of user code
@@ -80,7 +90,7 @@ public class Competition {
 	 * Returns settled.
 	 * @return settled 
 	 */
-	public boolean getSettled() {
+	public boolean isSettled() {
 		return this.settled;
 	}
 
@@ -96,16 +106,16 @@ public class Competition {
 	 * Returns isDraw.
 	 * @return isDraw 
 	 */
-	public boolean getIsDraw() {
-		return this.isDraw;
+	public boolean isDraw() {
+		return this.draw;
 	}
 
 	/**
 	 * Sets a value to attribute isDraw. 
 	 * @param newIsDraw 
 	 */
-	public void setIsDraw(boolean newIsDraw) {
-		this.isDraw = newIsDraw;
+	public void setDraw(boolean newIsDraw) {
+		this.draw = newIsDraw;
 	}
 
 	/**
@@ -128,7 +138,7 @@ public class Competition {
 	 * Returns closingDate.
 	 * @return closingDate 
 	 */
-	public Date getClosingDate() {
+	public Calendar getClosingDate() {
 		return this.closingDate;
 	}
 
@@ -136,16 +146,15 @@ public class Competition {
 	 * Sets a value to attribute closingDate. 
 	 * @param newClosingDate 
 	 */
-	public void setClosingDate(Date newClosingDate) {
+	public void setClosingDate(Calendar newClosingDate) {
 		this.closingDate = newClosingDate;
 	}
-
 
 	/**
 	 * Returns startingDate.
 	 * @return startingDate 
 	 */
-	public Date getStartingDate() {
+	public Calendar getStartingDate() {
 		return this.startingDate;
 	}
 
@@ -153,45 +162,20 @@ public class Competition {
 	 * Sets a value to attribute startingDate. 
 	 * @param newStartingDate 
 	 */
-	public void setStartingDate(Date newStartingDate) {
+	public void setStartingDate(Calendar newStartingDate) {
 		this.startingDate = newStartingDate;
 	}
 	
 	public boolean isOver() {
-		return this.getSettled();
+		return this.isSettled();
 	}
 
-	public Calendar getclosedate_calendar() {
-		// TODO Auto-generated method stub
-		return null;
+	public HashSet<Entry> getEntries() {
+		return entries;
 	}
 
-	public void add_competitor(Competitor competitor2) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public Collection<Competition> getCompetitors(){
-
-		return getCompetitors();
-	}
-	
-
-
-
-	public String getName_competition() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public int getRankCompetitor(Competitor competitor2) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public void deleteCompetitor(Competitor competitor2) {
-		// TODO Auto-generated method stub
-		
+	public Collection<Competition> consultBets(){
+		return null; // TODO
 	}
 
 	public long getTotalToken() {
@@ -210,12 +194,31 @@ public class Competition {
 		this.winnerToken = winnerToken;
 	}
 
-	public HashSet<Competitor> getCompetitor() {
-		return competitor;
+	public void settle(HashSet<Competitor> competitors) throws NotExistingCompetitorException {
+		for(Competitor competitor : competitors) {
+			Entry entry = this.getEntryFromCompetitor(competitor);
+			if (entry == null) {
+				throw new NotExistingCompetitorException("This competitor does not exist in this competition!");
+			}
+			
+		}
+		
+		
+		
+		this.settled = true;
 	}
 
-	public void setCompetitor(HashSet<Competitor> competitor) {
-		this.competitor = competitor;
+	private Entry getEntryFromCompetitor(Competitor competitor) {
+		for(Entry entry : entries) {
+			if (entry.getCompetitor() == competitor) {
+				return entry;
+			}
+		}
+		return null;
+	}
+
+	public void addEntry(Entry entry) {
+		this.entries.add(entry);
 	}
 
 

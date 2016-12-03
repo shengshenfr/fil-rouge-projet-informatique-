@@ -5,6 +5,9 @@ package Bet;
 
 import java.util.HashSet;
 
+import Betting.Exceptions.BadParametersException;
+import Interface.Competitor;
+
 // Start of user code (user defined imports)
 
 // End of user code
@@ -12,7 +15,7 @@ import java.util.HashSet;
 /**
  * Description of Entry.
  * 
- * @author Robin
+ * @author Robin, Rémy
  */
 public class Entry {
 	/**
@@ -23,29 +26,34 @@ public class Entry {
 	/**
 	 * Description of the property enumerations.
 	 */
-	public Enumeration enumerations = null;
+	private Rank rank = null;
 
 	/**
 	 * Description of the property winnerBets.
 	 */
-	public HashSet<WinnerBet> winnerBets = new HashSet<WinnerBet>();
-
-	// Start of user code (user defined attributes for Entry)
-
-	// End of user code
+	private HashSet<WinnerBet> winnerBets = new HashSet<WinnerBet>();
+	
+	private Competitor competitor = null;
+	private Competition competition = null;
 
 	/**
 	 * The constructor.
+	 * @throws BadParametersException 
 	 */
-	public Entry() {
-		// Start of user code constructor for Entry)
-		super();
-		// End of user code
+	public Entry(Competition competition, Competitor competitor) throws BadParametersException {
+		if (competition == null) {
+			throw new BadParametersException("The competition cannot be null!");
+		}
+		this.competition = competition;
+
+		if (competitor == null) {
+			throw new BadParametersException("The competitor cannot be null!");
+		}
+		this.competitor = competitor;
+		
+		this.competition.addEntry(this);
 	}
 
-	// Start of user code (user defined methods for Entry)
-
-	// End of user code
 	/**
 	 * Returns podiumBets.
 	 * @return podiumBets 
@@ -55,27 +63,35 @@ public class Entry {
 	}
 
 	/**
-	 * Returns enumerations.
-	 * @return enumerations 
-	 */
-	public Enumeration getEnumerations() {
-		return this.enumerations;
-	}
-
-	/**
-	 * Sets a value to attribute enumerations. 
-	 * @param newEnumerations 
-	 */
-	public void setEnumerations(Enumeration newEnumerations) {
-		this.enumerations = newEnumerations;
-	}
-
-	/**
 	 * Returns winnerBets.
 	 * @return winnerBets 
 	 */
 	public HashSet<WinnerBet> getWinnerBets() {
 		return this.winnerBets;
+	}
+
+	public Rank getRank() {
+		return rank;
+	}
+
+	public void setRank(Rank rank) {
+		this.rank = rank;
+	}
+
+	public Competition getCompetition() {
+		return competition;
+	}
+
+	public void setCompetition(Competition competition) {
+		this.competition = competition;
+	}
+
+	public Competitor getCompetitor() {
+		return competitor;
+	}
+
+	public void setCompetitor(Competitor competitor) {
+		this.competitor = competitor;
 	}
 
 }
