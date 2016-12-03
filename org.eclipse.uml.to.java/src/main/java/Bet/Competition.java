@@ -9,10 +9,11 @@ import java.util.Collection;
 
 // Start of user code (user defined imports)
 
-import java.util.Date;
+import java.util.Calendar;
 // End of user code
 import java.util.HashSet;
 
+import Betting.Exceptions.BadParametersException;
 import Interface.Competitor;
 
 /**
@@ -39,17 +40,17 @@ public class Competition {
 	/**
 	 * Description of the property closingDate.
 	 */
-	private Date closingDate = null;
+	private Calendar closingDate = null;
 
 	/**
 	 * Description of the property competitors.
 	 */
-	private HashSet<Competitor> competitor = new HashSet<Competitor>();
+	private HashSet<Entry> entries = new HashSet<Entry>();
 
 	/**
 	 * Description of the property startingDate.
 	 */
-	private Date startingDate = null;
+	private Calendar startingDate = null;
 	
 	private long totalToken = 0L;
 	
@@ -61,17 +62,25 @@ public class Competition {
 
 	/**
 	 * The constructor.
+	 * @throws BadParametersException 
 	 */
-	public Competition() {
-		// Start of user code constructor for Competition)
-		super();
-		// End of user code
+	public Competition(String competitionName, Calendar closingDate) throws BadParametersException {
+		if (competitionName == "") {
+			throw new BadParametersException("Competition name cannot be empty!");
+		}
+		this.name = competitionName;
+		
+		if (closingDate.before(Calendar.getInstance())) {
+			throw new BadParametersException("The closing date must be in the future!");
+		}
+		this.closingDate = closingDate; 
 	}
 
 	// Start of user code (user defined methods for Competition)
 
-	public Competition(String competition, Calendar closingDate) {
-		// TODO Auto-generated constructor stub
+	public Competition(String competitionName, Calendar startingDate, Calendar closingDate) throws BadParametersException {
+		this(competitionName, closingDate);
+		this.startingDate = startingDate;
 	}
 
 	// End of user code
@@ -127,7 +136,7 @@ public class Competition {
 	 * Returns closingDate.
 	 * @return closingDate 
 	 */
-	public Date getClosingDate() {
+	public Calendar getClosingDate() {
 		return this.closingDate;
 	}
 
@@ -135,7 +144,7 @@ public class Competition {
 	 * Sets a value to attribute closingDate. 
 	 * @param newClosingDate 
 	 */
-	public void setClosingDate(Date newClosingDate) {
+	public void setClosingDate(Calendar newClosingDate) {
 		this.closingDate = newClosingDate;
 	}
 
@@ -144,7 +153,7 @@ public class Competition {
 	 * Returns startingDate.
 	 * @return startingDate 
 	 */
-	public Date getStartingDate() {
+	public Calendar getStartingDate() {
 		return this.startingDate;
 	}
 
@@ -152,7 +161,7 @@ public class Competition {
 	 * Sets a value to attribute startingDate. 
 	 * @param newStartingDate 
 	 */
-	public void setStartingDate(Date newStartingDate) {
+	public void setStartingDate(Calendar newStartingDate) {
 		this.startingDate = newStartingDate;
 	}
 	
@@ -209,12 +218,8 @@ public class Competition {
 		this.winnerToken = winnerToken;
 	}
 
-	public HashSet<Competitor> getCompetitor() {
-		return competitor;
-	}
-
-	public void setCompetitor(HashSet<Competitor> competitor) {
-		this.competitor = competitor;
+	public void settle(float ratio) {
+		// TODO: do this
 	}
 
 

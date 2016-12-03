@@ -17,7 +17,7 @@ public class DrawBet extends Bet {
 	/**
 	 * Description of the property competitions.
 	 */
-	public Competition competitions = null;
+	private Competition competition = null;
 
 	// Start of user code (user defined attributes for DrawBet)
 
@@ -26,10 +26,9 @@ public class DrawBet extends Bet {
 	/**
 	 * The constructor.
 	 */
-	public DrawBet() {
-		// Start of user code constructor for DrawBet)
-		super();
-		// End of user code
+	public DrawBet(long amount, String betOwner, Competition competition) {
+		super(amount, betOwner);
+		this.competition = competition;
 	}
 
 	// Start of user code (user defined methods for DrawBet)
@@ -39,16 +38,16 @@ public class DrawBet extends Bet {
 	 * Returns competitions.
 	 * @return competitions 
 	 */
-	public Competition getCompetitions() {
-		return this.competitions;
+	public Competition getCompetition() {
+		return this.competition;
 	}
 
 	/**
 	 * Sets a value to attribute competitions. 
-	 * @param newCompetitions 
+	 * @param newCompetitions
 	 */
-	public void setCompetitions(Competition newCompetitions) {
-		this.competitions = newCompetitions;
+	public void setCompetition(Competition newCompetition) {
+		this.competition = newCompetition;
 	}
 
 }
