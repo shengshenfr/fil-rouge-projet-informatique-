@@ -15,7 +15,7 @@ import Interface.Competitor;
 /**
  * Description of Entry.
  * 
- * @author Robin
+ * @author Robin, Rémy
  */
 public class Entry {
 	/**
@@ -50,6 +50,8 @@ public class Entry {
 			throw new BadParametersException("The competitor cannot be null!");
 		}
 		this.competitor = competitor;
+		
+		this.competition.addEntry(this);
 	}
 
 	/**

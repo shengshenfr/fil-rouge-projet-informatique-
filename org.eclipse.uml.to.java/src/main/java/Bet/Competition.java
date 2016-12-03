@@ -14,12 +14,13 @@ import java.util.Calendar;
 import java.util.HashSet;
 
 import Betting.Exceptions.BadParametersException;
+import Betting.Exceptions.NotExistingCompetitorException;
 import Interface.Competitor;
 
 /**
  * Description of Competition.
  * 
- * @author Robin
+ * @author Robin, Rémy
  */
 public class Competition {
 	/**
@@ -148,7 +149,6 @@ public class Competition {
 		this.closingDate = newClosingDate;
 	}
 
-
 	/**
 	 * Returns startingDate.
 	 * @return startingDate 
@@ -169,17 +169,11 @@ public class Competition {
 		return this.isSettled();
 	}
 
-	public Calendar getclosedate_calendar() {
-		// TODO Auto-generated method stub
-		return null;
+	public HashSet<Entry> getEntries() {
+		return entries;
 	}
 
-	public void add_competitor(Competitor competitor2) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public Collection<Competition> consultBet(){
+	public Collection<Competition> consultBets(){
 		return null; // TODO
 	}
 
@@ -199,8 +193,31 @@ public class Competition {
 		this.winnerToken = winnerToken;
 	}
 
-	public void settle(float ratio) {
-		// TODO: do this
+	public void settle(HashSet<Competitor> competitors) throws NotExistingCompetitorException {
+		for(Competitor competitor : competitors) {
+			Entry entry = this.getEntryFromCompetitor(competitor);
+			if (entry == null) {
+				throw new NotExistingCompetitorException("This competitor does not exist in this competition!");
+			}
+			
+		}
+		
+		
+		
+		this.settled = true;
+	}
+
+	private Entry getEntryFromCompetitor(Competitor competitor) {
+		for(Entry entry : entries) {
+			if (entry.getCompetitor() == competitor) {
+				return entry;
+			}
+		}
+		return null;
+	}
+
+	public void addEntry(Entry entry) {
+		this.entries.add(entry);
 	}
 
 

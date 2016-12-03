@@ -14,7 +14,7 @@ import Individual.Subscriber;
 /**
  * Description of PodiumBet.
  * 
- * @author Robin
+ * @author Robin, Rémy
  */
 public class PodiumBet extends Bet {
 	/**

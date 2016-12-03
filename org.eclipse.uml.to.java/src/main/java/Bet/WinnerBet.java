@@ -12,7 +12,7 @@ import Individual.Subscriber;
 /**
  * Description of WinnerBet.
  * 
- * @author Robin
+ * @author Robin, Rémy
  */
 public class WinnerBet extends Bet {
 	/**

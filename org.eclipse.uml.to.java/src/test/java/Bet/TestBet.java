@@ -28,8 +28,8 @@ import Individual.Subscriber;
 public class TestBet {
 	
 	private Competition competition;
-	private Competitor competitor;
-	private Entry entry;
+	private Competitor competitorA, competitorB, competitorC;
+	private Entry entryA, entryB, entryC;
 	private Subscriber subscriber;
 	
 	@Before
@@ -38,18 +38,24 @@ public class TestBet {
 		tomorrow.add(Calendar.DATE, 1);
 		competition = new Competition("Competition", tomorrow);
 		
-		competitor = new Competitor() {
-			 
-		};
+		competitorA = new Competitor() {};
+		competitorB = new Competitor() {};
+		competitorC = new Competitor() {};
 		
-		entry = new Entry(competition, competitor);
+		entryA = new Entry(competition, competitorA);
+		entryB = new Entry(competition, competitorB);
+		entryC = new Entry(competition, competitorC);
 		
 		subscriber = new Subscriber("abob", "Alice", "Bob", new Date(2016, 16, 16), 100);
 	}
 	
 	@Test
 	public void testBet() {
-		DrawBet drawBet = new DrawBet(10, subscriber, competition);
+		Bet drawBet = new DrawBet(1, subscriber, competition);
+		Bet winnerBet = new WinnerBet(1, subscriber, entryA);
+		Bet podiumBet = new PodiumBet(1, subscriber, entryA, entryB, entryC);
+		
+		assert(competition.getTotalToken() == 3);
 	}
 	
 }

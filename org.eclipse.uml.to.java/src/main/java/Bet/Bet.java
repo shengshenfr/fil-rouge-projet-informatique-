@@ -14,7 +14,7 @@ import Individual.Subscriber;
 /**
  * Description of Bet.
  * 
- * @author Robin
+ * @author Robin, Rémy
  */
 @SuppressWarnings("unused")
 public class Bet {
