@@ -7,17 +7,13 @@ import Interface.Competitor;
 import Bet.Entry;
 import Individual.Subscriber;
 
-// Start of user code (user defined imports)
-
-// End of user code
-
 /**
  * Description of Bet.
  * 
  * @author Robin, Rémy
  */
 @SuppressWarnings("unused")
-public class Bet {
+abstract public class Bet {
 	/**
 	 * Description of the property amount.
 	 */
@@ -31,24 +27,13 @@ public class Bet {
 	/**
 	 * Description of the property betNextId.
 	 */
-	private static int betNextId = 1;
+	private static int nextId = 1;
 
 	/**
 	 * Description of the property idBet.
 	 */
-	private int idBet = 0;
+	private int id = 0;
 
-	// Start of user code (user defined attributes for Bet)
-
-	// End of user code
-
-	/**
-	 * The constructor.
-	 */
-	
-	
-
-	// End of user code
 	/**
 	 * Returns amount.
 	 * @return amount 
@@ -58,9 +43,13 @@ public class Bet {
 	}
 
 	public Bet(long amount, Subscriber betOwner) {
+		this(amount, betOwner, nextId++);
+	}
+	
+	public Bet(long amount, Subscriber betOwner, int idBet) {
 		this.amount = amount;
 		this.betOwner = betOwner;
-		this.idBet = betNextId++;
+		this.id = idBet;
 	}
 
 	/**
@@ -85,7 +74,7 @@ public class Bet {
 	 * @return betNextId 
 	 */
 	public static int getBetNextId() {
-		return betNextId;
+		return nextId;
 	}
 
 	/**
@@ -93,28 +82,30 @@ public class Bet {
 	 * @param newBetNextId 
 	 */
 	public static void setBetNextId(int newBetNextId) {
-		betNextId = newBetNextId;
+		nextId = newBetNextId;
 	}
 
 	/**
 	 * Returns idBet.
 	 * @return idBet 
 	 */
-	public int getIdBet() {
-		return this.idBet;
+	public int getId() {
+		return this.id;
 	}
 
 	/**
 	 * Sets a value to attribute idBet. 
 	 * @param newIdBet 
 	 */
-	public void setIdBet(int newIdBet) {
-		this.idBet = newIdBet;
+	public void setId(int newId) {
+		this.id = newId;
 	}
 
 	public Subscriber getBetOwner() {
 		return betOwner;
 	}
-	
-	
+
+	public boolean isWon() {
+		return false;
+	}
 }

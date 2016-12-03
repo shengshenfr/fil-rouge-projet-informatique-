@@ -7,11 +7,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 
-// Start of user code (user defined imports)
-
 import java.util.Calendar;
-// End of user code
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 import Betting.Exceptions.BadParametersException;
 import Betting.Exceptions.NotExistingCompetitorException;
@@ -47,6 +46,8 @@ public class Competition {
 	 * Description of the property competitors.
 	 */
 	private HashSet<Entry> entries = new HashSet<Entry>();
+	
+	private HashSet<DrawBet> drawBets = new HashSet<DrawBet>();
 
 	/**
 	 * Description of the property startingDate.
@@ -56,10 +57,6 @@ public class Competition {
 	private long totalToken = 0L;
 	
 	private long winnerToken = 0L;
-
-	// Start of user code (user defined attributes for Competition)
-
-	// End of user code
 
 	/**
 	 * The constructor.
@@ -77,14 +74,11 @@ public class Competition {
 		this.closingDate = closingDate; 
 	}
 
-	// Start of user code (user defined methods for Competition)
-
 	public Competition(String competitionName, Calendar startingDate, Calendar closingDate) throws BadParametersException {
 		this(competitionName, closingDate);
 		this.startingDate = startingDate;
 	}
 
-	// End of user code
 	/**
 	 * Returns settled.
 	 * @return settled 
@@ -178,6 +172,7 @@ public class Competition {
 	}
 
 	public long getTotalToken() {
+		this.computeTotalToken();
 		return totalToken;
 	}
 
@@ -192,19 +187,77 @@ public class Competition {
 	public void setWinnerToken(long winnerToken) {
 		this.winnerToken = winnerToken;
 	}
+	
+	public void addBet(DrawBet drawBet) {
+		drawBets.add(drawBet);
+	}
+	
+	public void removeBet(DrawBet drawBet) {
+		drawBets.remove(drawBet);
+	}
+	
+	public HashSet<DrawBet> getDrawBets() {
+		return drawBets;
+	}
+	
+	public HashSet<Bet> getBets() {
+		HashSet<Bet> bets = new HashSet<Bet>();
+		bets.addAll(getDrawBets());
 
-	public void settle(HashSet<Competitor> competitors) throws NotExistingCompetitorException {
-		for(Competitor competitor : competitors) {
+		for(Entry entry : entries) {
+			bets.addAll(entry.getBets());
+		}
+		return bets;
+	}
+	
+	public void computeTotalToken() {
+		totalToken = 0;
+		for(Bet bet : getBets()) {
+			totalToken += bet.getAmount();
+		}
+	}
+	
+	public void computeWinnerToken() {
+		winnerToken = 0;
+		for(Bet bet : getBets()) {
+			System.out.println(bet.isWon());
+			if (bet.isWon()) {
+				winnerToken += bet.getAmount();
+			}
+		}
+	}
+
+	public void settle(List<Competitor> competitors) throws NotExistingCompetitorException {
+		for(int i=0; i<competitors.size(); i++) {
+			Competitor competitor = competitors.get(i);
 			Entry entry = this.getEntryFromCompetitor(competitor);
 			if (entry == null) {
 				throw new NotExistingCompetitorException("This competitor does not exist in this competition!");
 			}
-			
+
+			entry.setRank(Rank.getRankIndex(i));
 		}
 		
-		
+		// Setting to NOT_PODIUM others
+		for(Entry entry : entries) {
+			if (entry.getRank() == null) {
+				entry.setRank(Rank.NOT_PODIUM);
+			}
+		}
 		
 		this.settled = true;
+		
+		// Compute winner tokens
+				this.computeWinnerToken();
+	}
+	
+	public void settleDraw() {
+		this.setDraw(true);
+		
+		this.settled = true;
+		
+		// Compute winner tokens
+		this.computeWinnerToken();
 	}
 
 	private Entry getEntryFromCompetitor(Competitor competitor) {
@@ -219,6 +272,4 @@ public class Competition {
 	public void addEntry(Entry entry) {
 		this.entries.add(entry);
 	}
-
-
 }

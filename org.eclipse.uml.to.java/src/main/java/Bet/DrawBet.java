@@ -30,6 +30,8 @@ public class DrawBet extends Bet {
 	public DrawBet(long amount, Subscriber betOwner, Competition competition) {
 		super(amount, betOwner);
 		this.competition = competition;
+		
+		this.competition.addBet(this);
 	}
 
 	// Start of user code (user defined methods for DrawBet)
@@ -49,6 +51,13 @@ public class DrawBet extends Bet {
 	 */
 	public void setCompetition(Competition newCompetition) {
 		this.competition = newCompetition;
+	}
+	
+	@Override
+	public boolean isWon() {
+		if (!this.competition.isSettled())
+			return false;
+		return this.competition.isDraw();
 	}
 
 }
