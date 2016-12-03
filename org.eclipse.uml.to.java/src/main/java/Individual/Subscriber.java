@@ -109,6 +109,7 @@ public class Subscriber extends Player {
 	 */
 	public String getPassword() {
 		return this.password;
+		
 	}
 
 	/**
@@ -246,7 +247,7 @@ public class Subscriber extends Player {
         }
 	}
 
-	public void debit(long numberTokens) {
+	public void debitSubscriber(long numberTokens) {
 		// TODO Auto-generated method stub
         if(numberTokens<0)
         {
@@ -258,7 +259,7 @@ public class Subscriber extends Player {
         
 	}
 
-	public void change_subcriber_password(String username2, String currentPwd, String newPwd) {
+	public void changeSubsPwd(String username2, String currentPwd, String newPwd) {
 		// TODO Auto-generated method stub
         if(this.authenticate(currentPwd)){
             this.pwd=newPwd;
@@ -268,7 +269,7 @@ public class Subscriber extends Player {
         }
 	}
 
-	public void credit(long numberTokens) {
+	public void creditSubscriber(long numberTokens) {
 		// TODO Auto-generated method stub
         if(numberTokens<0)
         {
@@ -281,22 +282,15 @@ public class Subscriber extends Player {
             this.balance=this.balance-numberTokens;
         }
 	}
-
-	public ArrayList<String> consult_user(String username2, String pwdSubs) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-    public void betOnPodium(long numberTokens, Competition competition, Competitor firstCompetitor, Competitor secondCompetitor, Competitor thirdCompetitor){
-        if(numberTokens<0)
-        {
-            println("Please give me a number positive!")
+    
+    public boolean checkBlance(long numberTokens){
+        if(numberTokens>this.balance){
+            return false;
         }
-        else if(isEntry(Competition competition, Competitor firstCompetitor)&){
-            
-        }
+        else{return true;}
     }
-    + betOnWinner(long numberTokens, Competition competition,  Competitor competitor) : void
-    + betOnDraw(long numberTokens, Competition competition) : void
+
+  
     
     
 }
