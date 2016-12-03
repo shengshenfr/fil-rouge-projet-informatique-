@@ -34,7 +34,7 @@ import Bet.Competition;
 
 @SuppressWarnings("unused")
 
-public class BetDrawManager {
+public class DrawBetManager {
 
 	
 	// Start of user code (user defined attributes for BetManager)
