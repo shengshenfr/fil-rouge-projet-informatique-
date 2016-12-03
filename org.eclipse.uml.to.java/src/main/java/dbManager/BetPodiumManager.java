@@ -31,7 +31,6 @@ import Bet.Competition;
  * @author Robin
  */
 
-@SuppressWarnings("unused")
 public class BetPodiumManager {
 	
 	// Start of user code (user defined attributes for BetPodiumManager)
@@ -251,5 +250,43 @@ public class BetPodiumManager {
 		}
 
 //----------------------------------------------------------------------------
-
+//--------------------------------------------------------------------------
+	//find all the Podium bets on one competition	
+			
+		public static List<Bet> findAllPodiumBetsByCompetition(Competition competition) throws SQLException {
+			Connection c = DatabaseConnection.getConnection();
+			PreparedStatement psSelect = c
+					.prepareStatement("select * from betsPodium, entrys where betsPodium.idBet = entrys.idEntry and entrys.competitionName = ? ");
+			psSelect.setString(1, competition.getName());
+			ResultSet resultSet = psSelect.executeQuery();
+			List<Bet> betsOnCompetition = new ArrayList<Bet>();
+			while (resultSet.next()) {
+				betsOnCompetition.add(new Bet(resultSet.getInt("idBet"), resultSet
+						.getString("betOwner"), resultSet
+						.getLong("amount"), resultSet.getInt("idEntry"),
+						resultSet.getInt("idEntry2"), resultSet.getInt("idEntry3")));
+			}
+			resultSet.close();
+			psSelect.close();
+			c.close();
+			
+			return betsOnCompetition;
+		}
+		
+	//-----------------------------------------------------------------------------------
+		// delete all the podium bets on a competition
+		
+		public static void deleleAllPodiumBetsOnCompetition(Competition competition) throws SQLException {
+			Connection c1 = DatabaseConnection.getConnection();
+			
+			List<Bet> betsOnCompetition = findAllPodiumBetsByCompetition(competition);
+			int betsOnCompetitionSize = betsOnCompetition.size();
+			for(int i =0; i < betsOnCompetitionSize; i++){
+				delete(betsOnCompetition.get(i));
+			}
+			c1.close();
+			System.out.println("bets podium on the competition" 
+								+ competition + "have been deleted");		
+			
+		}
 }

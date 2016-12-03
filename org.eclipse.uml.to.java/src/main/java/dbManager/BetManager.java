@@ -218,21 +218,48 @@ public class BetManager {
 		}
 	
 	
+//--------------------------------------------------------------------------
+		//find all the simple bets on one competition	
 	
+	public static List<Bet> findAllSimpleBetsByCompetition(Competition competition) throws SQLException {
+		Connection c = DatabaseConnection.getConnection();
+		PreparedStatement psSelect = c
+				.prepareStatement("select * from betsWinner, entrys where betsWinner.idBet = entrys.idEntry and entrys.competitionName = ? ");
+		psSelect.setString(1, competition.getName());
+		ResultSet resultSet = psSelect.executeQuery();
+		List<Bet> betsOnCompetition = new ArrayList<Bet>();
+		while (resultSet.next()) {
+			betsOnCompetition.add(new Bet(resultSet.getInt("idBet"), resultSet
+					.getString("betOwner"), resultSet
+					.getLong("amount"), resultSet.getInt("idEntry")));
+		}
+		resultSet.close();
+		psSelect.close();
+		c.close();
+		
+		return betsOnCompetition;
+	}
 	
+//-----------------------------------------------------------------------------------
+	// delete all the simple bets on a competition
 	
-	public static ArrayList<Bet> findAllByCompetition(String competition) {
-		// TODO Auto-generated method stub
-		return null;
-	}	
-	
-	public static void deleleAllBetsOnCompetition(Competition c) {
-		// TODO Auto-generated method stub
+	public static void deleleAllWinnerBetsOnCompetition(Competition competition) throws SQLException {
+		Connection c1 = DatabaseConnection.getConnection();
+		
+		List<Bet> betsOnCompetition = findAllSimpleBetsByCompetition(competition);
+		int betsOnCompetitionSize = betsOnCompetition.size();
+		for(int i =0; i < betsOnCompetitionSize; i++){
+			delete(betsOnCompetition.get(i));
+		}
+		c1.close();
+		System.out.println("simple bets on the competition" 
+							+ competition + "have been deleted");		
 		
 	}
 
-
-	public static Collection<Bet> findWinnerByCompetition(String competition) {
+//-------------------------------------------------------------------------------------
+	
+	public static ArrayList<Bet> findWinnerByCompetition(Competition competition) {
 		// TODO Auto-generated method stub
 		return null;
 	}

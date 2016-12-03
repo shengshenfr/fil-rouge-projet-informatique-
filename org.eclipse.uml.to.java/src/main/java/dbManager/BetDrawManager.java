@@ -32,8 +32,6 @@ import Bet.Competition;
  */
 
 
-@SuppressWarnings("unused")
-
 public class BetDrawManager {
 
 	
@@ -118,6 +116,8 @@ public class BetDrawManager {
 	
 	
 // -----------------------------------------------------------------------------
+	// find a draw bet with his id.
+	
 		/**
 		 * Find a betDraw by his id.
 		 * 
@@ -197,6 +197,8 @@ public class BetDrawManager {
 	}
 
 //------------------------------------------------------------------------	
+	
+	
 	public static void update(Bet betDraw) throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psUpdate = c
@@ -211,7 +213,7 @@ public class BetDrawManager {
 	}
 	
 	
-	// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 		/**
 		 * Find all the betsDraw in the database.
 		 * 
@@ -236,4 +238,50 @@ public class BetDrawManager {
 			return betsDraw;
 		}
 	
+	//--------------------------------------------------------------------------------
+		
+	//--------------------------------------------------------------------------------
+		//find all the draw bets on one competition	
+	
+	public static List<Bet> findAllDrawBetsByCompetition(Competition competition) throws SQLException {
+		Connection c = DatabaseConnection.getConnection();
+		PreparedStatement psSelect = c
+				.prepareStatement("select * from betsWinner, entrys where betsWinner.idBet = entrys.idEntry and entrys.competitionName = ? ");
+		psSelect.setString(1, competition.getName());
+		ResultSet resultSet = psSelect.executeQuery();
+		List<Bet> drawBetsOnCompetition = new ArrayList<Bet>();
+		while (resultSet.next()) {
+			drawBetsOnCompetition.add(new Bet(resultSet.getInt("idBet"), resultSet
+					.getString("betOwner"), resultSet
+					.getLong("amount"), resultSet.getInt("idEntry")));
+		}
+		resultSet.close();
+		psSelect.close();
+		c.close();
+		
+		return drawBetsOnCompetition;
+	}
+	
+//-----------------------------------------------------------------------------------
+	// delete all the draw bets on a competition
+	
+	public static void deleleAllDrawBetsOnCompetition(Competition competition) throws SQLException {
+		Connection c1 = DatabaseConnection.getConnection();
+		
+		List<Bet> betsOnCompetition = findAllDrawBetsByCompetition(competition);
+		int betsOnCompetitionSize = betsOnCompetition.size();
+		for(int i =0; i < betsOnCompetitionSize; i++){
+			delete(betsOnCompetition.get(i));
+		}
+		c1.close();
+		System.out.println("draw bets on the competition" 
+							+ competition + "have been deleted");		
+			
+	}
+
+//--------------------------------------------------------------------------------
+
+
 }
+
+/*************************************************************************************/
