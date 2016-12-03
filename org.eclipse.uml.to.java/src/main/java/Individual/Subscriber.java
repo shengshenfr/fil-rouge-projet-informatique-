@@ -109,6 +109,7 @@ public class Subscriber extends Player {
 	 */
 	public String getPassword() {
 		return this.password;
+		
 	}
 
 	/**
