@@ -1,75 +1,57 @@
-/*******************************************************************************
- * 2016, All rights reserved.
- *******************************************************************************/
 package Individual;
+import java.util.ArrayList;
+import Individual.abstract_Competitor;
+import manager.TeamsManager;
+import manager.Player_TeamsManager;
+import Individual.Player;
 
-import java.util.HashSet;
+public class Team extends abstract_Competitor{
 
-import Individual.AbstractCompetitor;
-// Start of user code (user defined imports)
-
-// End of user code
-
-/**
- * Description of Team.
- * 
- * @author Robin
- */
-public class Team extends AbstractCompetitor {
-	/**
-	 * Description of the property teamName.
-	 */
-	private String teamName = null;
-
-	/**
-	 * Description of the property players.
-	 */
-	public HashSet<Player> players = new HashSet<Player>();
-
-	// Start of user code (user defined attributes for Team)
-
-	// End of user code
-
-	/**
-	 * The constructor.
-	 */
-	public Team() {
-		// Start of user code constructor for Team)
-		super();
-		// End of user code
+	private String teamName;
+	private ArrayList<Player> member;
+	
+	public Team(String name){
+		if(!hasValidName(name)){
+			this.teamName = name;
+			manager.TeamsManager.persist(name);
+		}
+	}
+// verifier if the team has exist. If not, add the new team in data base.
+	
+	@Override
+		public void addMember(Player player){
+		// TODO Auto-generated method stub
+		 list<Player_Team> list = manager.Player_TeamsManager.findByPlayer(player.getName());
+		 if(list==null){
+			 this.member.add(player);
+			 manager.Player_TeamsManager.persist(this.teamName,player.getName());
+		 }
 	}
 
-	// Start of user code (user defined methods for Team)
-
-	public Team(String name) {
-		// TODO Auto-generated constructor stub
+	@Override
+	public void deleteMember(Player player) {
+		// TODO Auto-generated method stub
+		list<Player_Team> list = manager.Player_TeamsManager.findByPlayer(player.getName());
+		if(list!=null){
+			this.member.remove(player);
+			manager.Player_TeamsManager.delete(this.teamName,player.getName());
+		}
 	}
 
-	// End of user code
-	/**
-	 * Returns teamName.
-	 * @return teamName 
-	 */
-	public String getTeamName() {
+	@Override
+	public boolean hasValidName(String teamName) {
+		// TODO Auto-generated method stub
+		
+		Team team = manager.TeamsManager.findByTeam(teamName);
+		
+		if(team == null){
+			return true;
+		}else
+		return false;
+	}
+	
+	public String getTeamName(){
 		return this.teamName;
 	}
-
-	/**
-	 * Sets a value to attribute teamName. 
-	 * @param newTeamName 
-	 */
-	public void setTeamName(String newTeamName) {
-		this.teamName = newTeamName;
-	}
-
-	/**
-	 * Returns players.
-	 * @return players 
-	 */
-	public HashSet<Player> getPlayers() {
-		return this.players;
-	}
-
-
-
+	
 }
