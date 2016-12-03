@@ -173,7 +173,7 @@ public static void update(Subscriber subscriber) throws SQLException
   // 2 - Creating a Prepared Statement with the SQL instruction.
   //     The parameters are represented by question marks. 
   
-  PreparedStatement psUpdate = c.prepareStatement("update subscribers set firstname=?, lastname=?,set bornDate, set balance, where username=?");
+  PreparedStatement psUpdate = c.prepareStatement("update subscribers set firstname=?, lastname=?, bornDate=?, balance=?, where username=?");
   
   // 3 - Supplying values for the prepared statement parameters (question marks).
   
