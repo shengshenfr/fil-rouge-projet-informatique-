@@ -9,7 +9,7 @@ import java.util.Collection;
 
 // Start of user code (user defined imports)
 
-import java.util.Date;
+import java.sql.Date;
 // End of user code
 import java.util.HashSet;
 
@@ -20,6 +20,7 @@ import Interface.Competitor;
  * 
  * @author Robin
  */
+@SuppressWarnings("unused")
 public class Competition {
 	/**
 	 * Description of the property settled.
