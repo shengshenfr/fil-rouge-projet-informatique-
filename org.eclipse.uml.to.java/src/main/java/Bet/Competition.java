@@ -244,7 +244,6 @@ public class Competition {
 	public void computeWinnerToken() {
 		winnerToken = 0;
 		for(Bet bet : getBets()) {
-			System.out.println(bet.isWon());
 			if (bet.isWon()) {
 				winnerToken += bet.getAmount();
 			}
@@ -300,7 +299,6 @@ public class Competition {
 			return;
 		float ratio = getWinnerToken() / getTotalToken();
 		for(Bet bet : getBets()) {
-			System.out.println(bet.isWon());
 			if (bet.isWon()) {
 				bet.settle(ratio);
 			}

@@ -88,8 +88,7 @@ public class TestBetSettle {
 		assert(!winnerBet2.isWon());
 		assert(podiumBet1.isWon());
 		assert(!podiumBet2.isWon());
-		
-		System.out.println(competition.getWinnerToken());
+
 		assert(competition.getWinnerToken() == 6);
 	}
 	
