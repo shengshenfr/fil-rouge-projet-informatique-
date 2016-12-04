@@ -131,10 +131,10 @@ public static Entry persist(Entry entry) throws SQLException {
 						resultSet.getString("competitorName"),
 						resultSet.getInt("rank"));
 			} catch (BadParametersException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			} catch (MissingCompetitionException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 
@@ -188,10 +188,10 @@ public static Entry persist(Entry entry) throws SQLException {
 						.getString("competitionName"), resultSet
 						.getString("competitorName"), resultSet.getInt("rank")));
 			} catch (BadParametersException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			} catch (MissingCompetitionException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 
@@ -223,10 +223,10 @@ public static Entry persist(Entry entry) throws SQLException {
 						.getString("competitionName"), resultSet
 						.getString("competitorName"), resultSet.getInt("rank")));
 			} catch (BadParametersException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			} catch (MissingCompetitionException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		}

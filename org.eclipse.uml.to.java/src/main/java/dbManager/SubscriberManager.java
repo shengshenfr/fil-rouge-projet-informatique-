@@ -3,7 +3,6 @@
  *******************************************************************************/
 package dbManager;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,6 +11,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import Individual.Subscriber;
+import exceptions.BadParametersException;
 import utils.DatabaseConnection;
 
 // Start of user code (user defined imports)
@@ -121,8 +121,15 @@ public static Subscriber findByUsername(String username) throws SQLException
 	{
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(resultSet.getDate("bornDate"));
-		subscriber = Subscriber(resultSet.getString("username"),resultSet.getString("firstname"),
+		try
+		{
+		subscriber = new Subscriber(resultSet.getString("username"),resultSet.getString("firstname"),
 				resultSet.getString("lastname"), calendar, resultSet.getLong("balance"));
+		}
+		catch (BadParametersException e) {
+			
+			e.printStackTrace();
+		}
 		
 	}
 	
@@ -154,12 +161,20 @@ public static List<Subscriber> findAll() throws SQLException
     List<Subscriber> subscribers = new ArrayList<Subscriber>();
     while(resultSet.next())
     {
+    	
     	Calendar calendar = Calendar.getInstance();
 		calendar.setTime(resultSet.getDate("bornDate"));
-    	subscribers.add(Subscriber(resultSet.getString("username"),
+		try
+		{
+    	subscribers.add(new Subscriber(resultSet.getString("username"),
     								   resultSet.getString("firstname"),
     								   resultSet.getString("lastname"),
     								   calendar, resultSet.getLong("balance")));
+    	}
+    	catch (BadParametersException e) {
+			
+			e.printStackTrace();
+    	}
     	
     }
     resultSet.close();
@@ -232,5 +247,9 @@ public static void delete(Subscriber subscriber) throws SQLException
   psUpdate.close();
   c.close();
 }
-//-----------------------------------------------------------------------------
+//-------------------------------------------------------------------------------
+
+
+
+
 }

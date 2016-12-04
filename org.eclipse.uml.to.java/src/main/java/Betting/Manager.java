@@ -3,8 +3,8 @@
  *******************************************************************************/
 package Betting;
 import Betting.BettingSoft;
-import Betting.Exceptions.AuthentificationException;
-import Betting.Exceptions.BadParametersException;
+import exceptions.AuthentificationException;
+import exceptions.BadParametersException;
 
 /*******************************************************************************
  * 2016, All rights reserved.
