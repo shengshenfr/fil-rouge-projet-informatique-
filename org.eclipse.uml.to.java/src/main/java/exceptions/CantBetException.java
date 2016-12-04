@@ -1,9 +1,9 @@
-package fr.uv1.bettingServices.exceptions;
+package exceptions;
 
-public class CompetitionException extends Exception {
+public class CantBetException extends Exception {
 	private static final long serialVersionUID = 1L;
 
-	public CompetitionException(String s) {
+	public CantBetException(String s) {
 		super(s);
 	}
 }
