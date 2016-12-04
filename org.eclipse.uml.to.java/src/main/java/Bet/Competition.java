@@ -143,6 +143,7 @@ public class Competition {
 	 */
 	public void setDraw(boolean newIsDraw) {
 		this.draw = newIsDraw;
+		save();
 	}
 
 	/**
@@ -159,6 +160,7 @@ public class Competition {
 	 */
 	public void setName(String newName) {
 		this.name = newName;
+		save();
 	}
 
 	/**
@@ -175,6 +177,7 @@ public class Competition {
 	 */
 	public void setClosingDate(Calendar newClosingDate) {
 		this.closingDate = newClosingDate;
+		save();
 	}
 
 	/**
@@ -199,6 +202,7 @@ public class Competition {
 	 */
 	public void setStartingDate(Calendar newStartingDate) {
 		this.startingDate = newStartingDate;
+		save();
 	}
 	
 	public boolean isOver() {
@@ -316,6 +320,7 @@ public class Competition {
 		// Compute winner tokens
 		this.computeWinnerToken();
 		this.distributeGains();
+		save();
 	}
 	
 	public void settleDraw() throws CompetitionException {
@@ -329,6 +334,7 @@ public class Competition {
 		// Compute winner tokens
 		this.computeWinnerToken();
 		this.distributeGains();
+		save();
 	}
 
 	private Entry getEntryFromCompetitor(Competitor competitor) {

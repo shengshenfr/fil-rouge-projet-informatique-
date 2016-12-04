@@ -10,7 +10,6 @@ import java.util.List;
 import Bet.Bet;
 // Start of user code (user defined imports)
 import Individual.Subscriber;
-import dbManager.DrawBetManager;
 import dbManager.PodiumBetManager;
 import exceptions.CompetitionException;
 
@@ -44,6 +43,15 @@ public class PodiumBet extends Bet {
 			// TODO: raise Exception
 		}
 	}
+	
+	protected void save() {
+		try {
+			PodiumBetManager.update(this);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// TODO: raise Exception
+		}
+	}
 
 	/**
 	 * Returns entrys.
@@ -66,6 +74,8 @@ public class PodiumBet extends Bet {
 		for(Entry entry : podium) {
 			entry.addBet(this);
 		}
+		
+		save();
 	}
 	
 	@Override

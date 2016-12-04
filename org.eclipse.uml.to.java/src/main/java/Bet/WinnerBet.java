@@ -7,7 +7,6 @@ import java.sql.SQLException;
 
 import Bet.Bet;
 import Individual.Subscriber;
-import dbManager.PodiumBetManager;
 import dbManager.WinnerBetManager;
 import exceptions.CompetitionException;
 
@@ -40,6 +39,15 @@ public class WinnerBet extends Bet {
 			// TODO: raise Exception
 		}
 	}
+	
+	protected void save() {
+		try {
+			WinnerBetManager.update(this);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// TODO: raise Exception
+		}
+	}
 
 	public Entry getWinner() {
 		return winner;
@@ -49,6 +57,7 @@ public class WinnerBet extends Bet {
 		winner.removeBet(this);
 		this.winner = winner;
 		winner.addBet(this);
+		save();
 	}
 	
 	@Override

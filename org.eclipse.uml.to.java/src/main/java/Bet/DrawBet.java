@@ -37,6 +37,15 @@ public class DrawBet extends Bet {
 			// TODO: raise Exception
 		}
 	}
+	
+	protected void save() {
+		try {
+			DrawBetManager.update(this);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// TODO: raise Exception
+		}
+	}
 
 	/**
 	 * Returns competitions.
@@ -53,6 +62,8 @@ public class DrawBet extends Bet {
 	 */
 	public void setCompetition(Competition newCompetition) throws CompetitionException {
 		this.competition = newCompetition;
+		
+		save();
 	}
 	
 	@Override
