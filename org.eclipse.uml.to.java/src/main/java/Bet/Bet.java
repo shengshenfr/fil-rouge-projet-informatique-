@@ -13,7 +13,9 @@ import java.sql.SQLException;
 
 import Bet.Entry;
 import exceptions.BadParametersException;
+import exceptions.CompetitionException;
 import exceptions.MissingCompetitionException;
+import exceptions.MissingTokenException;
 import Individual.Subscriber;
 
 /**
@@ -171,15 +173,39 @@ abstract public class Bet {
 	public Subscriber getBetOwner() {
 		return betOwner;
 	}
+	
+	public boolean isOver() {
+		return false;
+	}
 
 	public boolean isWon() {
 		return false;
+	}
+	
+	public void cancel() throws CompetitionException {
+		try {
+			this.betOwner.creditSubscriber(amount);
+		} catch (MissingTokenException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadParametersException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void settle(float ratio) {
 		if (!isWon())
 			return;
 		
-		this.betOwner.creditSubscriber((long)(this.amount * ratio));
+		try {
+			this.betOwner.creditSubscriber((long)(this.amount * ratio));
+		} catch (MissingTokenException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadParametersException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

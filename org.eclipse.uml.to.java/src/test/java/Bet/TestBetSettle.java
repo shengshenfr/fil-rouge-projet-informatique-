@@ -8,6 +8,7 @@ import Interface.Competitor;import static org.junit.Assert.assertFalse;
 
 import java.sql.Date;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,17 +44,17 @@ public class TestBetSettle {
 		tomorrow.add(Calendar.DATE, 1);
 		competition = new Competition("Competition", tomorrow);
 		
-		competitorA = new Competitor() {};
-		competitorB = new Competitor() {};
-		competitorC = new Competitor() {};
-		competitorD = new Competitor() {};
+		competitorA = new TestCompetitor();
+		competitorB = new TestCompetitor();
+		competitorC = new TestCompetitor();
+		competitorD = new TestCompetitor();
 		
 		entryA = new Entry(competition, competitorA);
 		entryB = new Entry(competition, competitorB);
 		entryC = new Entry(competition, competitorC);
 		entryD = new Entry(competition, competitorD);
 		
-		subscriber = new Subscriber("abob", "Alice", "Bob", new Date(2016, 16, 16), 100);
+		subscriber = new Subscriber("abob", "Alice", "Bob", new GregorianCalendar(2016, 16, 16), 100);
 		
 		assert(competition.getBets().size() == 0);
 		assert(competition.getEntries().size() == 4);

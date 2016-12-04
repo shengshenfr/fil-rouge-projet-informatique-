@@ -65,24 +65,24 @@ public class CompetitionManager {
 			
 			}
 			
-			catch (SQLException e)
+		catch (SQLException e)
+		{
+			try
 			{
-				try
-				{
-					c.rollback();
-				}
-				catch (SQLException e1)
-				{
-					e1.printStackTrace();
-				}
-				c.setAutoCommit(true);
-				throw e;
+				c.rollback();
 			}
-			
+			catch (SQLException e1)
+			{
+				e1.printStackTrace();
+			}
 			c.setAutoCommit(true);
-			c.close();
-			
-			return competition;
+			throw e;
+		}
+		
+		c.setAutoCommit(true);
+		c.close();
+		
+		return competition;
 	   
 	}
 	

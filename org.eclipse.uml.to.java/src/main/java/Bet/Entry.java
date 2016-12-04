@@ -7,14 +7,12 @@ import java.sql.SQLException;
 import java.util.HashSet;
 
 import exceptions.BadParametersException;
+import exceptions.CompetitionException;
 import exceptions.MissingCompetitionException;
 import Interface.Competitor;
 import dbManager.CompetitionManager;
 import dbManager.CompetitorManager;
-
-// Start of user code (user defined imports)
-
-// End of user code
+import dbManager.EntryManager;
 
 /**
  * Description of Entry.
@@ -58,6 +56,13 @@ public class Entry {
 		this.competition.addEntry(this);
 		this.id = id;
 		this.rank = rank;
+		
+		try {
+			EntryManager.persist(this);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// TODO: raise Exception
+		}
 	}
 
 	/**
@@ -69,12 +74,39 @@ public class Entry {
 		this(competition, competitor, nextId++, null);
 	}
 
-	static public Entry createEntry(String competitionName, String competitorName, int id, int rank)
+	static public Entry createEntry(int id, String competitionName, String competitorName, int rank)
 			throws BadParametersException, MissingCompetitionException {
 		Competition competition = CompetitionManager.findBycompetitionName(competitionName);
 		Competitor competitor = CompetitorManager.findCompetitorByName(competitorName);
 		Rank rankObject = Rank.getRankIndex(rank);
 		return new Entry(competition, competitor, id, rankObject);
+	}
+	
+	protected void save() {
+		try {
+			EntryManager.update(this);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// TODO: raise Exception
+		}
+	}
+	
+	public void cancel() throws CompetitionException {
+		if (this.competition.isOver()) {
+			throw new CompetitionException("Competition is already over!");
+		}
+		
+		try {
+			EntryManager.delete(this);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// TODO: raise Exception
+		}
+		
+		// delete bets related to the entry
+		for(Bet b : getBets()) {
+			b.cancel();
+		}
 	}
 
 	/**

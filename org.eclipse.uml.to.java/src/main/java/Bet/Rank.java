@@ -30,4 +30,17 @@ public enum Rank {
 			return NOT_PODIUM;
 		}
 	}
+	
+	public static int getIndex(Rank r) {
+		switch(r) {
+		case FIRST:
+			return 0;
+		case SECOND:
+			return 1;
+		case THIRD:
+			return 2;
+		default:
+			return -1;
+		}
+	}
 }

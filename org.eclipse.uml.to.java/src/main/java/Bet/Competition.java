@@ -14,10 +14,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import exceptions.BadParametersException;
+import exceptions.CompetitionException;
 import exceptions.MissingCompetitorException;
 import Interface.Competitor;
 import dbManager.CompetitionManager;
 import dbManager.CompetitorManager;
+import dbManager.EntryManager;
 
 /**
  * Description of Competition.
@@ -75,7 +77,14 @@ public class Competition {
 		if (closingDate.before(Calendar.getInstance())) {
 			throw new BadParametersException("The closing date must be in the future!");
 		}
-		this.closingDate = closingDate; 
+		this.closingDate = closingDate;
+
+		try {
+			CompetitionManager.persist(this);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// TODO: raise Exception
+		}
 	}
 
 	public Competition(String competitionName, Calendar startingDate, Calendar closingDate) throws BadParametersException {
@@ -93,6 +102,15 @@ public class Competition {
 		competition.setSettled(settled);
 		competition.setDraw(draw);
 		return competition;
+	}
+	
+	protected void save() {
+		try {
+			CompetitionManager.update(this);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// TODO: raise Exception
+		}
 	}
 
 	/**
@@ -184,7 +202,7 @@ public class Competition {
 	}
 	
 	public boolean isOver() {
-		return this.isSettled();
+		return this.closingDate.after(Calendar.getInstance());
 	}
 
 	public HashSet<Entry> getEntries() {
@@ -247,6 +265,24 @@ public class Competition {
 			if (bet.isWon()) {
 				winnerToken += bet.getAmount();
 			}
+		}
+	}
+	
+	public void cancel() throws CompetitionException {
+		if (this.isOver()) {
+			throw new CompetitionException("Competition is already over!");
+		}
+		
+		try {
+			CompetitionManager.delete(this);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// TODO: raise Exception
+		}
+		
+		// delete entries related to competition
+		for(Entry e : getEntries()) {
+			e.cancel();
 		}
 	}
 
