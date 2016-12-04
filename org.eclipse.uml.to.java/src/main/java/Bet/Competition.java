@@ -13,8 +13,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import Betting.Exceptions.BadParametersException;
-import Betting.Exceptions.NotExistingCompetitorException;
+import exceptions.BadParametersException;
+import exceptions.MissingCompetitorException;
 import Interface.Competitor;
 import dbManager.CompetitionManager;
 import dbManager.CompetitorManager;
@@ -88,7 +88,7 @@ public class Competition {
 		startingCalendar.setTimeInMillis(startingDate.getTime());
 		Calendar closingCalendar = new GregorianCalendar();
 		closingCalendar.setTimeInMillis(startingDate.getTime());
-		
+		//TODO : persist competition & entries
 		Competition competition = new Competition(competitionName, startingCalendar, closingCalendar);
 		competition.setSettled(settled);
 		competition.setDraw(draw);
@@ -250,12 +250,12 @@ public class Competition {
 		}
 	}
 
-	public void settle(List<Competitor> competitors) throws NotExistingCompetitorException {
+	public void settle(List<Competitor> competitors) throws MissingCompetitorException {
 		for(int i=0; i<competitors.size(); i++) {
 			Competitor competitor = competitors.get(i);
 			Entry entry = this.getEntryFromCompetitor(competitor);
 			if (entry == null) {
-				throw new NotExistingCompetitorException("This competitor does not exist in this competition!");
+				throw new MissingCompetitorException("This competitor does not exist in this competition!");
 			}
 
 			entry.setRank(Rank.getRankIndex(i));

@@ -6,8 +6,8 @@ package Bet;
 import java.sql.SQLException;
 import java.util.HashSet;
 
-import Betting.Exceptions.BadParametersException;
-import Betting.Exceptions.NotExistingCompetitionException;
+import exceptions.BadParametersException;
+import exceptions.MissingCompetitionException;
 import Interface.Competitor;
 import dbManager.CompetitionManager;
 import dbManager.CompetitorManager;
@@ -23,9 +23,9 @@ import dbManager.CompetitorManager;
  */
 public class Entry {
 	private int id = 0;
-	
+
 	static private int nextId = 0;
-	
+
 	/**
 	 * Description of the property podiumBets.
 	 */
@@ -40,10 +40,10 @@ public class Entry {
 	 * Description of the property winnerBets.
 	 */
 	private HashSet<WinnerBet> winnerBets = new HashSet<WinnerBet>();
-	
+
 	private Competitor competitor = null;
 	private Competition competition = null;
-	
+
 	public Entry(Competition competition, Competitor competitor, int id) throws BadParametersException {
 		if (competition == null) {
 			throw new BadParametersException("The competition cannot be null!");
@@ -54,20 +54,22 @@ public class Entry {
 			throw new BadParametersException("The competitor cannot be null!");
 		}
 		this.competitor = competitor;
-		
+
 		this.competition.addEntry(this);
 		this.id = id;
 	}
 
 	/**
 	 * The constructor.
-	 * @throws BadParametersException 
+	 * 
+	 * @throws BadParametersException
 	 */
 	public Entry(Competition competition, Competitor competitor) throws BadParametersException {
 		this(competition, competitor, nextId++);
 	}
-	
-	static public Entry createEntry(String competitionName, String competitorName, int id) throws BadParametersException, NotExistingCompetitionException {
+
+	static public Entry createEntry(String competitionName, String competitorName, int id)
+			throws BadParametersException, MissingCompetitionException {
 		Competition competition = CompetitionManager.findBycompetitionName(competitionName);
 		Competitor competitor = CompetitorManager.findCompetitorByName(competitorName);
 		return new Entry(competition, competitor, id);
@@ -75,7 +77,8 @@ public class Entry {
 
 	/**
 	 * Returns podiumBets.
-	 * @return podiumBets 
+	 * 
+	 * @return podiumBets
 	 */
 	public HashSet<PodiumBet> getPodiumBets() {
 		return this.podiumBets;
@@ -83,12 +86,13 @@ public class Entry {
 
 	/**
 	 * Returns winnerBets.
-	 * @return winnerBets 
+	 * 
+	 * @return winnerBets
 	 */
 	public HashSet<WinnerBet> getWinnerBets() {
 		return this.winnerBets;
 	}
-	
+
 	public HashSet<Bet> getBets() {
 		HashSet<Bet> bets = new HashSet<Bet>();
 		bets.addAll(podiumBets);
@@ -123,15 +127,15 @@ public class Entry {
 	public void addBet(PodiumBet podiumBet) {
 		podiumBets.add(podiumBet);
 	}
-	
+
 	public void removeBet(PodiumBet podiumBet) {
 		podiumBets.remove(podiumBet);
 	}
-	
+
 	public void addBet(WinnerBet winnerBet) {
 		winnerBets.add(winnerBet);
 	}
-	
+
 	public void removeBet(WinnerBet winnerBet) {
 		winnerBets.remove(winnerBet);
 	}
