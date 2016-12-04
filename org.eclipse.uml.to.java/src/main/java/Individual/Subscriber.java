@@ -31,16 +31,11 @@ public class Subscriber extends Player {
 	 */
 	private long balance = 0L;
 
-	/**
-	 * Description of the property REGEX_USERNAME.
-	 */
-	private static String REGEX_USERNAME = null;
-
-	/**
-	 * Description of the property LONG_USERNAME.
-	 */
-	private static int LONG_USERNAME = 0;
-
+    private int LONG_USERNAME = 6;
+    private String REGEX_USERNAME = "^[0-9A-Za-z]{6}$";
+    private int LONG_PASSWORD = 8;
+    private String REGEX_PASSWORD = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8}$";
+    private String username;
 	/**
 	 * Description of the property bornDate.
 	 */
@@ -61,14 +56,6 @@ public class Subscriber extends Player {
 	public HashSet<Bet> bets = new HashSet<Bet>();
 
 
-	/**
-	 * Description of the property REGEX_NAME.
-	 */
-	private static String REGEX_NAME = null;
-
-	// Start of user code (user defined attributes for Subscriber)
-
-	// End of user code
 
 	/**
 	 * Description of the method authenticate.
@@ -77,16 +64,34 @@ public class Subscriber extends Player {
 	
 	public Subscriber(String username, String firstname, String lastname, Date bornDate, long balance){
 		System.out.println("creation d'un subscriber");
-		this.username = username;
+        if(username.length()==6&&username.matches(REGEX_USERNAME)){
+            this.username = username;
+            System.out.println("Username is finish");
+        }
+        if(username.length()!=6){
+            System.out.println("LONG_USERNAME Wrong");
+        }
+        if(!username.matches(REGEX_USERNAME)){
+            System.out.println("REGEX_USERNAME Wrong");
+        }
+        
+        if(pwdMngr.length()==8&&pwdMngr.matches(REGEX_PASSWORD)){
+            this.password = pwdMngr;
+            System.out.println("Password is finish");
+        }
+        if(pwdMngr.length()!=8){
+            System.out.println("LONG_PASSWORD Wrong");
+        }
+        if(!pwdMngr.matches(REGEX_PASSWORD)){
+            System.out.println("REGEX_PASSWORD Wrong");
+        }
+    }
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.bornDate = bornDate;
 		this.balance = balance;
 	}
-	
-	public Subscriber(String lastName2, String firstName2, String username2, MyCalendar change_date) {
-		// TODO Auto-generated constructor stub
-	}
+
 
 	public boolean authenticate(String pwd) {
 		// Start of user code for method authenticate
