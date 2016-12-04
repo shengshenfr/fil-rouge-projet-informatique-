@@ -82,6 +82,11 @@ public class CompetitionManager {
 	   
 	}
 	
+	
+	public static java.sql.Date convertJavaDateToSqlDate(java.util.Date date) {
+	    return new java.sql.Date(date.getTime());
+	}
+	
 	//----------------------------------------------------------------------
 	
 	
@@ -183,7 +188,7 @@ public class CompetitionManager {
 	  
 	  // 3 - Supplying values for the prepared statement parameters (question marks).
 	  
-	  psUpdate.setDate(1,  competition.getStartingDate());
+	  psUpdate.setDate(1,  convertJavaDateToSqlDate((competition.getStartingDate()).getTime()));
 	  psUpdate.setDate(2, competition.getClosingDate());
 	  psUpdate.setBoolean(3,  competition.getSettled());
 	  psUpdate.setBoolean(4, competition.getIsDraw());
