@@ -4,6 +4,7 @@
 package dbManager;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Bet.Competition;
+import Betting.Exceptions.BadParametersException;
+import Betting.Exceptions.NotExistingCompetitionException;
 import Individual.Subscriber;
 import Interface.Competitor;
 import utils.DatabaseConnection;
@@ -52,8 +55,8 @@ public class CompetitionManager {
 			psPersist.setString(1, competition.getName());
 			psPersist.setDate(2, competition.getStartingDate());
 			psPersist.setDate(3, competition.getClosingDate());
-			psPersist.setBoolean(4, competition.getSettled());
-			psPersist.setBoolean(5, competition.getIsDraw());
+			psPersist.setBoolean(4, competition.isSettled());
+			psPersist.setBoolean(5, competition.isDraw());
 			
 			psPersist.executeUpdate();
 
@@ -82,6 +85,11 @@ public class CompetitionManager {
 	   
 	}
 	
+	
+	public static java.sql.Date convertJavaDateToSqlDate(java.util.Date date) {
+	    return new java.sql.Date(date.getTime());
+	}
+	
 	//----------------------------------------------------------------------
 	
 	
@@ -92,40 +100,50 @@ public class CompetitionManager {
 	 * @return the competition or null if the competitionName does not exist in the database.
 	 * @throws SQLException
 	 */
-	public static Competition findBycompetitionName(String competitionName) throws SQLException
+	public static Competition findBycompetitionName(String competitionName) throws NotExistingCompetitionException
 	{
-		 // 1 - Get a database connection from the class 'DatabaseConnection'
-		Connection c = DatabaseConnection.getConnection();
-		
-		// 2 - Creating a Prepared Statement with the SQL instruction.
-	    //     The parameters are represented by question marks. 
-		PreparedStatement psSelect = c.prepareStatement("select * from competitions where competitionName=?");
-		
-		// 3 Supplying values for the prepared statement parameters (question marks).
-		psSelect.setString(1, competitionName);
-		
-		// 4 - Executing Prepared Statement object among the database.
-	    //     The return value is a Result Set containing the data.
-		
-		ResultSet resultSet = psSelect.executeQuery();
-		
-		// 5 - Retrieving values from the Result Set.
 		Competition competition = null;
-		while(resultSet.next())
-		{
-			competition = new Competition(resultSet.getString("competitionName"),resultSet.getDate("startingDate"),
-					resultSet.getDate("closingDate"), resultSet.getBoolean("settled"), resultSet.getBoolean("isDraw"));
-			
-		}
+		try {
+			// 1 - Get a database connection from the class 'DatabaseConnection'
+			Connection c = DatabaseConnection.getConnection();
 		
-		 // 6 - Closing the Result Set
-	    resultSet.close();
-	    
-	    // 7 - Closing the Prepared Statement.
-	    psSelect.close();
-	    
-	    // 8 - Closing the database connection.
-	    c.close();
+			// 2 - Creating a Prepared Statement with the SQL instruction.
+		    //     The parameters are represented by question marks. 
+			PreparedStatement psSelect = c.prepareStatement("select * from competitions where competitionName=?");
+			
+			// 3 Supplying values for the prepared statement parameters (question marks).
+			psSelect.setString(1, competitionName);
+			
+			// 4 - Executing Prepared Statement object among the database.
+		    //     The return value is a Result Set containing the data.
+			
+			ResultSet resultSet = psSelect.executeQuery();
+			
+			// 5 - Retrieving values from the Result Set.
+			while(resultSet.next())
+			{
+				competition = Competition.createCompetition(
+						resultSet.getString("competitionName"),
+						resultSet.getDate("startingDate"),
+						resultSet.getDate("closingDate"),
+						resultSet.getBoolean("settled"),
+						resultSet.getBoolean("isDraw")
+				);
+				
+			}
+			
+			 // 6 - Closing the Result Set
+		    resultSet.close();
+		    
+		    // 7 - Closing the Prepared Statement.
+		    psSelect.close();
+		    
+		    // 8 - Closing the database connection.
+		    c.close();
+		} catch (SQLException e) {
+		} catch (BadParametersException e) {
+			e.printStackTrace();
+		}
 	    
 	    return competition;
 			
@@ -145,25 +163,36 @@ public class CompetitionManager {
 	
 //------------------------------------------------------------------------
 
-	public static List<Competition> findAll() throws SQLException {
-		Connection c = DatabaseConnection.getConnection();
-	    PreparedStatement psSelect = c.prepareStatement("select * from competitions order by competitionName");
-	    ResultSet resultSet = psSelect.executeQuery();
-	    List<Competition> competitions = new ArrayList<Competition>();
-	    while(resultSet.next())
-	    {
-	    	competitions.add(new Competition(resultSet.getString("competitionName"),
-	    								   resultSet.getDate("startingDate"),
-	    								   resultSet.getDate("closingDate"),
-	    								   resultSet.getBoolean("settled"),
-	    								   resultSet.getBoolean("isDraw")));
-	    	
-	    }
-	    resultSet.close();
-	    
-	    psSelect.close();
-	    
-	    c.close();
+	public static List<Competition> findAll() {
+		List<Competition> competitions = new ArrayList<Competition>();
+		try {
+			Connection c = DatabaseConnection.getConnection();
+		
+		    PreparedStatement psSelect = c.prepareStatement("select * from competitions order by competitionName");
+		    ResultSet resultSet = psSelect.executeQuery();
+		    while(resultSet.next())
+		    {
+		    	competitions.add(Competition.createCompetition(
+						resultSet.getString("competitionName"),
+						resultSet.getDate("startingDate"),
+						resultSet.getDate("closingDate"),
+						resultSet.getBoolean("settled"),
+						resultSet.getBoolean("isDraw")
+				));
+		    	
+		    }
+		    resultSet.close();
+		    
+		    psSelect.close();
+		    
+		    c.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadParametersException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	    
 	    return competitions;		
 		
@@ -183,10 +212,10 @@ public class CompetitionManager {
 	  
 	  // 3 - Supplying values for the prepared statement parameters (question marks).
 	  
-	  psUpdate.setDate(1,  competition.getStartingDate());
+	  psUpdate.setDate(1,  convertJavaDateToSqlDate((competition.getStartingDate()).getTime()));
 	  psUpdate.setDate(2, competition.getClosingDate());
-	  psUpdate.setBoolean(3,  competition.getSettled());
-	  psUpdate.setBoolean(4, competition.getIsDraw());
+	  psUpdate.setBoolean(3,  competition.isSettled());
+	  psUpdate.setBoolean(4, competition.isDraw());
 	  psUpdate.setString(5, competition.getName());
 	  
 	//Executing the prepared statement object among the database.

@@ -29,7 +29,7 @@ public class WinnerBet extends Bet {
 	 */
 	public WinnerBet(long amount, Subscriber betOwner, Entry winner) {
 		super(amount, betOwner);
-		this.winner = winner;
+		this.setWinner(winner);
 	}
 
 	public Entry getWinner() {
@@ -37,7 +37,20 @@ public class WinnerBet extends Bet {
 	}
 
 	public void setWinner(Entry winner) {
+		winner.removeBet(this);
 		this.winner = winner;
+		winner.addBet(this);
+	}
+	
+	@Override
+	public boolean isWon() {
+		if (!this.winner.getCompetition().isSettled())
+			return false;
+		
+		if (this.winner.getCompetition().isDraw())
+			return false;
+		
+		return this.winner.getRank() == Rank.FIRST;
 	}
 
 }

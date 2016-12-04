@@ -1,9 +1,9 @@
-package fr.uv1.bettingServices.exceptions;
+package exceptions;
 
-public class ExistingSubscriberException extends Exception {
+public class ExistingAbstractCompetitorException extends Exception {
 	private static final long serialVersionUID = 1L;
 
-	public ExistingSubscriberException(String s) {
+	public ExistingAbstractCompetitorException(String s) {
 		super(s);
 	}
 }

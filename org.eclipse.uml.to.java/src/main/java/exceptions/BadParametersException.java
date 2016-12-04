@@ -1,4 +1,4 @@
-package fr.uv1.bettingServices.exceptions;
+package exceptions;
 
 public class BadParametersException extends Exception {
 	private static final long serialVersionUID = 1L;

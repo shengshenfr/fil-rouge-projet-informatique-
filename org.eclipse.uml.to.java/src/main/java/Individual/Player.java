@@ -1,7 +1,7 @@
 package Individual;
-import Individual.abstract_Competitor;
+import Individual.AbstractCompetitor;
 
-public class Player extends abstract_Competitor {
+public class Player extends AbstractCompetitor {
 	
 	private String playerName;
 	

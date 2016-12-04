@@ -27,16 +27,7 @@ public class CompetitorManager {
 	/**
 	 * The constructor.
 	 */
-	public CompetitorManager() {
-		// Start of user code constructor for CompetitorManager)
-		super();
-		// End of user code
-	}
-
-
-
-
-
+	
 	public static ArrayList<Competitor> findCompetitorinTeam(String teamName) {
 		// TODO Auto-generated method stub
 		return null;
@@ -55,7 +46,7 @@ public class CompetitorManager {
 
 
 
-	public static Object findCompetitorByName(String name) {
+	public static Competitor findCompetitorByName(String name) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -5,12 +5,16 @@ package Individual;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 
 import Bet.Bet;
 import Individual.Player;
 // Start of user code (user defined imports)
 import Interface.Competitor;
+import exceptions.AuthentificationException;
+import exceptions.BadParametersException;
+import exceptions.MissingTokenException;
 import utils.MyCalendar;
 
 // End of user code
@@ -31,21 +35,15 @@ public class Subscriber extends Player {
 	 */
 	private long balance = 0L;
 
-    private int LONG_USERNAME = 6;
-    private String REGEX_USERNAME = "^[0-9A-Za-z]{6}$";
+    private static int LONG_USERNAME = 6;
+    private static String REGEX_USERNAME = "^[0-9A-Za-z]{6}$";
     private int LONG_PASSWORD = 8;
     private String REGEX_PASSWORD = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8}$";
     private String username;
 	/**
 	 * Description of the property bornDate.
 	 */
-	private Date bornDate = null;
-
-	/**
-	 * Description of the property username.
-	 */
-	private String username = null;
-
+	private Calendar bornDate = null;
 	/**
 	 * Description of the property bets.
 	 */
@@ -53,39 +51,24 @@ public class Subscriber extends Player {
 
 	private String lastname;
 	
-	public HashSet<Bet> bets = new HashSet<Bet>();
-
-
 
 	/**
 	 * Description of the method authenticate.
 	 * @param pwd 
 	 */
 	
-	public Subscriber(String username, String firstname, String lastname, Date bornDate, long balance){
+	public Subscriber(String username, String firstname, String lastname, Calendar bornDate, long balance){
 		System.out.println("creation d'un subscriber");
+        if(username.length()!=6){
+            throw new BadParametersException("LONG_USERNAME Wrong");
+        }
+        if(!username.matches(REGEX_USERNAME)){
+        	throw new BadParametersException("REGEX_USERNAME Wrong");
+        }
         if(username.length()==6&&username.matches(REGEX_USERNAME)){
             this.username = username;
             System.out.println("Username is finish");
         }
-        if(username.length()!=6){
-            System.out.println("LONG_USERNAME Wrong");
-        }
-        if(!username.matches(REGEX_USERNAME)){
-            System.out.println("REGEX_USERNAME Wrong");
-        }
-        
-        if(pwdMngr.length()==8&&pwdMngr.matches(REGEX_PASSWORD)){
-            this.password = pwdMngr;
-            System.out.println("Password is finish");
-        }
-        if(pwdMngr.length()!=8){
-            System.out.println("LONG_PASSWORD Wrong");
-        }
-        if(!pwdMngr.matches(REGEX_PASSWORD)){
-            System.out.println("REGEX_PASSWORD Wrong");
-        }
-    }
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.bornDate = bornDate;
@@ -177,7 +160,7 @@ public class Subscriber extends Player {
 	 * Returns bornDate.
 	 * @return bornDate 
 	 */
-	public Date getBornDate() {
+	public Calendar getBornDate() {
 		return this.bornDate;
 	}
 
@@ -185,7 +168,7 @@ public class Subscriber extends Player {
 	 * Sets a value to attribute bornDate. 
 	 * @param newBornDate 
 	 */
-	public void setBornDate(Date newBornDate) {
+	public void setBornDate(Calendar newBornDate) {
 		this.bornDate = newBornDate;
 	}
 
@@ -205,20 +188,14 @@ public class Subscriber extends Player {
 		this.username = newUsername;
 	}
 
-	/**
-	 * Returns bets.
-	 * @return bets 
-	 */
-	public HashSet<Bet> listBet() {
-		return this.bets;
-	}
+
 
 	/**
 	 * Returns REGEX_NAME.
 	 * @return REGEX_NAME 
 	 */
 	public static String getREGEX_NAME() {
-		return REGEX_NAME;
+		return REGEX_USERNAME;
 	}
 
 	/**
@@ -226,7 +203,7 @@ public class Subscriber extends Player {
 	 * @param newREGEX_NAME 
 	 */
 	public static void setREGEX_NAME(String newREGEX_NAME) {
-		REGEX_NAME = newREGEX_NAME;
+		REGEX_USERNAME = newREGEX_NAME;
 	}
 
 	public String getFirstname(){
@@ -242,9 +219,9 @@ public class Subscriber extends Player {
 		this.lastname = newLastname;
 	}
 
-	public boolean equalsPlayer(Competitor competitor) {
+	public boolean equalsPlayer(AbstractCompetitor competitor) {
 		// TODO Auto-generated method stub
-        if(this.username==competitor.username){
+        if(this.username==competitor.getAbstractCompetitorName()){
             return true;
         }
         else{
@@ -252,11 +229,11 @@ public class Subscriber extends Player {
         }
 	}
 
-	public void debitSubscriber(long numberTokens) {
+	public void debitSubscriber(long numberTokens) throws BadParametersException {
 		// TODO Auto-generated method stub
         if(numberTokens<0)
         {
-            println("Please give me a number positive!")
+            throw new BadParametersException("Please give me a number positive!");
         }
         else{
             this.balance=this.balance+numberTokens;
@@ -264,24 +241,24 @@ public class Subscriber extends Player {
         
 	}
 
-	public void changeSubsPwd(String username2, String currentPwd, String newPwd) {
+	public void changeSubsPwd(String username2, String currentPwd, String newPwd) throws AuthentificationException {
 		// TODO Auto-generated method stub
         if(this.authenticate(currentPwd)){
-            this.pwd=newPwd;
+            this.password=newPwd;
         }
         else{
-            println("You didn't have the right pass word, this change is wrong!")
+        	throw new AuthentificationException("You didn't have the right pass word, this change is wrong!");
         }
 	}
 
-	public void creditSubscriber(long numberTokens) {
+	public void creditSubscriber(long numberTokens) throws MissingTokenException, BadParametersException {
 		// TODO Auto-generated method stub
         if(numberTokens<0)
         {
-            println("Please give me a number positive!")
+        	throw new BadParametersException("Please give me a number positive!");
         }
         else if(this.balance<numberTokens){
-            println("You didn't have enough money for this bet!")
+        	throw new MissingTokenException("You didn't have enough money for this bet!");
         }
         else{
             this.balance=this.balance-numberTokens;

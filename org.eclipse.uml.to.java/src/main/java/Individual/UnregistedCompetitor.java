@@ -1,11 +1,11 @@
 package Individual;
 import Individual.Player;
 
-public class unregistedSubscriber extends Player {
+public class UnregistedCompetitor extends Player {
 
 		private String unregistedSubscriberName;
 		
-		public unregistedSubscriber(String name){
+		public UnregistedCompetitor(String name){
 			super(name);
 		}
 		

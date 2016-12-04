@@ -3,10 +3,14 @@
  *******************************************************************************/
 package Bet;
 
+import java.sql.SQLException;
 import java.util.HashSet;
 
 import Betting.Exceptions.BadParametersException;
+import Betting.Exceptions.NotExistingCompetitionException;
 import Interface.Competitor;
+import dbManager.CompetitionManager;
+import dbManager.CompetitorManager;
 
 // Start of user code (user defined imports)
 
@@ -18,10 +22,14 @@ import Interface.Competitor;
  * @author Robin, Rémy
  */
 public class Entry {
+	private int id = 0;
+	
+	static private int nextId = 0;
+	
 	/**
 	 * Description of the property podiumBets.
 	 */
-	public HashSet<PodiumBet> podiumBets = new HashSet<PodiumBet>();
+	private HashSet<PodiumBet> podiumBets = new HashSet<PodiumBet>();
 
 	/**
 	 * Description of the property enumerations.
@@ -35,12 +43,8 @@ public class Entry {
 	
 	private Competitor competitor = null;
 	private Competition competition = null;
-
-	/**
-	 * The constructor.
-	 * @throws BadParametersException 
-	 */
-	public Entry(Competition competition, Competitor competitor) throws BadParametersException {
+	
+	public Entry(Competition competition, Competitor competitor, int id) throws BadParametersException {
 		if (competition == null) {
 			throw new BadParametersException("The competition cannot be null!");
 		}
@@ -52,6 +56,21 @@ public class Entry {
 		this.competitor = competitor;
 		
 		this.competition.addEntry(this);
+		this.id = id;
+	}
+
+	/**
+	 * The constructor.
+	 * @throws BadParametersException 
+	 */
+	public Entry(Competition competition, Competitor competitor) throws BadParametersException {
+		this(competition, competitor, nextId++);
+	}
+	
+	static public Entry createEntry(String competitionName, String competitorName, int id) throws BadParametersException, NotExistingCompetitionException {
+		Competition competition = CompetitionManager.findBycompetitionName(competitionName);
+		Competitor competitor = CompetitorManager.findCompetitorByName(competitorName);
+		return new Entry(competition, competitor, id);
 	}
 
 	/**
@@ -68,6 +87,13 @@ public class Entry {
 	 */
 	public HashSet<WinnerBet> getWinnerBets() {
 		return this.winnerBets;
+	}
+	
+	public HashSet<Bet> getBets() {
+		HashSet<Bet> bets = new HashSet<Bet>();
+		bets.addAll(podiumBets);
+		bets.addAll(winnerBets);
+		return bets;
 	}
 
 	public Rank getRank() {
@@ -92,6 +118,30 @@ public class Entry {
 
 	public void setCompetitor(Competitor competitor) {
 		this.competitor = competitor;
+	}
+
+	public void addBet(PodiumBet podiumBet) {
+		podiumBets.add(podiumBet);
+	}
+	
+	public void removeBet(PodiumBet podiumBet) {
+		podiumBets.remove(podiumBet);
+	}
+	
+	public void addBet(WinnerBet winnerBet) {
+		winnerBets.add(winnerBet);
+	}
+	
+	public void removeBet(WinnerBet winnerBet) {
+		winnerBets.remove(winnerBet);
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 }
