@@ -3,10 +3,9 @@
  *******************************************************************************/
 package Individual;
 
-import java.sql.Date;
-import java.util.ArrayList;
+
 import java.util.Calendar;
-import java.util.HashSet;
+
 import java.util.Random;
 
 import Bet.Bet;
@@ -60,11 +59,14 @@ public class Subscriber extends Player {
     
     public Subscriber(String username, String firstname, String lastname, Calendar bornDate, long balance) throws BadParametersException{
         System.out.println("creation d'un subscriber");
+        if(username==null||firstname==null||lastname==null||bornDate==null){
+            throw new BadParametersException("can't have null name or bornDate!!!");
+        }
         if(username.length()!=6){
-            throw new BadParametersException("LONG_USERNAME Wrong");
+            throw new BadParametersException("the length of username should be 6.");
         }
         if(!username.matches(REGEX_USERNAME)){
-            throw new BadParametersException("REGEX_USERNAME Wrong");
+            throw new BadParametersException("REGEX_NAME Wrong!");
         }
         if(username.length()==6&&username.matches(REGEX_USERNAME)){
             this.username = username;
@@ -74,6 +76,7 @@ public class Subscriber extends Player {
         this.lastname = lastname;
         this.bornDate = bornDate;
         this.balance = balance;
+        this.password=generatePassword();
     }
     
     
@@ -97,7 +100,7 @@ public class Subscriber extends Player {
      * Returns password.
      * @return password
      */
-    public String getPassword() {
+    public String generatePassword() {
             String passwordRandom = "passwordInitial";
             String[][] element = {{"0"},{"1"},{"2"},{"3"},{"4"},{"5"},{"6"},{"7"},{"8"},{"9"},
                 {"a"},{"b"},{"c"},{"d"},{"e"},{"f"},{"g"},{"h"},{"i"},{"j"},{"k"},{"l"},{"m"},{"n"},
@@ -118,6 +121,9 @@ public class Subscriber extends Player {
             }
         this.password=passwordRandom;
         return passwordRandom;
+    }
+    public String getPassword(){
+    	return this.password;
     }
     
     /**
@@ -249,7 +255,7 @@ public class Subscriber extends Player {
         }
     }
     
-    public void debitSubscriber(long numberTokens) throws BadParametersException {
+    public void creditSubscriber(long numberTokens) throws BadParametersException {
         // TODO Auto-generated method stub
         if(numberTokens<0)
         {
@@ -261,23 +267,34 @@ public class Subscriber extends Player {
         
     }
     
-    public void changeSubsPwd(String username2, String currentPwd, String newPwd) throws AuthentificationException {
+    public void changeSubsPwd(String username2, String currentPwd, String newPwd) throws AuthentificationException, BadParametersException {
         // TODO Auto-generated method stub
         if(this.authenticate(currentPwd)){
-            this.password=newPwd;
+        	if(newPwd==null){
+                throw new BadParametersException("can't change a null password!!!");
+            }
+        	else if(newPwd.length()!=LONG_PASSWORD){
+                throw new BadParametersException("the length of username should be 8.");
+            }
+        	else if(!newPwd.matches(REGEX_PASSWORD)){
+                throw new BadParametersException("REGEX_PASSWORD Wrong!");
+            }
+            else{
+        	this.password=newPwd;
+            }
         }
         else{
             throw new AuthentificationException("You didn't have the right pass word, this change is wrong!");
         }
     }
     
-    public void creditSubscriber(long numberTokens) throws MissingTokenException, BadParametersException {
+    public void debitSubscriber(long numberTokens) throws MissingTokenException, BadParametersException {
         // TODO Auto-generated method stub
         if(numberTokens<0)
         {
             throw new BadParametersException("Please give me a number positive!");
         }
-        else if(this.balance<numberTokens){
+        else if(this.balance<=numberTokens){
             throw new MissingTokenException("You didn't have enough money for this bet!");
         }
         else{
