@@ -10,8 +10,8 @@ import utils.DatabaseConnection;
 import Bet.Bet;
 import Bet.Competition;
 import Bet.DrawBet;
-import Betting.Exceptions.BadParametersException;
-import Betting.Exceptions.NotExistingCompetitionException;
+import exceptions.BadParametersException;
+import exceptions.MissingCompetitionException;
 
 
 // Start of user code (user defined imports)
@@ -118,7 +118,7 @@ public class DrawBetManager {
 		 * @throws BadParametersException 
 		 */
 	
-	public static DrawBet findById(Integer idBet) throws SQLException, BadParametersException, NotExistingCompetitionException {
+	public static DrawBet findById(Integer idBet) throws SQLException, BadParametersException, MissingCompetitionException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psSelect = c
 				.prepareStatement("select * from betsDraw where idBet=?");
@@ -171,7 +171,7 @@ public class DrawBetManager {
 	 */
 
 	public static List<DrawBet> findByOwner(String betOwner) 
-		throws SQLException, BadParametersException, NotExistingCompetitionException {
+		throws SQLException, BadParametersException, MissingCompetitionException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psSelect = c.prepareStatement("select * from"
 				+ "betsDraw where betOwner=? order by idBet");
@@ -218,7 +218,7 @@ public class DrawBetManager {
 		 * @throws NotExistingCompetitionException 
 		 * @throws BadParametersException 
 		 */
-		public static List<DrawBet> findAll() throws SQLException, BadParametersException, NotExistingCompetitionException {
+		public static List<DrawBet> findAll() throws SQLException, BadParametersException, MissingCompetitionException {
 			Connection c = DatabaseConnection.getConnection();
 			PreparedStatement psSelect = c
 					.prepareStatement("select * from betsDraw order by betOwner,idBet");
@@ -244,7 +244,7 @@ public class DrawBetManager {
 	//--------------------------------------------------------------------------------
 		//find all the draw bets on one competition	
 	
-	public static List<DrawBet> findAllDrawBetsByCompetition(Competition competition) throws SQLException, BadParametersException, NotExistingCompetitionException {
+	public static List<DrawBet> findAllDrawBetsByCompetition(Competition competition) throws SQLException, BadParametersException, MissingCompetitionException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psSelect = c
 				.prepareStatement("select * from betsWinner, entrys where betsWinner.idBet = entrys.idEntry and entrys.competitionName = ? ");
@@ -269,7 +269,7 @@ public class DrawBetManager {
 //-----------------------------------------------------------------------------------
 	// delete all the draw bets on a competition
 	
-	public static void deleleAllDrawBetsOnCompetition(Competition competition) throws SQLException, BadParametersException, NotExistingCompetitionException {
+	public static void deleleAllDrawBetsOnCompetition(Competition competition) throws SQLException, BadParametersException, MissingCompetitionException {
 		Connection c1 = DatabaseConnection.getConnection();
 		
 		List<DrawBet> betsOnCompetition = findAllDrawBetsByCompetition(competition);

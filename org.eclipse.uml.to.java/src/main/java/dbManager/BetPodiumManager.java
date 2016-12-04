@@ -10,8 +10,8 @@ import utils.DatabaseConnection;
 import Bet.Bet;
 import Bet.Competition;
 import Bet.PodiumBet;
-import Betting.Exceptions.BadParametersException;
-import Betting.Exceptions.NotExistingCompetitionException;
+import exceptions.BadParametersException;
+import exceptions.MissingCompetitionException;
 
 
 // Start of user code (user defined imports)
@@ -116,7 +116,7 @@ public class BetPodiumManager {
 		 * @throws BadParametersException 
 		 */
 	
-	public static PodiumBet findById(Integer idBet) throws SQLException, BadParametersException, NotExistingCompetitionException {
+	public static PodiumBet findById(Integer idBet) throws SQLException, BadParametersException, MissingCompetitionException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psSelect = c
 				.prepareStatement("select * from betsPodium where idBet=?");
@@ -171,7 +171,7 @@ public class BetPodiumManager {
 	 */
 
 	public static List<PodiumBet> findByOwner(String betOwner) 
-		throws SQLException, BadParametersException, NotExistingCompetitionException {
+		throws SQLException, BadParametersException, MissingCompetitionException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psSelect = c.prepareStatement("select * from"
 				+ "betsPodium where betOwner=? order by idBet");
@@ -224,7 +224,7 @@ public class BetPodiumManager {
 		 * @throws NotExistingCompetitionException 
 		 * @throws BadParametersException 
 		 */
-		public static List<Bet> findAll() throws SQLException, BadParametersException, NotExistingCompetitionException {
+		public static List<Bet> findAll() throws SQLException, BadParametersException, MissingCompetitionException {
 			Connection c = DatabaseConnection.getConnection();
 			PreparedStatement psSelect = c
 					.prepareStatement("select * from betsPodium order by betOwner,idBet");
@@ -273,7 +273,7 @@ public class BetPodiumManager {
 							.getString("betOwner"), resultSet
 							.getLong("amount"), resultSet.getInt("idEntry"),
 							resultSet.getInt("idEntry2"), resultSet.getInt("idEntry3")));
-				} catch (BadParametersException | NotExistingCompetitionException e) {
+				} catch (BadParametersException | MissingCompetitionException e) {
 					
 					e.printStackTrace();
 				}

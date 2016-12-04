@@ -1,5 +1,5 @@
 package org.postgresql;
-import Betting.Exceptions.*;
+import exceptions.*;
 
 import java.sql.Connection;
 
@@ -9,6 +9,7 @@ import java.sql.SQLFeatureNotSupportedException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+@SuppressWarnings("unused")
 public class Driver implements java.sql.Driver {
 
 	@Override

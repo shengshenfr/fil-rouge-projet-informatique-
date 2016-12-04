@@ -10,8 +10,7 @@ import utils.DatabaseConnection;
 import Bet.Bet;
 import Bet.Entry;
 import Bet.WinnerBet;
-import Betting.Exceptions.BadParametersException;
-import Betting.Exceptions.NotExistingCompetitionException;
+import exceptions.*;
 import Bet.Competition;
 
 
@@ -127,7 +126,7 @@ public class BetManager {
 						resultSet.getString("betOwner"),
 						resultSet.getLong("amount"),
 						resultSet.getInt("idEntry"));
-			} catch (BadParametersException | NotExistingCompetitionException e) {
+			} catch (BadParametersException | MissingCompetitionException e) {
 				
 				e.printStackTrace();
 			}
@@ -168,7 +167,7 @@ public class BetManager {
 				betsWinner.add(Bet.createWinnerBet(resultSet.getInt("idBet"), resultSet
 						.getString("betOwner"), resultSet
 						.getLong("amount"), resultSet.getInt("idEntry")));
-			} catch (BadParametersException | NotExistingCompetitionException e) {
+			} catch (BadParametersException | MissingCompetitionException e) {
 				
 				e.printStackTrace();
 			}
@@ -213,7 +212,7 @@ public class BetManager {
 					betsWinner.add(Bet.createWinnerBet(resultSet.getInt("idBet"), resultSet
 							.getString("betOwner"), resultSet
 							.getLong("amount"), resultSet.getInt("idEntry")));
-				} catch (BadParametersException | NotExistingCompetitionException e) {
+				} catch (BadParametersException | MissingCompetitionException e) {
 					
 					e.printStackTrace();
 				}
@@ -241,7 +240,7 @@ public class BetManager {
 				betsOnCompetition.add(Bet.createWinnerBet(resultSet.getInt("idBet"), resultSet
 						.getString("betOwner"), resultSet
 						.getLong("amount"), resultSet.getInt("idEntry")));
-			} catch (BadParametersException | NotExistingCompetitionException e) {
+			} catch (BadParametersException | MissingCompetitionException e) {
 				
 				e.printStackTrace();
 			}

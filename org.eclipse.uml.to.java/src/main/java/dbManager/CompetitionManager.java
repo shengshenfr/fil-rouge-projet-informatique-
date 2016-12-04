@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Bet.Competition;
-import Betting.Exceptions.BadParametersException;
-import Betting.Exceptions.NotExistingCompetitionException;
+import exceptions.BadParametersException;
+import exceptions.MissingCompetitionException;
 import Individual.Subscriber;
 import Interface.Competitor;
 import utils.DatabaseConnection;
@@ -27,6 +27,7 @@ import utils.DatabaseConnection;
  * 
  * @author Robin
  */
+@SuppressWarnings("unused")
 public class CompetitionManager {
 	// Start of user code (user defined attributes for CompetitionManager)
 
@@ -100,7 +101,7 @@ public class CompetitionManager {
 	 * @return the competition or null if the competitionName does not exist in the database.
 	 * @throws SQLException
 	 */
-	public static Competition findBycompetitionName(String competitionName) throws NotExistingCompetitionException
+	public static Competition findBycompetitionName(String competitionName) throws MissingCompetitionException
 	{
 		Competition competition = null;
 		try {
@@ -187,10 +188,10 @@ public class CompetitionManager {
 		    
 		    c.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (BadParametersException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 	    
@@ -212,7 +213,7 @@ public class CompetitionManager {
 	  
 	  // 3 - Supplying values for the prepared statement parameters (question marks).
 	  
-	  psUpdate.setDate(1,  convertJavaDateToSqlDate((competition.getStartingDate()).getTime()));
+	  psUpdate.setDate(1, competition.getClosingDate());
 	  psUpdate.setDate(2, competition.getClosingDate());
 	  psUpdate.setBoolean(3,  competition.isSettled());
 	  psUpdate.setBoolean(4, competition.isDraw());
@@ -235,19 +236,5 @@ public class CompetitionManager {
 	}
 
 
-	//fonction a mettre dans entryManager
-		public static void addCompetitor(Competition c, Competitor competitor) {
-			// TODO Auto-generated method stub
-			
-		}
-
-
-
-	//fonction a mettre dans entryManager
-		public static void deleteCompetitor(Competition c, Competitor competitor) {
-			// TODO Auto-generated method stub
-			
-		}
-		
 		
 }
