@@ -32,7 +32,10 @@ public class PodiumBet extends Bet {
 	 */
 	public PodiumBet(long amount, Subscriber betOwner, Entry first, Entry second, Entry third) {
 		super(amount, betOwner);
-		this.setPodium(first, second, third);
+		try {
+			this.setPodium(first, second, third);
+		} catch (CompetitionException e1) {
+		}
 		
 		try {
 			PodiumBetManager.persist(this);
@@ -50,7 +53,7 @@ public class PodiumBet extends Bet {
 		return this.podium;
 	}
 	
-	public void setPodium(Entry first, Entry second, Entry third) {
+	public void setPodium(Entry first, Entry second, Entry third) throws CompetitionException {
 		for(Entry entry : podium) {
 			entry.removeBet(this);
 		}
@@ -67,9 +70,7 @@ public class PodiumBet extends Bet {
 	
 	@Override
 	public void cancel() throws CompetitionException {
-		if (isOver()) {
-			throw new CompetitionException("Competition is already over!");
-		}
+		checkCompetitionNotOver();
 		
 		for(Entry entry : podium) {
 			entry.removeBet(this);

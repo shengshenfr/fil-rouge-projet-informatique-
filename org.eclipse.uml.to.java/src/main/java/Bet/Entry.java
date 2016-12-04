@@ -91,10 +91,14 @@ public class Entry {
 		}
 	}
 	
-	public void cancel() throws CompetitionException {
+	public void checkCompetitionNotOver() throws CompetitionException {
 		if (this.competition.isOver()) {
 			throw new CompetitionException("Competition is already over!");
 		}
+	}
+	
+	public void cancel() throws CompetitionException {
+		checkCompetitionNotOver();
 		
 		try {
 			EntryManager.delete(this);
@@ -146,7 +150,7 @@ public class Entry {
 		return competition;
 	}
 
-	public void setCompetition(Competition competition) {
+	public void setCompetition(Competition competition) throws CompetitionException {
 		this.competition = competition;
 	}
 
@@ -154,23 +158,23 @@ public class Entry {
 		return competitor;
 	}
 
-	public void setCompetitor(Competitor competitor) {
+	public void setCompetitor(Competitor competitor) throws CompetitionException {
 		this.competitor = competitor;
 	}
 
-	public void addBet(PodiumBet podiumBet) {
+	public void addBet(PodiumBet podiumBet) throws CompetitionException {
 		podiumBets.add(podiumBet);
 	}
 
-	public void removeBet(PodiumBet podiumBet) {
+	public void removeBet(PodiumBet podiumBet) throws CompetitionException {
 		podiumBets.remove(podiumBet);
 	}
 
-	public void addBet(WinnerBet winnerBet) {
+	public void addBet(WinnerBet winnerBet) throws CompetitionException {
 		winnerBets.add(winnerBet);
 	}
 
-	public void removeBet(WinnerBet winnerBet) {
+	public void removeBet(WinnerBet winnerBet) throws CompetitionException {
 		winnerBets.remove(winnerBet);
 	}
 

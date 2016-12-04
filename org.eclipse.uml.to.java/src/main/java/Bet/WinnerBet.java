@@ -28,7 +28,10 @@ public class WinnerBet extends Bet {
 	 */
 	public WinnerBet(long amount, Subscriber betOwner, Entry winner) {
 		super(amount, betOwner);
-		this.setWinner(winner);
+		try {
+			this.setWinner(winner);
+		} catch (CompetitionException e1) {
+		}
 		
 		try {
 			WinnerBetManager.persist(this);
@@ -42,7 +45,7 @@ public class WinnerBet extends Bet {
 		return winner;
 	}
 
-	public void setWinner(Entry winner) {
+	public void setWinner(Entry winner) throws CompetitionException {
 		winner.removeBet(this);
 		this.winner = winner;
 		winner.addBet(this);
@@ -50,9 +53,7 @@ public class WinnerBet extends Bet {
 	
 	@Override
 	public void cancel() throws CompetitionException {
-		if (isOver()) {
-			throw new CompetitionException("Competition is already over!");
-		}
+		checkCompetitionNotOver();
 		
 		winner.removeBet(this);
 

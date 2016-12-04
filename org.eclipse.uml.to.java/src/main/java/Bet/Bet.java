@@ -185,12 +185,15 @@ abstract public class Bet {
 	public void cancel() throws CompetitionException {
 		try {
 			this.betOwner.creditSubscriber(amount);
-		} catch (MissingTokenException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (BadParametersException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	public void checkCompetitionNotOver() throws CompetitionException {
+		if (this.isOver()) {
+			throw new CompetitionException("Competition is already over!");
 		}
 	}
 
@@ -200,9 +203,6 @@ abstract public class Bet {
 		
 		try {
 			this.betOwner.creditSubscriber((long)(this.amount * ratio));
-		} catch (MissingTokenException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (BadParametersException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
