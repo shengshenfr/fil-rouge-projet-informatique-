@@ -14,7 +14,7 @@ import Betting.Manager;
 import Individual.*;
 import Bet.*;
 import dbManager.*;
-import Betting.Exceptions.*;
+import exceptions.*;
 import utils.*;
 // End of user code
 
@@ -34,7 +34,7 @@ public class BettingSoft implements Betting {
 	 * Constructor for bet Bettingsoft 
 	 * @throws SQLException 
 	 */
-	public BettingSoft() throws BadParametersException{
+	public BettingSoft() {
 		
 	}
 
@@ -87,7 +87,7 @@ public class BettingSoft implements Betting {
 			// Add competiton to SQL
 			CompetitionManager.persist(c);
 		}
-		catch (SQLException e) {
+		catch (SQLException| NotExistingCompetitionException e) {
 			System.out.println("competition not added");
 			
 		}
@@ -109,7 +109,8 @@ public class BettingSoft implements Betting {
 
 			//check if the competition is still open
 			Calendar today = new GregorianCalendar();
-			if (c.getClosingDate().before(today))
+			Calendar closingdate = c.getClosingDate();
+			if (closingdate.before(today))
 				throw new CompetitionException ("This competition is already close");			
 
 		
@@ -443,7 +444,7 @@ public class BettingSoft implements Betting {
 				//Update subscriber's information
 				SubscriberManager.update(subscriber);
 			}
-			catch(SQLException |SubscriberException e){
+			catch(SQLException e){
 				System.out.println(e);
 			}
 	}
@@ -523,8 +524,8 @@ public class BettingSoft implements Betting {
 			if (c == null){
 				throw new ExistingCompetitionException("The competition does not exist");
 			}
-		
-			if (c.getClosingDate().after(MyCalendar.getDate())){
+			Calendar closingdate = c.getClosingDate();
+			if (closingdate.after(MyCalendar.getDate())){
 				throw new CompetitionException("The competition is not finished yet");
 			}
 
@@ -837,7 +838,7 @@ public class BettingSoft implements Betting {
 	
 		}
 		
-		catch (NotExistingSubscriberException | SQLException | BadParametersException | SubscriberException e){
+		catch (NotExistingSubscriberException | SQLException e){
 			if (e instanceof NotExistingSubscriberException )
 				throw new ExistingSubscriberException();
 			return 0;

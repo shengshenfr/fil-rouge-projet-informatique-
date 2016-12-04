@@ -2,7 +2,7 @@ package Interface;
 import java.util.*;
 
 import Bet.*;
-import Betting.Exceptions.*;
+import exceptions.*;
 
 /**
  * 
