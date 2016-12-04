@@ -271,7 +271,8 @@ public class Competition {
 		this.settled = true;
 		
 		// Compute winner tokens
-				this.computeWinnerToken();
+		this.computeWinnerToken();
+		this.distributeGains();
 	}
 	
 	public void settleDraw() {
@@ -281,6 +282,7 @@ public class Competition {
 		
 		// Compute winner tokens
 		this.computeWinnerToken();
+		this.distributeGains();
 	}
 
 	private Entry getEntryFromCompetitor(Competitor competitor) {
@@ -290,6 +292,18 @@ public class Competition {
 			}
 		}
 		return null;
+	}
+	
+	private void distributeGains() {
+		if (getTotalToken() == 0)
+			return;
+		float ratio = getWinnerToken() / getTotalToken();
+		for(Bet bet : getBets()) {
+			System.out.println(bet.isWon());
+			if (bet.isWon()) {
+				bet.settle(ratio);
+			}
+		}
 	}
 
 	public void addEntry(Entry entry) {

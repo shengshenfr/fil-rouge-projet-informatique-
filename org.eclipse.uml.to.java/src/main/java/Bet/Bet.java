@@ -175,4 +175,11 @@ abstract public class Bet {
 	public boolean isWon() {
 		return false;
 	}
+
+	public void settle(float ratio) {
+		if (!isWon())
+			return;
+		
+		this.betOwner.creditSubscriber((long)(this.amount * ratio));
+	}
 }
