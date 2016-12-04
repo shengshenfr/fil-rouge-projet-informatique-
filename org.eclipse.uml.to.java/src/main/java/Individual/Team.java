@@ -1,11 +1,10 @@
 package Individual;
 import java.util.ArrayList;
-import Individual.abstract_Competitor;
-import manager.TeamsManager;
-import manager.Player_TeamsManager;
+import Individual.AbstractCompetitor;
+import dbManager.TeamManager;
 import Individual.Player;
 
-public class Team extends abstract_Competitor{
+public class Team extends AbstractCompetitor{
 
 	private String teamName;
 	private ArrayList<Player> member;
@@ -13,7 +12,7 @@ public class Team extends abstract_Competitor{
 	public Team(String name){
 		if(!hasValidName(name)){
 			this.teamName = name;
-			manager.TeamsManager.persist(name);
+			dbManager.TeamManager.persist(name);
 		}
 	}
 // verifier if the team has exist. If not, add the new team in data base.

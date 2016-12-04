@@ -76,7 +76,7 @@ public class BettingSoft implements Betting {
 			//Check if the closing date is in the future
 			Calendar today = new GregorianCalendar();
 			if (closingDate == null) 
-				throw new BadParametersException();
+				throw new BadParametersException("The closedate can't be null");
 			if(closingDate.before(today))
 				throw new CompetitionException ("The closedate should be after today ");
 
@@ -175,31 +175,23 @@ public class BettingSoft implements Betting {
 		}
 		catch ( ExistingSubscriberException | SQLException e){
 			if (e instanceof ExistingSubscriberException)
-				throw new AuthentificationException();
+				throw new AuthentificationException("Authentification problem");
 			if (e instanceof ExistingCompetitorException)
-				throw new CompetitionException();
+				throw new CompetitionException("Competition has problem");
 		}
 	}
 
 	@Override
 	public void betOnWinner(long numberTokens, String competition, Competitor winner, String username, String pwdSubs)
 			throws AuthentificationException, CompetitionException, ExistingCompetitionException, SubscriberException,
-			BadParametersException {
+			BadParametersException, MissingCompetitionException, MissingTokenException {
 		try{
 			//Authenticate subscriber
 			Subscriber subscriber = SubscriberManager.findByUsername(username);
 			subscriber.authenticate(pwdSubs);
 			
-			if (subscriber == null) {
-				throw new AuthentificationException("Subscriber username = "+ username + " is not exist");
-			}
-			
-
-			
 			//find competition
 			Competition c = CompetitionManager.findBycompetitionName(competition);
-			if (competition == null)
-				throw new ExistingCompetitionException("Competition "+ competition + " is not exist");
 
 			//Check if the competition is still open
 			Calendar today = new GregorianCalendar();
@@ -236,7 +228,7 @@ public class BettingSoft implements Betting {
 	
 	public void betOnDraw(long numberTokens, String competition,  String username, String pwdSubs)
 			throws AuthentificationException, CompetitionException, ExistingCompetitionException, SubscriberException,
-			BadParametersException {
+			BadParametersException, MissingTokenException {
 		try{
 			//Authenticate subscriber
 			Subscriber subscriber = SubscriberManager.findByUsername(username);
@@ -271,9 +263,9 @@ public class BettingSoft implements Betting {
 		}
 		catch ( ExistingSubscriberException | SQLException e){
 			if (e instanceof ExistingSubscriberException)
-				throw new AuthentificationException();
+				throw new AuthentificationException("Authentification has problem!");
 			if (e instanceof ExistingCompetitorException)
-				throw new CompetitionException();
+				throw new CompetitionException("Competition has problem!");
 		}
 	}
 	@Override
@@ -284,7 +276,7 @@ public class BettingSoft implements Betting {
 			Competition c = CompetitionManager.findBycompetitionName(competition);
 			//check if the competition is existed
 			if (c == null)
-				throw new NotExistingCompetitionException("Competition " + competition + " is not exist.");
+				throw new MissingCompetitionException("Competition " + competition + " is not exist.");
 			
 			//check if the competition is still open
 			Calendar today = new GregorianCalendar();
@@ -292,7 +284,7 @@ public class BettingSoft implements Betting {
 			if (closingdate.before(today))
 				throw new CompetitionException ("This competition is already close");
 			
-			ArrayList<Bet> bets = (ArrayList<Bet>) BetManager.findAllSimpleBetsByCompetition(c);
+			List<WinnerBet> bets = BetManager.findAllSimpleBetsByCompetition(c);
 			
 			for (Bet bet : bets) {
 				this.creditSubscriber(bet.getBetOwner(), bet.getAmount(), managerPwd);
@@ -427,16 +419,16 @@ public class BettingSoft implements Betting {
 	}
 
 	@Override
-	public void creditSubscriber(String username, long numberTokens, String managerPwd)
+	public void creditSubscriber(Subscriber subscriber2, long numberTokens, String managerPwd)
 			throws AuthentificationException, ExistingSubscriberException, BadParametersException {
 			try{
 				// Authenticate manager
 				authenticateMngr(managerPwd);
 
 				//Check if the subscriber is existed
-				Subscriber subscriber = SubscriberManager.findByUsername(username);
+				Subscriber subscriber = SubscriberManager.findByUsername(subscriber2);
 				if (subscriber == null)
-					throw new ExistingSubscriberException("Subscriber username = "+ username + " is not exist");
+					throw new ExistingSubscriberException("Subscriber username = "+ subscriber2 + " is not exist");
 
 				//Credit subscriber
 				subscriber.creditSubscriber(numberTokens);
@@ -799,7 +791,7 @@ public class BettingSoft implements Betting {
 				
 			// Create the new subscriber
 			// Check if the subscriber is over 18 years old or not is in the method setborndate of Subscriber 
-			Subscriber s = new Subscriber(lastName,firstName,username,dateValide.change_date(borndate));
+			Subscriber s = new Subscriber(lastName,firstName,username,dateValide.change_date(borndate), 0);
 			
 
 			// Add subscriber to SQL
