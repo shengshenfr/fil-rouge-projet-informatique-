@@ -49,7 +49,7 @@ public class SubscriberManager {
 		psPersist.setString(1,  subscriber.getUsername());
 		psPersist.setString(2,  subscriber.getFirstname());
 		psPersist.setString(3, subscriber.getLastname());
-		psPersist.setDate(4, subscriber.getBornDate());
+		psPersist.setDate(4, convertJavaDateToSqlDate(subscriber.getBornDate().getTime()));
 		psPersist.setLong(5, subscriber.getBalance());
 		
 		psPersist.executeUpdate();
@@ -77,6 +77,10 @@ public class SubscriberManager {
 	return subscriber;
 	}
 
+	
+	public static java.sql.Date convertJavaDateToSqlDate(java.util.Date date) {
+	    return new java.sql.Date(date.getTime());
+	}
 
 
 //-----------------------------------------------------------------------------
@@ -108,7 +112,7 @@ public static Subscriber findByUsername(String username) throws SQLException
 	Subscriber subscriber = null;
 	while(resultSet.next())
 	{
-		subscriber = new Subscriber(resultSet.getString("username"),resultSet.getString("firstname"),
+		subscriber = Subscriber(resultSet.getString("username"),resultSet.getString("firstname"),
 				resultSet.getString("lastname"), resultSet.getDate("bornDate"), resultSet.getLong("balance"));
 		
 	}
@@ -141,7 +145,7 @@ public static List<Subscriber> findAll() throws SQLException
     List<Subscriber> subscribers = new ArrayList<Subscriber>();
     while(resultSet.next())
     {
-    	subscribers.add(new Subscriber(resultSet.getString("username"),
+    	subscribers.add(Subscriber(resultSet.getString("username"),
     								   resultSet.getString("firstname"),
     								   resultSet.getString("lastname"),
     								   resultSet.getDate("bornDate"),
@@ -179,7 +183,7 @@ public static void update(Subscriber subscriber) throws SQLException
   
   psUpdate.setString(1,  subscriber.getFirstname());
   psUpdate.setString(2, subscriber.getLastname());
-  psUpdate.setDate(3,  subscriber.getBornDate());
+  psUpdate.setDate(3,  convertJavaDateToSqlDate(subscriber.getBornDate().getTime()));
   psUpdate.setLong(4, subscriber.getBalance());
   psUpdate.setString(5, subscriber.getUsername());
   

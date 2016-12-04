@@ -7,6 +7,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.Random;
 
 import Bet.Bet;
 import Individual.Player;
@@ -14,6 +15,7 @@ import Individual.Player;
 import Interface.Competitor;
 import exceptions.AuthentificationException;
 import exceptions.BadParametersException;
+import exceptions.CantBetException;
 import exceptions.MissingTokenException;
 import utils.MyCalendar;
 
@@ -50,14 +52,13 @@ public class Subscriber extends Player {
     private String firstname;
     
     private String lastname;
+    public Subscriber(String username){
+    	
+    	super(username);
+    }
+
     
-    
-    /**
-     * Description of the method authenticate.
-     * @param pwd
-     */
-    
-    public Subscriber(String username, String firstname, String lastname, Calendar bornDate, long balance){
+    public Subscriber(String username, String firstname, String lastname, Calendar bornDate, long balance) throws BadParametersException{
         System.out.println("creation d'un subscriber");
         if(username.length()!=6){
             throw new BadParametersException("LONG_USERNAME Wrong");
@@ -76,13 +77,14 @@ public class Subscriber extends Player {
     }
     
     
-    public boolean authenticate(String pwd) {
+    public boolean authenticate(String pwd) throws AuthentificationException {
         // Start of user code for method authenticate
         // End of user code
-        if(this.password==pwd){
-            return true;
+        if(!(this.password==pwd)){
+            throw new AuthentificationException("password is incorrect!");
         }
-        return false;
+        else{return true;}
+       
     }
     
     /**
@@ -96,8 +98,26 @@ public class Subscriber extends Player {
      * @return password
      */
     public String getPassword() {
-        return this.password;
-        
+            String passwordRandom = "passwordInitial";
+            String[][] element = {{"0"},{"1"},{"2"},{"3"},{"4"},{"5"},{"6"},{"7"},{"8"},{"9"},
+                {"a"},{"b"},{"c"},{"d"},{"e"},{"f"},{"g"},{"h"},{"i"},{"j"},{"k"},{"l"},{"m"},{"n"},
+                {"o"},{"p"},{"q"},{"r"},{"s"},{"t"},{"u"},{"v"},{"w"},{"x"},{"y"},{"z"},
+                {"M"},{"N"},{"O"},{"P"},{"Q"},{"R"},{"S"},{"T"},{"U"},{"V"},{"W"},{"X"},
+                {"A"},{"B"},{"C"},{"D"},{"E"},{"F"},{"G"},{"H"},{"I"},{"J"},{"K"},{"L"},
+                {"Y"},{"Z"}};
+            while(!(passwordRandom.matches(REGEX_PASSWORD))){
+                passwordRandom = "";
+                for(int i=0;i<LONG_PASSWORD;i++){
+                    Random rand = new Random();
+                    int randNum = rand.nextInt(element.length);
+                    
+                    passwordRandom = passwordRandom + element[randNum][0];
+                    
+                    
+                }
+            }
+        this.password=passwordRandom;
+        return passwordRandom;
     }
     
     /**
@@ -265,13 +285,11 @@ public class Subscriber extends Player {
         }
     }
     
-    public boolean checkBlance(long numberTokens){
+    public void checkBlance(long numberTokens) throws CantBetException{
         if(numberTokens>this.balance){
-            return false;
+            throw new CantBetException("Not enough money!");
         }
-        else{return true;}
     }
-    
     
     
     

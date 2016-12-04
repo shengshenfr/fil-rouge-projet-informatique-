@@ -33,6 +33,10 @@ public abstract class AbstractCompetitor implements Competitor {
 
 	// Start of user code (user defined methods for AbstractCompetitor)
 
+	public AbstractCompetitor() {
+		// TODO Auto-generated constructor stub
+	}
+
 	// End of user code
 	/**
 	 * Returns abstractCompetitorName.

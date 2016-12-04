@@ -5,6 +5,9 @@ public class Player extends AbstractCompetitor {
 	
 	private String playerName;
 	
+	public Player(){
+		super();
+	}
 	public Player(String playerName){
 		super(playerName);
 	}
