@@ -69,11 +69,13 @@ public static Entry persist(Entry entry) throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		try {
 			c.setAutoCommit(false);
+
 			PreparedStatement psPersist = c.prepareStatement("insert into Entrys(idEntry, competitionName, competitorName, rank) values(?,?,?,?)");
 			psPersist.setString(2, entry.getCompetition().getName());
 			psPersist.setString(3, entry.getCompetitor().getName());
 			psPersist.setInt(4, Rank.getIndex(entry.getRank()));
 			psPersist.setInt(1, entry.getId());
+
 			psPersist.executeUpdate();
 
 			psPersist.close();
@@ -122,6 +124,7 @@ public static Entry persist(Entry entry) throws SQLException {
 		ResultSet resultSet = psSelect.executeQuery();
 		Entry entry = null;
 		while (resultSet.next()) {
+
 			try {
 				entry = Entry.createEntry(resultSet.getInt("idEntry"),
 						resultSet.getString("competitionName"),
@@ -134,6 +137,7 @@ public static Entry persist(Entry entry) throws SQLException {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
 		}
 		
 		resultSet.close();
@@ -177,6 +181,8 @@ public static Entry persist(Entry entry) throws SQLException {
 		List<Entry> entrys = new ArrayList<Entry>();
 		while (resultSet.next()) {
 			
+
+
 			try {
 				entrys.add(Entry.createEntry(resultSet.getInt("idEntry"), resultSet
 						.getString("competitionName"), resultSet
@@ -188,6 +194,7 @@ public static Entry persist(Entry entry) throws SQLException {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
 		}
 		resultSet.close();
 		psSelect.close();
