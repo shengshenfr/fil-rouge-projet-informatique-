@@ -1,6 +1,5 @@
 /Betting/
-/utils/
-/dbManager/
-/Individual/
 /Bet/
-*.class
+/Individual/
+/dbManager/
+/exceptions/

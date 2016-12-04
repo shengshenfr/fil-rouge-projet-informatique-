@@ -34,9 +34,7 @@ import Betting.Exceptions.NotExistingCompetitionException;
  * @author Robin
  */
 
-
 @SuppressWarnings("unused")
-
 public class DrawBetManager {
 
 	
@@ -121,6 +119,8 @@ public class DrawBetManager {
 	
 	
 // -----------------------------------------------------------------------------
+	// find a draw bet with his id.
+	
 		/**
 		 * Find a betDraw by his id.
 		 * 
@@ -223,7 +223,7 @@ public class DrawBetManager {
 	}
 	
 	
-	// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 		/**
 		 * Find all the betsDraw in the database.
 		 * 
@@ -253,4 +253,53 @@ public class DrawBetManager {
 			return betsDraw;
 		}
 	
+	//--------------------------------------------------------------------------------
+		
+	//--------------------------------------------------------------------------------
+		//find all the draw bets on one competition	
+	
+	public static List<Bet> findAllDrawBetsByCompetition(Competition competition) throws SQLException, BadParametersException, NotExistingCompetitionException {
+		Connection c = DatabaseConnection.getConnection();
+		PreparedStatement psSelect = c
+				.prepareStatement("select * from betsWinner, entrys where betsWinner.idBet = entrys.idEntry and entrys.competitionName = ? ");
+		psSelect.setString(1, competition.getName());
+		ResultSet resultSet = psSelect.executeQuery();
+		List<Bet> drawBetsOnCompetition = new ArrayList<Bet>();
+		while (resultSet.next()) {
+			drawBetsOnCompetition.add(Bet.createDrawBet(
+					resultSet.getInt("idBet"),
+					resultSet.getString("betOwner"),
+					resultSet.getLong("amount"),
+					resultSet.getString("competitionName")
+			));
+		}
+		resultSet.close();
+		psSelect.close();
+		c.close();
+		
+		return drawBetsOnCompetition;
+	}
+	
+//-----------------------------------------------------------------------------------
+	// delete all the draw bets on a competition
+	
+	public static void deleleAllDrawBetsOnCompetition(Competition competition) throws SQLException, BadParametersException, NotExistingCompetitionException {
+		Connection c1 = DatabaseConnection.getConnection();
+		
+		List<Bet> betsOnCompetition = findAllDrawBetsByCompetition(competition);
+		int betsOnCompetitionSize = betsOnCompetition.size();
+		for(int i =0; i < betsOnCompetitionSize; i++){
+			delete(betsOnCompetition.get(i));
+		}
+		c1.close();
+		System.out.println("draw bets on the competition" 
+							+ competition + "have been deleted");		
+			
+	}
+
+//--------------------------------------------------------------------------------
+
+
 }
+
+/*************************************************************************************/

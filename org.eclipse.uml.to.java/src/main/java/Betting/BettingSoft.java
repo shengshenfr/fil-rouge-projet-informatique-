@@ -68,7 +68,7 @@ public class BettingSoft implements Betting {
 		try{
 			// Authenticate manager
 			authenticateMngr(managerPwd);
-			Competition comp = CompetitionManager.findByName(competition);
+			Competition comp = CompetitionManager.findBycompetitionName(competition);
 			//Check if the competition has not been in the system
 			if (comp != null)
 				throw new ExistingCompetitionException("Competition "+competition+" is already in the system");			
@@ -108,7 +108,7 @@ public class BettingSoft implements Betting {
 			// Authenticate manager
 			authenticateMngr(managerPwd);
 
-			Competition c = CompetitionManager.findByName(competition);
+			Competition c = CompetitionManager.findBycompetitionName(competition);
 			//check if the competition is existed
 			if (c == null)
 				throw new ExistingCompetitionException("Competition is not exist");
@@ -147,7 +147,7 @@ public class BettingSoft implements Betting {
 
 
 			//find competition
-			Competition c = CompetitionManager.findByName(competition);
+			Competition c = CompetitionManager.findBycompetitionName(competition);
 			if (c == null)
 				throw new ExistingCompetitionException("Competition "+ competition + " is not exist");
 
@@ -187,7 +187,7 @@ public class BettingSoft implements Betting {
 			Bet bet = new Bet(username,c.getName_competition(),numberTokens,winner,second,third);
 
 			//Debit subscriber 
-			subscriber.debit(numberTokens);
+			subscriber.debitSubscriber(numberTokens);
 
 			//Update subscriber's information in the database
 			SubscriberManager.update(subscriber);
@@ -210,47 +210,36 @@ public class BettingSoft implements Betting {
 		try{
 			//Authenticate subscriber
 			Subscriber subscriber = SubscriberManager.findByUsername(username);
+			subscriber.authenticate(pwdSubs);
+			
 			if (subscriber == null)
 				throw new ExistingSubscriberException("Subscriber username = "+ username + " is not exist");
-
+			
 			//find competition
-			Competition c = CompetitionManager.findByName(competition);
+			Competition c = CompetitionManager.findBycompetitionName(competition);
 			if (competition == null)
 				throw new ExistingCompetitionException("Competition "+ competition + " is not exist");
 
 			//Check if the competition is still open
 			Calendar today = new GregorianCalendar();
-			Calendar closingdate = c.getclosedate_calendar();
+			Calendar closingdate = c.getClosingDate();
 			if (today.after(closingdate))
 				throw new CompetitionException("The competition is closed, you cannot add your bet");
 
 			//Check if the winner participates in this competition 
-			if (!(c.getCompetitors().contains(winner)))
+			//List<Entry> entry = EntryManager.findAllByCompetition(competition);
+			if (!EntryManager.findAllByCompetition(competition).contains(winner))
 				throw new CompetitionException("The competitor isn't in the competition!");
 			
-			//Check if the subscriber is not a competitor in this competition
-			for (Competitor competitor : c.getCompetitors()) {
-				//if the competitor is a player => check if the lastname of subscriber is equal with the name of competitor
-				if (competitor instanceof Player){
-					if (subscriber.equalsPlayer(competitor))
-						throw new CompetitionException("You are a player in the competition " + competition + " so you can not bet in this competition");
-				}
-				//if the competitor is a team => check if the lastname of subscriber is equal with name of any competitor in this team
-				else if (competitor instanceof Team){
-					ArrayList<Competitor> competitors = CompetitorManager.findCompetitorinTeam(((Team) competitor).getTeamName());
-					for (Competitor competitor_temp : competitors) {
-						if (subscriber.equalsPlayer(competitor_temp))
-							throw new CompetitionException("You are a player in the team " +((Team) competitor).getTeamName()+ " who participates in the competition "
-									+ competition + " so you can not bet in this competition");
-					}
-				}
-			}
-
-			//All condition passed, create a bet
-			Bet bet = new Bet(username,c.getName_competition(),numberTokens,winner);
+			//check if subscriber has enough money
+			if (numberTokens>subscriber.getBalance())
+				throw new BadParametersException("you do not have enough money");
+			
+			//All condition passed, create a winner bet
+			WinnerBet winner_bet = new WinnerBet(numberTokens,subscriber.getUsername(),winner);
 
 			//Debit subscriber 
-			subscriber.debit(numberTokens);
+			subscriber.debitSubscriber(numberTokens);
 
 			//Update subscriber's information in the database
 			SubscriberManager.update(subscriber);
@@ -278,7 +267,7 @@ public class BettingSoft implements Betting {
 
 
 			//find competition
-			Competition c = CompetitionManager.findByName(competition);
+			Competition c = CompetitionManager.findBycompetitionName(competition);
 			if (c == null)
 				throw new ExistingCompetitionException("Competition "+ competition + " is not exist");
 
@@ -331,7 +320,7 @@ public class BettingSoft implements Betting {
 			throws AuthentificationException, ExistingCompetitionException, CompetitionException {
 		try{
 			authenticateMngr(managerPwd);
-			Competition c = CompetitionManager.findByName(competition);
+			Competition c = CompetitionManager.findBycompetitionName(competition);
 			//check if the competition is existed
 			if (c == null)
 				throw new NotExistingCompetitionException("Competition " + competition + " is not exist.");
@@ -349,7 +338,7 @@ public class BettingSoft implements Betting {
 			}
 
 			// Delete competition in SQL
-			CompetitionManager.deleteCompetition(c);
+			CompetitionManager.delete(c);
 	}
 	catch(BadParametersException | ExistingSubscriberException | NotExistingCompetitionException |SQLException | NotExistingCompetitorException  e){
 		System.out.println(e);
@@ -361,7 +350,7 @@ public class BettingSoft implements Betting {
 			throws AuthentificationException, BadParametersException {
 		try{
 			Subscriber subscriber = SubscriberManager.findByUsername(username);
-			subscriber.change_subcriber_password(username, currentPwd, newPwd);
+			subscriber.changeSubsPwd(username, currentPwd, newPwd);
 			SubscriberManager.update(subscriber);
 		}
 		catch (SQLException | SubscriberException e){
@@ -373,7 +362,7 @@ public class BettingSoft implements Betting {
 	public ArrayList<String> consultBetsCompetition(String competition) throws ExistingCompetitionException {
 		try{
 			
-			Competition c = CompetitionManager.findByName(competition);
+			Competition c = CompetitionManager.findBycompetitionName(competition);
 			if (c == null)
 				throw new ExistingCompetitionException("Competition "+ competition + " is not exist");
 			//check if the competition is closed
@@ -402,7 +391,7 @@ public class BettingSoft implements Betting {
 		
 		ArrayList<Competitor> winners = new ArrayList<Competitor>();
 		try{
-			Competition c = CompetitionManager.findByName(competition);
+			Competition c = CompetitionManager.findBycompetitionName(competition);
 			if (c == null){
 				throw new ExistingCompetitionException("The competition doesn't exist!");
 			}
@@ -502,7 +491,7 @@ public class BettingSoft implements Betting {
 					throw new ExistingSubscriberException("Subscriber username = "+ username + " is not exist");
 
 				//Credit subscriber
-				subscriber.credit(numberTokens);
+				subscriber.creditSubscriber(numberTokens);
 
 				//Update subscriber's information
 				SubscriberManager.update(subscriber);
@@ -525,7 +514,7 @@ public class BettingSoft implements Betting {
 				throw new ExistingSubscriberException("Subscriber username = "+ username + " is not exist");
 
 			//Debit subscriber
-			subscriber.debit(numberTokens);	
+			subscriber.debitSubscriber(numberTokens);	
 
 			//Update subscriber's information
 			SubscriberManager.update(subscriber);
@@ -543,7 +532,7 @@ public class BettingSoft implements Betting {
 
 			//Authenticate subscriber
 			Subscriber subscriber = SubscriberManager.findByUsername(username);
-			Competition c = CompetitionManager.findByName(competition);
+			Competition c = CompetitionManager.findBycompetitionName(competition);
 			//Check if the competition is exist
 			if (c == null)
 				throw new ExistingCompetitionException("Competition " + competition +" is not exist.");
@@ -582,7 +571,7 @@ public class BettingSoft implements Betting {
 			// Authenticate manager
 			authenticateMngr(managerPwd);
 			//Check if the competition is exist
-			Competition c = CompetitionManager.findByName(competition);
+			Competition c = CompetitionManager.findBycompetitionName(competition);
 
 			if (c == null){
 				throw new ExistingCompetitionException("The competition does not exist");
@@ -610,7 +599,7 @@ public class BettingSoft implements Betting {
 			// Authenticate manager
 			authenticateMngr(managerPwd);
 
-			Competition c = CompetitionManager.findByName(competition);
+			Competition c = CompetitionManager.findBycompetitionName(competition);
 			//check if the competition is existed
 			if (c == null)
 				throw new ExistingCompetitionException("Competition is not exist");
@@ -660,7 +649,7 @@ public class BettingSoft implements Betting {
 	public Collection<Competition> listCompetitors(String competition)
 			throws ExistingCompetitionException, CompetitionException {
 		try{
-			Competition c = CompetitionManager.findByName(competition);
+			Competition c = CompetitionManager.findBycompetitionName(competition);
 			if (c == null)
 				throw new ExistingCompetitionException("Competition "+ competition + " is not exist");
 			//check if the competition is closed
@@ -721,7 +710,7 @@ public class BettingSoft implements Betting {
 			authenticateMngr(managerPwd);
 
 			//Check if a competition is existed
-			Competition c = CompetitionManager.findByName(competition);
+			Competition c = CompetitionManager.findBycompetitionName(competition);
 			if (c == null)
 				throw new ExistingCompetitionException("The competition "+competition+" is not exist");
 
@@ -739,7 +728,7 @@ public class BettingSoft implements Betting {
 			Collection<Bet> bets_competition = BetManager.findPodiumByCompetition(competition);
 			Collection<Bet> bets_competition_podium = new ArrayList<Bet>();
 			for (Bet bet : bets_competition) {
-				if (bet.get_idBet().equals(Podium.idBet))
+				if (bet.getIdBet().equals(idBet))
 					bets_competition_podium.add(bet);
 			}
 
@@ -748,7 +737,7 @@ public class BettingSoft implements Betting {
 
 			// if bets_competition is empty => there are no bet on this competition => delete this competition
 			if (bets_competition.isEmpty()){
-				CompetitionManager.deleteCompetition(c);
+				CompetitionManager.delete(c);
 			}
 			else if (!bets_competition_podium.isEmpty()){
 				for (Bet bet : bets_competition_podium) {
@@ -775,7 +764,7 @@ public class BettingSoft implements Betting {
 				}
 				if (BetManager.findPodiumByCompetition(competition).isEmpty())
 					//if there are no more bet on this competition, delete this competition in the DB
-					CompetitionManager.deleteCompetition(c);
+					CompetitionManager.delete(c);
 			}
 		} catch (ExistingSubscriberException |BadParametersException | SQLException | NotExistingCompetitorException e){
 			System.out.println(e);
@@ -790,7 +779,7 @@ public class BettingSoft implements Betting {
 			authenticateMngr(managerPwd);
 
 			//Check if a competition is existed
-			Competition c = CompetitionManager.findByName(competition);
+			Competition c = CompetitionManager.findBycompetitionName(competition);
 			if (c == null)
 				throw new ExistingCompetitionException("The competition "+competition+" is not exist");
 
@@ -807,7 +796,7 @@ public class BettingSoft implements Betting {
 			Collection<Bet> bets_competition = BetManager.findWinnerByCompetition(competition);
 			Collection<Bet> bets_competition_winner = new ArrayList<Bet>();
 			for (Bet bet : bets_competition) {
-				if (bet.get_idBet().equals(Winner.idBet))
+				if (bet.getIdBet().equals(Winner.idBet))
 					bets_competition_winner.add(bet);
 			}
 
@@ -815,7 +804,7 @@ public class BettingSoft implements Betting {
 			long sum_balance = 0;
 
 			if (bets_competition.isEmpty()){
-				CompetitionManager.deleteCompetition(c);
+				CompetitionManager.delete(c);
 			}
 			else if (!bets_competition_winner.isEmpty()){
 				for (Bet bet : bets_competition_winner) {
@@ -842,7 +831,7 @@ public class BettingSoft implements Betting {
 				}
 				if (BetManager.findWinnerByCompetition(competition).isEmpty())
 					//if there are no more bet on this competition, delete this competition in the DB
-					CompetitionManager.deleteCompetition(c);
+					CompetitionManager.delete(c);
 			}
 		}
 		catch (ExistingSubscriberException |BadParametersException | SQLException | NotExistingCompetitorException e){
@@ -864,12 +853,13 @@ public class BettingSoft implements Betting {
 			// Create the new subscriber
 			// Check if the subscriber is over 18 years old or not is in the method setborndate of Subscriber 
 			Subscriber s = new Subscriber(lastName,firstName,username,dateValide.change_date(borndate));
+			
 
 			// Add subscriber to SQL
 			SubscriberManager.persist(s);
 
 			return s.getPassword();
-
+			
 		}
 
 		catch (SQLException  e){
@@ -893,7 +883,12 @@ public class BettingSoft implements Betting {
 
 			// Delete subscriber from SQL
 			SubscriberManager.delete(s);
+		
 			return number_balance;
+			
+			
+			
+	
 		}
 		
 		catch (NotExistingSubscriberException | SQLException | BadParametersException | SubscriberException e){

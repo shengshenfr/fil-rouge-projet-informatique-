@@ -24,6 +24,7 @@ import dbManager.CompetitorManager;
  * 
  * @author Robin, Rémy
  */
+@SuppressWarnings("unused")
 public class Competition {
 	/**
 	 * Description of the property settled.

@@ -47,8 +47,8 @@ public class SubscriberManager {
 		PreparedStatement psPersist = c.prepareStatement("insert into subscribers(username,firstname,lastname,bornDate,balance) values (?,?,?,?,?)");
 		
 		psPersist.setString(1,  subscriber.getUsername());
-		psPersist.setString(2,  subscriber.getPlayerFirstName());
-		psPersist.setString(3, subscriber.getPlayerLastName());
+		psPersist.setString(2,  subscriber.getFirstname());
+		psPersist.setString(3, subscriber.getLastname());
 		psPersist.setDate(4, subscriber.getBornDate());
 		psPersist.setLong(5, subscriber.getBalance());
 		
