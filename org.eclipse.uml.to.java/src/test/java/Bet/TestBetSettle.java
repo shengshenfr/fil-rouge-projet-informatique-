@@ -18,6 +18,7 @@ import org.junit.Test;
 
 import Bet.Entry;
 import exceptions.BadParametersException;
+import exceptions.CompetitionException;
 import exceptions.MissingCompetitorException;
 import Individual.Subscriber;
 
@@ -54,7 +55,7 @@ public class TestBetSettle {
 		entryC = new Entry(competition, competitorC);
 		entryD = new Entry(competition, competitorD);
 		
-		subscriber = new Subscriber("abob", "Alice", "Bob", new GregorianCalendar(2016, 16, 16), 100);
+		subscriber = new Subscriber("balice", "Alice", "Bob", new GregorianCalendar(2016, 16, 16), 100);
 		
 		assert(competition.getBets().size() == 0);
 		assert(competition.getEntries().size() == 4);
@@ -71,7 +72,7 @@ public class TestBetSettle {
 	}
 	
 	@Test
-	public void testSettleBetAllCompetitors() throws MissingCompetitorException {
+	public void testSettleBetAllCompetitors() throws MissingCompetitorException, CompetitionException {
 		List<Competitor> results = new LinkedList<Competitor>();
 		results.add(competitorA);
 		results.add(competitorB);
@@ -94,7 +95,7 @@ public class TestBetSettle {
 	}
 	
 	@Test
-	public void testSettleBetPodium() throws MissingCompetitorException {
+	public void testSettleBetPodium() throws MissingCompetitorException, CompetitionException {
 		List<Competitor> results = new LinkedList<Competitor>();
 		results.add(competitorA);
 		results.add(competitorB);
@@ -116,7 +117,7 @@ public class TestBetSettle {
 	}
 	
 	@Test
-	public void testSettleBetPodium2() throws MissingCompetitorException {
+	public void testSettleBetPodium2() throws MissingCompetitorException, CompetitionException {
 		List<Competitor> results = new LinkedList<Competitor>();
 		results.add(competitorB);
 		results.add(competitorA);
@@ -138,7 +139,7 @@ public class TestBetSettle {
 	}
 	
 	@Test
-	public void testSettleDraw() throws MissingCompetitorException {
+	public void testSettleDraw() throws MissingCompetitorException, CompetitionException {
 		competition.settleDraw();
 		
 		assert(competition.isDraw());

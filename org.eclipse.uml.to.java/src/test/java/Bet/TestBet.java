@@ -54,7 +54,7 @@ public class TestBet {
 		entryC = new Entry(competition, competitorC);
 		entryD = new Entry(competition, competitorD);
 		
-		subscriber = new Subscriber("abob", "Alice", "Bob", new GregorianCalendar(2016, 16, 16), 100);
+		subscriber = new Subscriber("balice", "Alice", "Bob", new GregorianCalendar(2016, 16, 16), 100);
 	}
 	
 	@Test

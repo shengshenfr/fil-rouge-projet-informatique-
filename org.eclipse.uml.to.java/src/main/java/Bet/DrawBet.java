@@ -49,16 +49,15 @@ public class DrawBet extends Bet {
 	/**
 	 * Sets a value to attribute competitions. 
 	 * @param newCompetitions
+	 * @throws CompetitionException 
 	 */
-	public void setCompetition(Competition newCompetition) {
+	public void setCompetition(Competition newCompetition) throws CompetitionException {
 		this.competition = newCompetition;
 	}
 	
 	@Override
 	public void cancel() throws CompetitionException {
-		if (isOver()) {
-			throw new CompetitionException("Competition is already over!");
-		}
+		checkCompetitionNotOver();
 		
 		this.competition.removeBet(this);
 		try {

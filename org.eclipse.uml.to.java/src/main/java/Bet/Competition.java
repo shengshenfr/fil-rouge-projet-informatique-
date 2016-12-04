@@ -268,10 +268,14 @@ public class Competition {
 		}
 	}
 	
-	public void cancel() throws CompetitionException {
+	public void checkCompetitionNotOver() throws CompetitionException {
 		if (this.isOver()) {
 			throw new CompetitionException("Competition is already over!");
 		}
+	}
+	
+	public void cancel() throws CompetitionException {
+		checkCompetitionNotOver();
 		
 		try {
 			CompetitionManager.delete(this);
@@ -286,7 +290,10 @@ public class Competition {
 		}
 	}
 
-	public void settle(List<Competitor> competitors) throws MissingCompetitorException {
+	public void settle(List<Competitor> competitors) throws MissingCompetitorException, CompetitionException {
+		if (!this.isOver()) {
+			throw new CompetitionException("Competition is not over yet!");
+		}
 		for(int i=0; i<competitors.size(); i++) {
 			Competitor competitor = competitors.get(i);
 			Entry entry = this.getEntryFromCompetitor(competitor);
@@ -311,7 +318,10 @@ public class Competition {
 		this.distributeGains();
 	}
 	
-	public void settleDraw() {
+	public void settleDraw() throws CompetitionException {
+		if (!this.isOver()) {
+			throw new CompetitionException("Competition is not over yet!");
+		}
 		this.setDraw(true);
 		
 		this.settled = true;
