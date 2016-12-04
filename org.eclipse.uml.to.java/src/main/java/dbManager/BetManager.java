@@ -8,6 +8,10 @@ import java.sql.*;
 import java.util.*;
 import utils.DatabaseConnection;
 import Bet.Bet;
+import Bet.Entry;
+import Bet.WinnerBet;
+import Betting.Exceptions.BadParametersException;
+import Betting.Exceptions.NotExistingCompetitionException;
 import Bet.Competition;
 
 
@@ -30,6 +34,7 @@ import Bet.Competition;
  *
  * @author Robin
  */
+@SuppressWarnings("unused")
 public class BetManager {
 	// Start of user code (user defined attributes for BetManager)
 
@@ -52,7 +57,7 @@ public class BetManager {
 	
 		//persist for BetWinner
 	
-	public static Bet persist(Bet betWinner) throws SQLException {
+	public static WinnerBet persist(WinnerBet betWinner) throws SQLException {
 		
 		// Two steps in this method which must be managed in an atomic
 		// (unique) transaction:
@@ -64,28 +69,16 @@ public class BetManager {
 		Connection c = DatabaseConnection.getConnection();
 		try {
 			c.setAutoCommit(false);
-			PreparedStatement psPersist = c.prepareStatement("insert into betsWinner(betOwner, amount,idEntry) values(?,?,?)");
-			psPersist.setString(1, betWinner.getBetOwner().getUsername());
-			psPersist.setLong(2, betWinner.getAmount());
-			psPersist.setInt(3, betWinner.getId());
+			PreparedStatement psPersist = c.prepareStatement("insert into betsWinner(idBet, betOwner, amount,idEntry) values(?,?,?,?)");
+			psPersist.setString(2, betWinner.getBetOwner().getUsername());
+			psPersist.setLong(3, betWinner.getAmount());
+			psPersist.setInt(4, betWinner.getWinner().getId());
+			psPersist.setInt(1, betWinner.getId());
 			
 			psPersist.executeUpdate();
 
 			psPersist.close();
 
-			// Retrieving the value of the id with a request on the
-			// sequence (subscribers_id_seq).
-			
-			PreparedStatement psIdValue = c.prepareStatement("select currval('betsWinner_id_seq') as value_id");
-			ResultSet resultSet = psIdValue.executeQuery();
-			Integer idBet = null;
-			while (resultSet.next()){
-				idBet = resultSet.getInt("value_id");
-			}
-			resultSet.close();
-			psIdValue.close();
-			c.commit();
-			betWinner.setId(idBet);
 		}
 		
 		catch (SQLException e) {
@@ -122,29 +115,33 @@ public class BetManager {
 		 * @throws SQLException
 		 */
 	
-	public static Bet findById(Integer idBet) throws SQLException {
-		/*Connection c = DatabaseConnection.getConnection();
+	public static WinnerBet findById(Integer idBet) throws SQLException {
+		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psSelect = c
 				.prepareStatement("select * from betsWinner where idBet=?");
 		ResultSet resultSet = psSelect.executeQuery();
-		Bet betWinner = null;
+		WinnerBet betWinner = null;
 		while (resultSet.next()) {
-			betWinner = new Bet(resultSet.getInt("idBet"),
-					resultSet.getString("betOwner"),
-					resultSet.getLong("amount"),
-					resultSet.getInt("idEntry"));
+			try {
+				betWinner = Bet.createWinnerBet(resultSet.getInt("idBet"),
+						resultSet.getString("betOwner"),
+						resultSet.getLong("amount"),
+						resultSet.getInt("idEntry"));
+			} catch (BadParametersException | NotExistingCompetitionException e) {
+				
+				e.printStackTrace();
+			}
 		}
 		
 		resultSet.close();
 		psSelect.close();
 		c.close();
 
-		return betWinner;*/
-		return null; // TODO
+		return betWinner;
 	}
 	
 
-	public static void delete(Bet betWinner) throws SQLException {
+	public static void delete(WinnerBet betWinner) throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psUpdate = c
 				.prepareStatement("delete from betsWinner where idBet=?");
@@ -157,37 +154,41 @@ public class BetManager {
 
 
 
-	public static List<Bet> findByOwner(String betOwner) 
-		/*throws SQLException {
+	public static List<WinnerBet> findByOwner(String betOwner) 
+		throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psSelect = c.prepareStatement("select * from"
 				+ "betsWinner where betOwner=? order by idBet");
 		psSelect.setString(1, betOwner);
 		
 		ResultSet resultSet = psSelect.executeQuery();
-		List<Bet> betsWinner = new ArrayList<Bet>();
+		List<WinnerBet> betsWinner = new ArrayList<WinnerBet>();
 		while (resultSet.next()) {
-			betsWinner.add(new Bet(resultSet.getInt("idBet"), resultSet
-					.getString("betOwner"), resultSet
-					.getLong("amount"), resultSet.getInt("idEntry")));
+			try {
+				betsWinner.add(Bet.createWinnerBet(resultSet.getInt("idBet"), resultSet
+						.getString("betOwner"), resultSet
+						.getLong("amount"), resultSet.getInt("idEntry")));
+			} catch (BadParametersException | NotExistingCompetitionException e) {
+				
+				e.printStackTrace();
+			}
 		}
 		resultSet.close();
 		psSelect.close();
 		c.close();
 
-		return betsWinner;*/
-		return null; // TODO
+		return betsWinner;
 	}
 
 	
-	public static void update(Bet betWinner) throws SQLException {
+	public static void update(WinnerBet betWinner) throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psUpdate = c
 				.prepareStatement("update betsWinner set betOwner=?, amount=?, idEntry = ? where idBet=?");
 		psUpdate.setString(1, betWinner.getBetOwner().getUsername());
 		psUpdate.setLong(2, betWinner.getAmount());
 		psUpdate.setInt(4, betWinner.getId());
-		psUpdate.setInt(3,  betWinner.getIdEntry()); // TODO
+		psUpdate.setInt(3,  betWinner.getWinner().getId()); 
 		psUpdate.executeUpdate();
 		psUpdate.close();
 		c.close();
@@ -201,16 +202,21 @@ public class BetManager {
 		 * @return
 		 * @throws SQLException
 		 */
-		public static List<Bet> findAll() throws SQLException {
+		public static List<WinnerBet> findAll() throws SQLException {
 			Connection c = DatabaseConnection.getConnection();
 			PreparedStatement psSelect = c
 					.prepareStatement("select * from betsWinner order by betOwner,idBet");
 			ResultSet resultSet = psSelect.executeQuery();
-			List<Bet> betsWinner = new ArrayList<Bet>();
+			List<WinnerBet> betsWinner = new ArrayList<WinnerBet>();
 			while (resultSet.next()) {
-				betsWinner.add(new Bet(resultSet.getInt("idBet"), resultSet
-						.getString("betOwner"), resultSet
-						.getLong("amount"), resultSet.getInt("idEntry")));
+				try {
+					betsWinner.add(Bet.createWinnerBet(resultSet.getInt("idBet"), resultSet
+							.getString("betOwner"), resultSet
+							.getLong("amount"), resultSet.getInt("idEntry")));
+				} catch (BadParametersException | NotExistingCompetitionException e) {
+					
+					e.printStackTrace();
+				}
 			}
 			resultSet.close();
 			psSelect.close();
@@ -223,17 +229,22 @@ public class BetManager {
 //--------------------------------------------------------------------------
 		//find all the simple bets on one competition	
 	
-	public static List<Bet> findAllSimpleBetsByCompetition(Competition competition) throws SQLException {
+	public static List<WinnerBet> findAllSimpleBetsByCompetition(Competition competition) throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psSelect = c
 				.prepareStatement("select * from betsWinner, entrys where betsWinner.idBet = entrys.idEntry and entrys.competitionName = ? ");
 		psSelect.setString(1, competition.getName());
 		ResultSet resultSet = psSelect.executeQuery();
-		List<Bet> betsOnCompetition = new ArrayList<Bet>();
+		List<WinnerBet> betsOnCompetition = new ArrayList<WinnerBet>();
 		while (resultSet.next()) {
-			betsOnCompetition.add(new Bet(resultSet.getInt("idBet"), resultSet
-					.getString("betOwner"), resultSet
-					.getLong("amount"), resultSet.getInt("idEntry")));
+			try {
+				betsOnCompetition.add(Bet.createWinnerBet(resultSet.getInt("idBet"), resultSet
+						.getString("betOwner"), resultSet
+						.getLong("amount"), resultSet.getInt("idEntry")));
+			} catch (BadParametersException | NotExistingCompetitionException e) {
+				
+				e.printStackTrace();
+			}
 		}
 		resultSet.close();
 		psSelect.close();
@@ -248,7 +259,7 @@ public class BetManager {
 	public static void deleleAllWinnerBetsOnCompetition(Competition competition) throws SQLException {
 		Connection c1 = DatabaseConnection.getConnection();
 		
-		List<Bet> betsOnCompetition = findAllSimpleBetsByCompetition(competition);
+		List<WinnerBet> betsOnCompetition = findAllSimpleBetsByCompetition(competition);
 		int betsOnCompetitionSize = betsOnCompetition.size();
 		for(int i =0; i < betsOnCompetitionSize; i++){
 			delete(betsOnCompetition.get(i));
@@ -262,7 +273,7 @@ public class BetManager {
 //-------------------------------------------------------------------------------------
 	
 	public static ArrayList<Bet> findWinnerByCompetition(Competition competition) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
