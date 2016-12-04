@@ -6,7 +6,7 @@ public class Player extends AbstractCompetitor {
 	private String playerName;
 	
 	public Player(String playerName){
-		this.playerName = playerName;
+		super(playerName);
 	}
 	
 	public String getPlayerName(){

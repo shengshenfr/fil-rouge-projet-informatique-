@@ -25,9 +25,9 @@ public abstract class AbstractCompetitor implements Competitor {
 	/**
 	 * The constructor.
 	 */
-	public AbstractCompetitor() {
+	public AbstractCompetitor(String name) {
 		// Start of user code constructor for AbstractCompetitor)
-		super();
+		this.abstractCompetitorName=name;
 		// End of user code
 	}
 
