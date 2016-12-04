@@ -3,6 +3,10 @@ package Interface;
  * 2016, All rights reserved.
  *******************************************************************************/
 
+import Individual.*;
+import exceptions.BadParametersException;
+import exceptions.ExistingCompetitorException;
+
 // Start of user code (user defined imports)
 
 // End of user code
@@ -13,12 +17,12 @@ package Interface;
  * @author Robin
  */
 public interface Competitor {
-	// Start of user code (user defined attributes for Competitor)
-
-	// End of user code
-
-	// Start of user code (user defined methods for Competitor)
-
-	// End of user code
+	boolean hasValidName();
+	
+	void addMember(Competitor member) throws ExistingCompetitorException,
+		BadParametersException;
+	
+	void deleteMember(Competitor member) throws BadParametersException,
+	ExistingCompetitorException;
 
 }
