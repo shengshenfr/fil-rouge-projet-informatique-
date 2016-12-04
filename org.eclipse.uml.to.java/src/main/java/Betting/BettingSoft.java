@@ -88,13 +88,7 @@ public class BettingSoft implements Betting {
 			CompetitionManager.persist(c);
 		}
 		catch (SQLException e) {
-			try {
-				System.out.println("competition not added");
-				
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-			throw e;
+			System.out.println("competition not added");
 			
 		}
 		
@@ -115,12 +109,11 @@ public class BettingSoft implements Betting {
 
 			//check if the competition is still open
 			Calendar today = new GregorianCalendar();
-			if (c.getclosedate_calendar().before(today))
+			if (c.getClosingDate().before(today))
 				throw new CompetitionException ("This competition is already close");			
 
 		
-			c.add_competitor(competitor);
-
+	
 			//Add to SQL
 			CompetitionManager.addCompetitor(c, competitor);
 		}
@@ -153,39 +146,23 @@ public class BettingSoft implements Betting {
 
 			//check if the competition is still open
 			Calendar today = new GregorianCalendar();
-			Calendar closingdate = c.getclosedate_calendar();
+			Calendar closingdate = c.getClosingDate();
 			if (today.after(closingdate))
 				throw new CompetitionException("The competition is closed, you cannot add your bet");
 
 			//check if the competitors participate in this competition
-			if (!(c.getCompetitors().contains(winner)))
+			if (!(!EntryManager.findAllByCompetition(competition).contains(winner)))
 				throw new CompetitionException("The competitor 1 isn't in the competition!");
-			if (!(c.getCompetitors().contains(second)))
+			if (!(!EntryManager.findAllByCompetition(competition).contains(second)))
 				throw new CompetitionException("The competitor 2 isn't in the competition!");
-			if (!(c.getCompetitors().contains(third)))
+			if (!(!EntryManager.findAllByCompetition(competition).contains(third)))
 				throw new CompetitionException("The competitor 3 isn't in the competition!");
 		
-			//Check if the subscriber is not a competitor in this competition
-			for (Competitor competitor : c.getCompetitors()) {
-				//if the competitor is a player => check if the lastname of subscriber is equal with the name of competitor
-				if (competitor instanceof Player){
-					if (subscriber.equalsPlayer(competitor))
-						throw new CompetitionException("You are a player in the competition " + competition + " so you can not bet in this competition");
-				}
-				//if the competitor is a team => check if the lastname of subscriber is equal with name of any competitor in this team
-				else if (competitor instanceof Team){
-					ArrayList<Competitor> competitors = CompetitorManager.findCompetitorinTeam(((Team) competitor).getTeamName());
-					for (Competitor competitor_temp : competitors) {
-						if (subscriber.equalsPlayer(competitor_temp))
-							throw new CompetitionException("You are a player in the team " +((Team) competitor).getTeamName()+ " who participates in the competition "
-									+ competition + " so you can not bet in this competition");
-					}
-				}
-			}
+		
 
 			//All condition passed, create a bet
-			Bet bet = new Bet(username,c.getName_competition(),numberTokens,winner,second,third);
-
+		
+			PodiumBet podium_bet = new PodiumBet(numberTokens,subscriber,(Entry)winner,(Entry)second,(Entry)third);
 			//Debit subscriber 
 			subscriber.debitSubscriber(numberTokens);
 
@@ -193,9 +170,9 @@ public class BettingSoft implements Betting {
 			SubscriberManager.update(subscriber);
 
 			//Persist the bet
-			BetManager.persist(bet);
+			//PodiumBetManager.persist(podium_bet);
 		}
-		catch ( ExistingSubscriberException | NotExistingCompetitorException| SQLException e){
+		catch ( ExistingSubscriberException | SQLException e){
 			if (e instanceof ExistingSubscriberException)
 				throw new AuthentificationException();
 			if (e instanceof ExistingCompetitorException)
@@ -212,8 +189,11 @@ public class BettingSoft implements Betting {
 			Subscriber subscriber = SubscriberManager.findByUsername(username);
 			subscriber.authenticate(pwdSubs);
 			
-			if (subscriber == null)
-				throw new ExistingSubscriberException("Subscriber username = "+ username + " is not exist");
+			if (subscriber == null) {
+				throw new AuthentificationException("Subscriber username = "+ username + " is not exist");
+			}
+			
+
 			
 			//find competition
 			Competition c = CompetitionManager.findBycompetitionName(competition);
@@ -236,7 +216,7 @@ public class BettingSoft implements Betting {
 				throw new BadParametersException("you do not have enough money");
 			
 			//All condition passed, create a winner bet
-			WinnerBet winner_bet = new WinnerBet(numberTokens,subscriber.getUsername(),winner);
+			WinnerBet winner_bet = new WinnerBet(numberTokens,subscriber,(Entry)winner);
 
 			//Debit subscriber 
 			subscriber.debitSubscriber(numberTokens);
@@ -245,13 +225,10 @@ public class BettingSoft implements Betting {
 			SubscriberManager.update(subscriber);
 
 			//Persist the bet
-			BetManager.persist(bet);
+			//WinnerBetManager.persist(winner_bet);
 		}
-		catch ( ExistingSubscriberException | NotExistingCompetitorException| SQLException e){
-			if (e instanceof ExistingSubscriberException)
-				throw new AuthentificationException();
-			if (e instanceof ExistingCompetitorException)
-				throw new CompetitionException();
+		catch (  SQLException e){
+			System.out.println(e);
 		}
 	}
 
@@ -273,42 +250,25 @@ public class BettingSoft implements Betting {
 
 			//check if the competition is still open
 			Calendar today = new GregorianCalendar();
-			Calendar closingdate = c.getclosedate_calendar();
+			Calendar closingdate = c.getClosingDate();
 			if (today.after(closingdate))
 				throw new CompetitionException("The competition is closed, you cannot add your bet");
 
 
-			//check if the subscriber is not a competitor in this competition
-			for (Competitor competitor : c.getCompetitors()) {
-				//if the competitor is a player => check if the lastname of subscriber is equal with the name of competitor
-				if (competitor instanceof Player){
-					if (subscriber.equalsPlayer(competitor))
-						throw new CompetitionException("You are a player in the competition " + competition + " so you can not bet in this competition");
-				}
-				//if the competitor is a team => check if the lastname of subscriber is equal with name of any competitor in this team
-				else if (competitor instanceof Team){
-					ArrayList<Competitor> competitors = CompetitorManager.findPlayerinTeam(((Team) competitor).getTeamName());
-					for (Competitor competitor_temp : competitors) {
-						if (subscriber.equalsPlayer(competitor_temp))
-							throw new CompetitionException("You are a player in the team " +((Team) competitor).getTeamName()+ " who participates in the competition "
-									+ competition + " so you can not bet in this competition");
-					}
-				}
-			}
-
+		
 			//All condition passed, create a bet
-			Bet bet = new Bet(username,c.getName_competition(),numberTokens);
-
+			
+			DrawBet draw_bet = new DrawBet(numberTokens,subscriber,c);
 			//Debit subscriber 
-			subscriber.debit(numberTokens);
+			subscriber.debitSubscriber(numberTokens);
 
 			//Update subscriber's information in the database
 			SubscriberManager.update(subscriber);
 
 			//Persist the bet
-			BetManager.persist(bet);
+			//DrawBetManager.persist(draw_bet);
 		}
-		catch ( ExistingSubscriberException | NotExistingCompetitorException| SQLException e){
+		catch ( ExistingSubscriberException | SQLException e){
 			if (e instanceof ExistingSubscriberException)
 				throw new AuthentificationException();
 			if (e instanceof ExistingCompetitorException)
@@ -327,13 +287,14 @@ public class BettingSoft implements Betting {
 			
 			//check if the competition is still open
 			Calendar today = new GregorianCalendar();
-			if (c.getclosedate_calendar().before(today))
+			Calendar closingdate = c.getClosingDate();
+			if (closingdate.before(today))
 				throw new CompetitionException ("This competition is already close");
 			
-			ArrayList<Bet> bets = (ArrayList<Bet>) BetManager.findAllByCompetition(competition);
+			ArrayList<Bet> bets = (ArrayList<Bet>) BetManager.findAllSimpleBetsByCompetition(c);
 			
 			for (Bet bet : bets) {
-				this.creditSubscriber(bet.getUsername(), bet.getBalance(), managerPwd);
+				this.creditSubscriber(bet.getBetOwner(), bet.getAmount(), managerPwd);
 				BetManager.delete(bet);
 			}
 
@@ -353,7 +314,7 @@ public class BettingSoft implements Betting {
 			subscriber.changeSubsPwd(username, currentPwd, newPwd);
 			SubscriberManager.update(subscriber);
 		}
-		catch (SQLException | SubscriberException e){
+		catch (SQLException e){
 			System.out.println(e);
 		}
 	}
@@ -367,11 +328,11 @@ public class BettingSoft implements Betting {
 				throw new ExistingCompetitionException("Competition "+ competition + " is not exist");
 			//check if the competition is closed
 			Calendar today = new GregorianCalendar();
-			Calendar closingdate = c.getclosedate_calendar();
+			Calendar closingdate = c.getClosingDate();
 			if (today.after(closingdate))
 				throw new CompetitionException("The competition is closed, you cannot get the bets list");
 
-			list<Entry> entryBet = EntryManager.findAllByCompetition(competition);
+			List<Entry> entryBet = EntryManager.findAllByCompetition(competition);
 
 			ArrayList<String> listEntryBets = new ArrayList<String>();
 			
@@ -381,7 +342,7 @@ public class BettingSoft implements Betting {
 			
 			return listEntryBets;
 		}
-		catch(BadParametersException |  SQLException | NotExistingCompetitorException | CompetitionException e){
+		catch(  SQLException | CompetitionException e){
 			return null;
 		}
 	}
@@ -389,7 +350,7 @@ public class BettingSoft implements Betting {
 	@Override
 	public ArrayList<Competitor> consultResultsCompetition(String competition) throws ExistingCompetitionException {
 		
-		ArrayList<Competitor> winners = new ArrayList<Competitor>();
+
 		try{
 			Competition c = CompetitionManager.findBycompetitionName(competition);
 			if (c == null){
@@ -398,34 +359,20 @@ public class BettingSoft implements Betting {
 		
 			//check if the competition is closed
 			Calendar today = new GregorianCalendar();
-			Calendar closingdate = c.getclosedate_calendar();
+			Calendar closingdate = c.getClosingDate();
 			if (today.after(closingdate))
 				throw new CompetitionException("The competition is closed, you cannot get the bets list");
 		
-			List<Competitor> competitors = CompetitorManager.findAllByCompetition(competition);
+			List<Entry> winners = EntryManager.findAllByCompetition(competition);
 
+			return winners;
 		
-			winners.add(null);
-			winners.add(null);
-			winners.add(null);
-		
-			for (int i=0; i<competitors.size();i++){
-				Competitor competitor = competitors.get(i);
-				int rank=0;
-				rank=c.getRankCompetitor(competitor);
-				
-				if (rank>0 && rank<4){
-					winners.add(rank, competitor);
-					if (winners.get(rank+1)==null)
-						winners.remove(rank+1);
-				}
-			}
 		}
 	
 		catch(SQLException | BadParametersException | CompetitionException | ExistingCompetitorException e){
 			System.out.println(e);
 		}
-		return winners;
+
 	}
 
 	@Override
@@ -539,20 +486,20 @@ public class BettingSoft implements Betting {
 
 			//Check if the old competition is still open
 			Calendar today = new GregorianCalendar();
-			Calendar closingdate = c.getclosedate_calendar();
+			Calendar closingdate = c.getClosingDate();
 			if (today.after(closingdate))
 				throw new CompetitionException("The competition is closed");
 
 			//Get bets of subscriber
-			List<Bet> bets = BetManager.findByUsername(username);
-
+			List<Bet> bets = BetManager.findByOwner(username);
+			
 			for (Bet bet : bets) {
-				if (bet.get_competition() == c.getName_competition()){
+				
 					//recredit tokens to subscriber
-					subscriber.credit(bet.getBalance());
+					subscriber.creditSubscriber(bet.getAmount());
 					//delete bet form DB
 					BetManager.delete(bet);
-				}
+				
 			}
 
 			//Update subscriber's information in the database
@@ -577,11 +524,11 @@ public class BettingSoft implements Betting {
 				throw new ExistingCompetitionException("The competition does not exist");
 			}
 		
-			if (c.getclosedate_calendar().after(MyCalendar.getDate())){
+			if (c.getClosingDate().after(MyCalendar.getDate())){
 				throw new CompetitionException("The competition is not finished yet");
 			}
 
-			BetManager.deleleAllBetsOnCompetition(c);
+			BetManager.deleleAllWinnerBetsOnCompetition(c);
 
 			CompetitionManager.delete(c);
 			} 
@@ -606,11 +553,11 @@ public class BettingSoft implements Betting {
 
 			//Check if the competition is still open
 			Calendar today = new GregorianCalendar();
-			if (c.getclosedate_calendar().before(today))
+			Calendar closingdate = c.getClosingDate();
+			if (closingdate.before(today))
 				throw new CompetitionException ("This competition is already close");	
 
-			//Check if the number of competitor left is more than 2 is in the method below
-			c.deleteCompetitor(competitor);
+	
 
 			//Delete in SQL
 			CompetitionManager.deleteCompetitor(c, competitor);
@@ -636,33 +583,32 @@ public class BettingSoft implements Betting {
 	}
 
 	@Override
-	public List<List<String>> listCompetitions() {
+	public List<Competition> listCompetitions() {
 		try{
-			return CompetitionManager.findAll();
+			List<Competition>  competitions = CompetitionManager.findAll();
+			return competitions;
 		}
-		catch (SQLException | BadParametersException| NotExistingCompetitorException | CompetitionException e){
+		catch (SQLException | BadParametersException e){
 			return null;
 		}
+	
 	}
 
 	@Override
-	public Collection<Competition> listCompetitors(String competition)
+	public List<Entry> listCompetitors(String competition)
 			throws ExistingCompetitionException, CompetitionException {
 		try{
 			Competition c = CompetitionManager.findBycompetitionName(competition);
 			if (c == null)
 				throw new ExistingCompetitionException("Competition "+ competition + " is not exist");
-			//check if the competition is closed
-			Calendar today = new GregorianCalendar();
-			Calendar closingdate = c.getclosedate_calendar();
-			if (today.after(closingdate))
-				throw new CompetitionException("The competition is closed, you cannot get the competitors list");
+		List<Entry> competitors = EntryManager.findCompetitorByCompetition(competition);
 
-			return c.getCompetitors();
+			return competitors;
 		}
 		catch (BadParametersException | SQLException e){
 			return null;
 		}
+		
 	}
 
 	@Override
@@ -716,7 +662,7 @@ public class BettingSoft implements Betting {
 
 			//Check if the competition is closed
 			Calendar today = new GregorianCalendar();
-			if (c.getclosedate_calendar().after(today))
+			if (c.getClosingDate().after(today))
 				throw new CompetitionException ("This competition still open");
 
 			if (!(c.getCompetitors().contains(winner) || c.getCompetitors().contains(second) || c.getCompetitors().contains(third)))
@@ -785,15 +731,15 @@ public class BettingSoft implements Betting {
 
 			//Check if the competition is closed
 			Calendar today = new GregorianCalendar();
-			if (c.getclosedate_calendar().after(today))
+			if (c.getClosingDate().after(today))
 				throw new CompetitionException ("This competition still open");
 
-			if (!(c.getCompetitors().contains(winner)))
+			if (!(CompetitorManager.findCompetitorBycompetitionName(competition).contains(winner)))
 				throw new CompetitionException("the competitors isn't in the competition!");
 
 			
 			//Find bet winner on this competition
-			Collection<Bet> bets_competition = BetManager.findWinnerByCompetition(competition);
+			Collection<Bet> bets_competition = BetManager.findAllSimpleBetsByCompetition(competition);
 			Collection<Bet> bets_competition_winner = new ArrayList<Bet>();
 			for (Bet bet : bets_competition) {
 				if (bet.getIdBet().equals(Winner.idBet))
