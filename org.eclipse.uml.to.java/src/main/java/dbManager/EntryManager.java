@@ -66,11 +66,11 @@ public static Entry persist(Entry entry) throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		try {
 			c.setAutoCommit(false);
-			PreparedStatement psPersist = c.prepareStatement("insert into Entrys(idEntry, competitionName, competitorName, rank) values(?,?,?,?)");
-			psPersist.setString(2, entry.getCompetition().getName());
-			psPersist.setLong(3, entry.getCompetitor().getName());
+			PreparedStatement psPersist = c.prepareStatement("insert into Entrys(competitionName, competitorName,idEntry, rank) values(?,?,?,?,?)");
+			psPersist.setString(1, entry.getCompetition().getName());
+			psPersist.setString(2, entry.getCompetitor().getName());
 			psPersist.setInt(4, entry.getRank());
-			psPersist.setInt(1, entry.getId());
+			psPersist.setInt(3, entry.getId());
 			psPersist.executeUpdate();
 
 			psPersist.close();
@@ -119,9 +119,8 @@ public static Entry persist(Entry entry) throws SQLException {
 		ResultSet resultSet = psSelect.executeQuery();
 		Entry entry = null;
 		while (resultSet.next()) {
-			entry = new Entry(resultSet.getInt("idEntry"),
-					resultSet.getString("competitionName"),
-					resultSet.getString("competitorName"),
+			entry = createEntry(resultSet.getString("competitionName"),
+					resultSet.getString("competitorName"),resultSet.getInt("idEntry"),
 					resultSet.getInt("rank"));
 		}
 		
@@ -166,7 +165,7 @@ public static Entry persist(Entry entry) throws SQLException {
 		List<Entry> entrys = new ArrayList<Entry>();
 		while (resultSet.next()) {
 			
-			entrys.add(new Entry(resultSet.getInt("idEntry"), resultSet
+			entrys.add(new createEntry(resultSet.getInt("idEntry"), resultSet
 					.getString("competitionName"), resultSet
 					.getString("competitorName"), resultSet.getInt("rank")));
 		}
@@ -213,7 +212,7 @@ public static Entry persist(Entry entry) throws SQLException {
 				.prepareStatement("update entrys set rank= ?, competitioName=?, competitorName = ? where idEntry=?");
 		psUpdate.setInt(1, entry.getRank());
 		psUpdate.setString(2, entry.getCompetition().getName());
-		psUpdate.setString(4, entry.getCompetitor());
+		psUpdate.setString(4, entry.getCompetitor().getName());
 		psUpdate.setInt(3,  entry.getId());
 		psUpdate.executeUpdate();
 		psUpdate.close();
