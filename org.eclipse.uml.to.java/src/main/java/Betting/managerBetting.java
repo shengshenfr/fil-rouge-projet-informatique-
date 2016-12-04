@@ -1,5 +1,7 @@
 package Individual;
 
+import exceptions.BadParametersException;
+
 public class managerBetting {
 	private int LONG_USERNAME = 6;
 	private String REGEX_USERNAME = "^[0-9A-Za-z]{6}$";
@@ -8,16 +10,16 @@ public class managerBetting {
 	private String username;
 	private String password;
 	
-	public managerBetting(String username,String pwdMngr){
+	public managerBetting(String username,String pwdMngr) throws BadParametersException{
 		if(username.length()==6&&username.matches(REGEX_USERNAME)){
 		this.username = username;
 		System.out.println("Username is finish");
 		}
 		if(username.length()!=6){
-			System.out.println("LONG_USERNAME Wrong");
+			throw new ("LONG_USERNAME Wrong");
 		}
 		if(!username.matches(REGEX_USERNAME)){
-			System.out.println("REGEX_USERNAME Wrong");
+			throw new ("REGEX_USERNAME Wrong");
 		}
 
 		if(pwdMngr.length()==8&&pwdMngr.matches(REGEX_PASSWORD)){
@@ -25,10 +27,10 @@ public class managerBetting {
 		System.out.println("Password is finish");
 		}
 		if(pwdMngr.length()!=8){
-			System.out.println("LONG_PASSWORD Wrong");
+			throw new ("LONG_PASSWORD Wrong");
 		}
 		if(!pwdMngr.matches(REGEX_PASSWORD)){
-			System.out.println("REGEX_PASSWORD Wrong");
+			throw new ("REGEX_PASSWORD Wrong");
 		}
 	}
 	
