@@ -4,7 +4,16 @@
 package Bet;
 
 import Interface.Competitor;
+import dbManager.CompetitionManager;
+import dbManager.CompetitorManager;
+import dbManager.EntryManager;
+import dbManager.SubscriberManager;
+
+import java.sql.SQLException;
+
 import Bet.Entry;
+import Betting.Exceptions.BadParametersException;
+import Betting.Exceptions.NotExistingCompetitionException;
 import Individual.Subscriber;
 
 /**
@@ -46,10 +55,68 @@ abstract public class Bet {
 		this(amount, betOwner, nextId++);
 	}
 	
-	public Bet(long amount, Subscriber betOwner, int idBet) {
+	public Bet(long amount, Subscriber betOwner, int id) {
 		this.amount = amount;
 		this.betOwner = betOwner;
-		this.id = idBet;
+		this.id = id;
+	}
+	
+	static public DrawBet createDrawBet(int id, String ownerName, long amount, String competitionName) throws BadParametersException, NotExistingCompetitionException {
+		Subscriber owner;
+		try {
+			owner = SubscriberManager.findByUsername(ownerName);
+		} catch (SQLException e) {
+			return null;
+		}
+		Competition competition = CompetitionManager.findBycompetitionName(competitionName);
+		
+		DrawBet bet = new DrawBet(amount, owner, competition);
+		bet.setId(id);
+		return bet;
+	}
+	
+	static public WinnerBet createWinnerBet(int id, String ownerName, long amount, int idWinner) throws BadParametersException, NotExistingCompetitionException {
+		Subscriber owner;
+		try {
+			owner = SubscriberManager.findByUsername(ownerName);
+		} catch (SQLException e) {
+			return null;
+		}
+		// TODO: add exception notExistingEntry...
+		Entry winner = null;
+		try {
+			winner = EntryManager.findById(idWinner);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WinnerBet bet = new WinnerBet(amount, owner, winner);
+		bet.setId(id);
+		return bet;
+	}
+	
+	static public PodiumBet createPodiumBet(int id, String ownerName, long amount, int idFirst, int idSecond, int idThird) throws BadParametersException, NotExistingCompetitionException {
+		Subscriber owner;
+		try {
+			owner = SubscriberManager.findByUsername(ownerName);
+		} catch (SQLException e) {
+			return null;
+		}
+		// TODO: add exception notExistingEntry...
+		Entry first = null, second = null, third = null;
+		try {
+			first = EntryManager.findById(idFirst);
+			second = EntryManager.findById(idSecond);
+			third = EntryManager.findById(idThird);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		PodiumBet bet = new PodiumBet(amount, owner, first, second, third);
+		bet.setId(id);
+		return bet;
 	}
 
 	/**

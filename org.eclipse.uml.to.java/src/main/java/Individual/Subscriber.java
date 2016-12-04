@@ -20,7 +20,7 @@ import utils.MyCalendar;
  * 
  * @author Robin
  */
-public class Subscriber extends Player {
+public class Subscriber /*extends Player*/ {
 	/**
 	 * Description of the property password.
 	 */
@@ -239,7 +239,7 @@ public class Subscriber extends Player {
 
 	public boolean equalsPlayer(Competitor competitor) {
 		// TODO Auto-generated method stub
-        if(this.username==competitor.username){
+        if(false/*this.username==competitor.username*/){
             return true;
         }
         else{
@@ -251,7 +251,7 @@ public class Subscriber extends Player {
 		// TODO Auto-generated method stub
         if(numberTokens<0)
         {
-            println("Please give me a number positive!")
+        	System.out.println("Please give me a number positive!");
         }
         else{
             this.balance=this.balance+numberTokens;
@@ -262,10 +262,10 @@ public class Subscriber extends Player {
 	public void changeSubsPwd(String username2, String currentPwd, String newPwd) {
 		// TODO Auto-generated method stub
         if(this.authenticate(currentPwd)){
-            this.pwd=newPwd;
+            this.password=newPwd;
         }
         else{
-            println("You didn't have the right pass word, this change is wrong!")
+            System.out.println("You didn't have the right pass word, this change is wrong!");
         }
 	}
 
@@ -273,10 +273,10 @@ public class Subscriber extends Player {
 		// TODO Auto-generated method stub
         if(numberTokens<0)
         {
-            println("Please give me a number positive!")
+        	System.out.println("Please give me a number positive!");
         }
         else if(this.balance<numberTokens){
-            println("You didn't have enough money for this bet!")
+        	System.out.println("You didn't have enough money for this bet!");
         }
         else{
             this.balance=this.balance-numberTokens;

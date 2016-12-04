@@ -65,9 +65,9 @@ public class BetManager {
 		try {
 			c.setAutoCommit(false);
 			PreparedStatement psPersist = c.prepareStatement("insert into betsWinner(betOwner, amount,idEntry) values(?,?,?)");
-			psPersist.setString(1, betWinner.getBetOwner());
+			psPersist.setString(1, betWinner.getBetOwner().getUsername());
 			psPersist.setLong(2, betWinner.getAmount());
-			psPersist.setInt(3, betWinner.getIdEntry());
+			psPersist.setInt(3, betWinner.getId());
 			
 			psPersist.executeUpdate();
 
@@ -85,7 +85,7 @@ public class BetManager {
 			resultSet.close();
 			psIdValue.close();
 			c.commit();
-			betWinner.setIdBet(idBet);
+			betWinner.setId(idBet);
 		}
 		
 		catch (SQLException e) {
@@ -123,7 +123,7 @@ public class BetManager {
 		 */
 	
 	public static Bet findById(Integer idBet) throws SQLException {
-		Connection c = DatabaseConnection.getConnection();
+		/*Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psSelect = c
 				.prepareStatement("select * from betsWinner where idBet=?");
 		ResultSet resultSet = psSelect.executeQuery();
@@ -139,7 +139,8 @@ public class BetManager {
 		psSelect.close();
 		c.close();
 
-		return betWinner;
+		return betWinner;*/
+		return null; // TODO
 	}
 	
 
@@ -147,7 +148,7 @@ public class BetManager {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psUpdate = c
 				.prepareStatement("delete from betsWinner where idBet=?");
-		psUpdate.setInt(1, betWinner.getIdBet());
+		psUpdate.setInt(1, betWinner.getId());
 		psUpdate.executeUpdate();
 		psUpdate.close();
 		c.close();
@@ -157,7 +158,7 @@ public class BetManager {
 
 
 	public static List<Bet> findByOwner(String betOwner) 
-		throws SQLException {
+		/*throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psSelect = c.prepareStatement("select * from"
 				+ "betsWinner where betOwner=? order by idBet");
@@ -174,7 +175,8 @@ public class BetManager {
 		psSelect.close();
 		c.close();
 
-		return betsWinner;
+		return betsWinner;*/
+		return null; // TODO
 	}
 
 	
@@ -182,10 +184,10 @@ public class BetManager {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psUpdate = c
 				.prepareStatement("update betsWinner set betOwner=?, amount=?, idEntry = ? where idBet=?");
-		psUpdate.setString(1, betWinner.getBetOwner());
+		psUpdate.setString(1, betWinner.getBetOwner().getUsername());
 		psUpdate.setLong(2, betWinner.getAmount());
-		psUpdate.setInt(4, betWinner.getIdBet());
-		psUpdate.setInt(3,  betWinner.getIdEntry());
+		psUpdate.setInt(4, betWinner.getId());
+		psUpdate.setInt(3,  betWinner.getIdEntry()); // TODO
 		psUpdate.executeUpdate();
 		psUpdate.close();
 		c.close();

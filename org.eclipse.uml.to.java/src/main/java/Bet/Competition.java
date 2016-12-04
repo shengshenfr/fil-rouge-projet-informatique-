@@ -3,11 +3,12 @@
  *******************************************************************************/
 package Bet;
 
+import java.sql.Date;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-
-import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,6 +16,8 @@ import java.util.List;
 import Betting.Exceptions.BadParametersException;
 import Betting.Exceptions.NotExistingCompetitorException;
 import Interface.Competitor;
+import dbManager.CompetitionManager;
+import dbManager.CompetitorManager;
 
 /**
  * Description of Competition.
@@ -78,6 +81,18 @@ public class Competition {
 		this(competitionName, closingDate);
 		this.startingDate = startingDate;
 	}
+	
+	public static Competition createCompetition(String competitionName, Date startingDate, Date closingDate, boolean settled, boolean draw) throws BadParametersException {
+		Calendar startingCalendar = new GregorianCalendar();
+		startingCalendar.setTimeInMillis(startingDate.getTime());
+		Calendar closingCalendar = new GregorianCalendar();
+		closingCalendar.setTimeInMillis(startingDate.getTime());
+		
+		Competition competition = new Competition(competitionName, startingCalendar, closingCalendar);
+		competition.setSettled(settled);
+		competition.setDraw(draw);
+		return competition;
+	}
 
 	/**
 	 * Returns settled.
@@ -131,7 +146,7 @@ public class Competition {
 	 * Returns closingDate.
 	 * @return closingDate 
 	 */
-	public Calendar getClosingDate() {
+	public Calendar getClosingCalendar() {
 		return this.closingDate;
 	}
 
@@ -147,8 +162,16 @@ public class Competition {
 	 * Returns startingDate.
 	 * @return startingDate 
 	 */
-	public Calendar getStartingDate() {
+	public Calendar getStartingCalendar() {
 		return this.startingDate;
+	}
+	
+	public Date getStartingDate() {
+		return new Date(getStartingCalendar().getTimeInMillis());
+	}
+	
+	public Date getClosingDate() {
+		return new Date(getClosingCalendar().getTimeInMillis());
 	}
 
 	/**

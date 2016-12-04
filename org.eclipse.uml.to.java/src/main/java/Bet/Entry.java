@@ -3,10 +3,14 @@
  *******************************************************************************/
 package Bet;
 
+import java.sql.SQLException;
 import java.util.HashSet;
 
 import Betting.Exceptions.BadParametersException;
+import Betting.Exceptions.NotExistingCompetitionException;
 import Interface.Competitor;
+import dbManager.CompetitionManager;
+import dbManager.CompetitorManager;
 
 // Start of user code (user defined imports)
 
@@ -61,6 +65,12 @@ public class Entry {
 	 */
 	public Entry(Competition competition, Competitor competitor) throws BadParametersException {
 		this(competition, competitor, nextId++);
+	}
+	
+	static public Entry createEntry(String competitionName, String competitorName, int id) throws BadParametersException, NotExistingCompetitionException {
+		Competition competition = CompetitionManager.findBycompetitionName(competitionName);
+		Competitor competitor = CompetitorManager.findCompetitorByName(competitorName);
+		return new Entry(competition, competitor, id);
 	}
 
 	/**
