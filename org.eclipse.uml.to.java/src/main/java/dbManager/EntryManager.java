@@ -4,7 +4,10 @@
 package dbManager;
 
 import Bet.Bet;
+import Bet.Competition;
 import Bet.Entry;
+import Interface.Competitor;
+
 import java.sql.*;
 import java.util.*;
 import utils.DatabaseConnection;
@@ -63,29 +66,15 @@ public static Entry persist(Entry entry) throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		try {
 			c.setAutoCommit(false);
-			PreparedStatement psPersist = c.prepareStatement("insert into Entrys(competitionName, competitorName, rank) values(?,?,?)");
-			psPersist.setString(1, entry.getCompetitionName());
-			psPersist.setLong(2, entry.getCompetitorName());
-			psPersist.setInt(3, entry.getRank());
-			
+			PreparedStatement psPersist = c.prepareStatement("insert into Entrys(idEntry, competitionName, competitorName, rank) values(?,?,?,?)");
+			psPersist.setString(2, entry.getCompetition().getName());
+			psPersist.setLong(3, entry.getCompetitor().getName());
+			psPersist.setInt(4, entry.getRank());
+			psPersist.setInt(1, entry.getId());
 			psPersist.executeUpdate();
 
 			psPersist.close();
 
-			// Retrieving the value of the id with a request on the
-			// sequence (subscribers_id_seq).
-			
-			PreparedStatement psIdValue = c.prepareStatement("select currval('EntrysWinner_id_seq') as value_id");
-			ResultSet resultSet = psIdValue.executeQuery();
-			Integer idEntry = null;
-			while (resultSet.next()){
-				idEntry = resultSet.getInt("value_id");
-			}
-			resultSet.close();
-			psIdValue.close();
-			c.commit();
-			
-			entry.setIdEntry(idEntry);
 		}
 		
 		catch (SQLException e) {
@@ -152,7 +141,7 @@ public static Entry persist(Entry entry) throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psUpdate = c
 				.prepareStatement("delete from Entrys where idEntry=?");
-		psUpdate.setInt(1, entry.getIdEntry());
+		psUpdate.setInt(1, entry.getId());
 		
 		psUpdate.executeUpdate();
 		
@@ -223,14 +212,30 @@ public static Entry persist(Entry entry) throws SQLException {
 		PreparedStatement psUpdate = c
 				.prepareStatement("update entrys set rank= ?, competitioName=?, competitorName = ? where idEntry=?");
 		psUpdate.setInt(1, entry.getRank());
-		psUpdate.setString(2, entry.getCompetitionName());
-		psUpdate.setString(4, entry.getCompetitorName());
-		psUpdate.setInt(3,  entry.getIdEntry());
+		psUpdate.setString(2, entry.getCompetition().getName());
+		psUpdate.setString(4, entry.getCompetitor());
+		psUpdate.setInt(3,  entry.getId());
 		psUpdate.executeUpdate();
 		psUpdate.close();
 		c.close();
 	}
 	
+	
+
+	//fonction a mettre dans entryManager
+		public static void addCompetitor(Competition c, Competitor competitor) {
+			
+			
+		}
+
+
+
+	//fonction a mettre dans entryManager
+		public static void deleteCompetitor(Competition c, Competitor competitor) {
+			
+			
+		}
+		
 
 	// End of user code
 
