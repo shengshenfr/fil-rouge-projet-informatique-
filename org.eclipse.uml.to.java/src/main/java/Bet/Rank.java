@@ -10,10 +10,11 @@ package Bet;
 /**
  * Description of Enumeration.
  * 
- * @author Robin
+ * @author Robin, Rémy
  */
-public enum Enumeration {
-	// Start of user code (user defined enum literals for Enumeration)
-
-	// End of user code
+public enum Rank {
+	FIRST,
+	SECOND,
+	THIRD,
+	NOT_PODIUM;
 }
