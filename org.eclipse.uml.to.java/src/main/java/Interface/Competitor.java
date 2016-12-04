@@ -19,6 +19,8 @@ import exceptions.ExistingCompetitorException;
 public interface Competitor {
 	boolean hasValidName();
 	
+	String getName();
+	
 	void addMember(Competitor member) throws ExistingCompetitorException,
 		BadParametersException;
 	

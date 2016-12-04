@@ -33,9 +33,7 @@ public class TestEntry {
 		tomorrow.add(Calendar.DATE, 1);
 		competition = new Competition("Competition", tomorrow);
 		
-		competitor = new Competitor() {
-			 
-		};
+		competitor = new TestCompetitor();
 	}
 	
 	@Test

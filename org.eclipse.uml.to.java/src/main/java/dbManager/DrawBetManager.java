@@ -36,11 +36,6 @@ import exceptions.MissingCompetitionException;
 
 public class DrawBetManager {
 
-	
-	// Start of user code (user defined attributes for BetManager)
-
-		// End of user code
-
 		/**
 		 * Store a bet in the database for a specific subscriber (the subscriber is
 		 * included inside the Bet object). This bet is not stored yet, so his

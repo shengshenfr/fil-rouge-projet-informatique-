@@ -3,11 +3,12 @@
  *******************************************************************************/
 package Bet;
 
-import Bet.Bet;
-// Start of user code (user defined imports)
-import Individual.Subscriber;
+import java.sql.SQLException;
 
-// End of user code
+import Bet.Bet;
+import Individual.Subscriber;
+import dbManager.DrawBetManager;
+import exceptions.CompetitionException;
 
 /**
  * Description of DrawBet.
@@ -20,10 +21,6 @@ public class DrawBet extends Bet {
 	 */
 	private Competition competition = null;
 
-	// Start of user code (user defined attributes for DrawBet)
-
-	// End of user code
-
 	/**
 	 * The constructor.
 	 */
@@ -32,11 +29,15 @@ public class DrawBet extends Bet {
 		this.competition = competition;
 		
 		this.competition.addBet(this);
+		
+		try {
+			DrawBetManager.persist(this);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// TODO: raise Exception
+		}
 	}
 
-	// Start of user code (user defined methods for DrawBet)
-
-	// End of user code
 	/**
 	 * Returns competitions.
 	 * @return competitions 
@@ -51,6 +52,28 @@ public class DrawBet extends Bet {
 	 */
 	public void setCompetition(Competition newCompetition) {
 		this.competition = newCompetition;
+	}
+	
+	@Override
+	public void cancel() throws CompetitionException {
+		if (isOver()) {
+			throw new CompetitionException("Competition is already over!");
+		}
+		
+		this.competition.removeBet(this);
+		try {
+			DrawBetManager.delete(this);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// TODO: raise Exception
+		}
+		
+		super.cancel();
+	}
+	
+	@Override
+	public boolean isOver() {
+		return this.competition.isOver();
 	}
 	
 	@Override

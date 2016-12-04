@@ -6,7 +6,10 @@ package dbManager;
 import Bet.Bet;
 import Bet.Competition;
 import Bet.Entry;
+import Bet.Rank;
 import Interface.Competitor;
+import exceptions.BadParametersException;
+import exceptions.MissingCompetitionException;
 
 import java.sql.*;
 import java.util.*;
@@ -66,11 +69,13 @@ public static Entry persist(Entry entry) throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		try {
 			c.setAutoCommit(false);
-			PreparedStatement psPersist = c.prepareStatement("insert into Entrys(competitionName, competitorName,idEntry, rank) values(?,?,?,?,?)");
-			psPersist.setString(1, entry.getCompetition().getName());
-			psPersist.setString(2, entry.getCompetitor().getName());
-			psPersist.setInt(4, entry.getRank());
-			psPersist.setInt(3, entry.getId());
+
+			PreparedStatement psPersist = c.prepareStatement("insert into Entrys(idEntry, competitionName, competitorName, rank) values(?,?,?,?)");
+			psPersist.setString(2, entry.getCompetition().getName());
+			psPersist.setString(3, entry.getCompetitor().getName());
+			psPersist.setInt(4, Rank.getIndex(entry.getRank()));
+			psPersist.setInt(1, entry.getId());
+
 			psPersist.executeUpdate();
 
 			psPersist.close();
@@ -119,9 +124,20 @@ public static Entry persist(Entry entry) throws SQLException {
 		ResultSet resultSet = psSelect.executeQuery();
 		Entry entry = null;
 		while (resultSet.next()) {
-			entry = createEntry(resultSet.getString("competitionName"),
-					resultSet.getString("competitorName"),resultSet.getInt("idEntry"),
-					resultSet.getInt("rank"));
+
+			try {
+				entry = Entry.createEntry(resultSet.getInt("idEntry"),
+						resultSet.getString("competitionName"),
+						resultSet.getString("competitorName"),
+						resultSet.getInt("rank"));
+			} catch (BadParametersException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (MissingCompetitionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		}
 		
 		resultSet.close();
@@ -154,7 +170,7 @@ public static Entry persist(Entry entry) throws SQLException {
 	//-----------------------------------------------------------------------
 	// list all the entry on a competition
 
-	public static List<Entry> findAllByCompetition(String competitionName) {
+	public static List<Entry> findAllByCompetition(String competitionName) throws SQLException {
 		
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psSelect = c.prepareStatement("select * from"
@@ -165,9 +181,20 @@ public static Entry persist(Entry entry) throws SQLException {
 		List<Entry> entrys = new ArrayList<Entry>();
 		while (resultSet.next()) {
 			
-			entrys.add(new createEntry(resultSet.getInt("idEntry"), resultSet
-					.getString("competitionName"), resultSet
-					.getString("competitorName"), resultSet.getInt("rank")));
+
+
+			try {
+				entrys.add(Entry.createEntry(resultSet.getInt("idEntry"), resultSet
+						.getString("competitionName"), resultSet
+						.getString("competitorName"), resultSet.getInt("rank")));
+			} catch (BadParametersException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (MissingCompetitionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		}
 		resultSet.close();
 		psSelect.close();
@@ -180,7 +207,7 @@ public static Entry persist(Entry entry) throws SQLException {
 	//-----------------------------------------------------------------------
 	// list all the entry on a competitor
 	
-	public static List<Entry> findAllByCompetitor(String competitorName){
+	public static List<Entry> findAllByCompetitor(String competitorName) throws SQLException{
 
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psSelect = c.prepareStatement("select * from"
@@ -191,9 +218,17 @@ public static Entry persist(Entry entry) throws SQLException {
 		List<Entry> entrys = new ArrayList<Entry>();
 		while (resultSet.next()) {
 			
-			entrys.add(new Entry(resultSet.getInt("idEntry"), resultSet
-					.getString("competitionName"), resultSet
-					.getString("competitorName"), resultSet.getInt("rank")));
+			try {
+				entrys.add(Entry.createEntry(resultSet.getInt("idEntry"), resultSet
+						.getString("competitionName"), resultSet
+						.getString("competitorName"), resultSet.getInt("rank")));
+			} catch (BadParametersException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (MissingCompetitionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		resultSet.close();
 		psSelect.close();
@@ -210,7 +245,7 @@ public static Entry persist(Entry entry) throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psUpdate = c
 				.prepareStatement("update entrys set rank= ?, competitioName=?, competitorName = ? where idEntry=?");
-		psUpdate.setInt(1, entry.getRank());
+		psUpdate.setInt(1, Rank.getIndex(entry.getRank()));
 		psUpdate.setString(2, entry.getCompetition().getName());
 		psUpdate.setString(4, entry.getCompetitor().getName());
 		psUpdate.setInt(3,  entry.getId());

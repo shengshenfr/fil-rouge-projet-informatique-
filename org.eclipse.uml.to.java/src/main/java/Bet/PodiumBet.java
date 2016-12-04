@@ -3,13 +3,16 @@
  *******************************************************************************/
 package Bet;
 
-import java.util.HashSet;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
 import Bet.Bet;
 // Start of user code (user defined imports)
 import Individual.Subscriber;
+import dbManager.DrawBetManager;
+import dbManager.PodiumBetManager;
+import exceptions.CompetitionException;
 
 // End of user code
 
@@ -30,6 +33,13 @@ public class PodiumBet extends Bet {
 	public PodiumBet(long amount, Subscriber betOwner, Entry first, Entry second, Entry third) {
 		super(amount, betOwner);
 		this.setPodium(first, second, third);
+		
+		try {
+			PodiumBetManager.persist(this);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// TODO: raise Exception
+		}
 	}
 
 	/**
@@ -53,6 +63,31 @@ public class PodiumBet extends Bet {
 		for(Entry entry : podium) {
 			entry.addBet(this);
 		}
+	}
+	
+	@Override
+	public void cancel() throws CompetitionException {
+		if (isOver()) {
+			throw new CompetitionException("Competition is already over!");
+		}
+		
+		for(Entry entry : podium) {
+			entry.removeBet(this);
+		}
+
+		try {
+			PodiumBetManager.delete(this);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// TODO: raise Exception
+		}
+		
+		super.cancel();
+	}
+	
+	@Override
+	public boolean isOver() {
+		return this.podium.get(0).getCompetition().isOver();
 	}
 	
 	@Override
