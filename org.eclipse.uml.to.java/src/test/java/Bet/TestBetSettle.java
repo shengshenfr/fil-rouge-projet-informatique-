@@ -16,8 +16,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import Bet.Entry;
-import Betting.Exceptions.BadParametersException;
-import Betting.Exceptions.NotExistingCompetitorException;
+import exceptions.BadParametersException;
+import exceptions.MissingCompetitorException;
 import Individual.Subscriber;
 
 // Start of user code (user defined imports)
@@ -70,7 +70,7 @@ public class TestBetSettle {
 	}
 	
 	@Test
-	public void testSettleBetAllCompetitors() throws NotExistingCompetitorException {
+	public void testSettleBetAllCompetitors() throws MissingCompetitorException {
 		List<Competitor> results = new LinkedList<Competitor>();
 		results.add(competitorA);
 		results.add(competitorB);
@@ -93,7 +93,7 @@ public class TestBetSettle {
 	}
 	
 	@Test
-	public void testSettleBetPodium() throws NotExistingCompetitorException {
+	public void testSettleBetPodium() throws MissingCompetitorException {
 		List<Competitor> results = new LinkedList<Competitor>();
 		results.add(competitorA);
 		results.add(competitorB);
@@ -115,7 +115,7 @@ public class TestBetSettle {
 	}
 	
 	@Test
-	public void testSettleBetPodium2() throws NotExistingCompetitorException {
+	public void testSettleBetPodium2() throws MissingCompetitorException {
 		List<Competitor> results = new LinkedList<Competitor>();
 		results.add(competitorB);
 		results.add(competitorA);
@@ -137,7 +137,7 @@ public class TestBetSettle {
 	}
 	
 	@Test
-	public void testSettleDraw() throws NotExistingCompetitorException {
+	public void testSettleDraw() throws MissingCompetitorException {
 		competition.settleDraw();
 		
 		assert(competition.isDraw());

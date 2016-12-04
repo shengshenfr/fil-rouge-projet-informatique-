@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import Bet.Entry;
-import Betting.Exceptions.BadParametersException;
+import exceptions.BadParametersException;
 
 // Start of user code (user defined imports)
 

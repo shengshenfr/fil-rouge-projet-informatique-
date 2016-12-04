@@ -44,7 +44,7 @@ public class Entry {
 	private Competitor competitor = null;
 	private Competition competition = null;
 
-	public Entry(Competition competition, Competitor competitor, int id) throws BadParametersException {
+	public Entry(Competition competition, Competitor competitor, int id, Rank rank) throws BadParametersException {
 		if (competition == null) {
 			throw new BadParametersException("The competition cannot be null!");
 		}
@@ -57,6 +57,7 @@ public class Entry {
 
 		this.competition.addEntry(this);
 		this.id = id;
+		this.rank = rank;
 	}
 
 	/**
@@ -65,14 +66,15 @@ public class Entry {
 	 * @throws BadParametersException
 	 */
 	public Entry(Competition competition, Competitor competitor) throws BadParametersException {
-		this(competition, competitor, nextId++);
+		this(competition, competitor, nextId++, null);
 	}
 
-	static public Entry createEntry(String competitionName, String competitorName, int id)
+	static public Entry createEntry(String competitionName, String competitorName, int id, int rank)
 			throws BadParametersException, MissingCompetitionException {
 		Competition competition = CompetitionManager.findBycompetitionName(competitionName);
 		Competitor competitor = CompetitorManager.findCompetitorByName(competitorName);
-		return new Entry(competition, competitor, id);
+		Rank rankObject = Rank.getRankIndex(rank);
+		return new Entry(competition, competitor, id, rankObject);
 	}
 
 	/**

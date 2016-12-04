@@ -13,7 +13,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import Bet.Entry;
-import Betting.Exceptions.BadParametersException;
+import exceptions.BadParametersException;
 import Individual.Subscriber;
 
 // Start of user code (user defined imports)

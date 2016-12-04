@@ -16,8 +16,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import Bet.Entry;
-import Betting.Exceptions.BadParametersException;
-import Betting.Exceptions.NotExistingCompetitorException;
+import exceptions.BadParametersException;
+import exceptions.MissingCompetitorException;
 import Individual.Subscriber;
 
 // Start of user code (user defined imports)
@@ -56,7 +56,7 @@ public class TestBet {
 	}
 	
 	@Test
-	public void testBet() throws NotExistingCompetitorException {
+	public void testBet() throws MissingCompetitorException {
 		assert(competition.getBets().size() == 0);
 		assert(competition.getEntries().size() == 4);
 		
