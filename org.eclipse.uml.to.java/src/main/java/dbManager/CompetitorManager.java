@@ -46,7 +46,7 @@ public class CompetitorManager {
 
 
 
-	public static Object findCompetitorByName(String name) {
+	public static Competitor findCompetitorByName(String name) {
 		// TODO Auto-generated method stub
 		return null;
 	}

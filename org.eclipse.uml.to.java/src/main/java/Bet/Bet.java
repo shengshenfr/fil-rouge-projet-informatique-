@@ -4,12 +4,17 @@
 package Bet;
 
 import Interface.Competitor;
+import dbManager.CompetitionManager;
+import dbManager.CompetitorManager;
+import dbManager.EntryManager;
+import dbManager.SubscriberManager;
+
+import java.sql.SQLException;
+
 import Bet.Entry;
+import Betting.Exceptions.BadParametersException;
+import Betting.Exceptions.NotExistingCompetitionException;
 import Individual.Subscriber;
-
-// Start of user code (user defined imports)
-
-// End of user code
 
 /**
  * Description of Bet.
@@ -17,7 +22,7 @@ import Individual.Subscriber;
  * @author Robin, Rémy
  */
 @SuppressWarnings("unused")
-public class Bet {
+abstract public class Bet {
 	/**
 	 * Description of the property amount.
 	 */
@@ -31,24 +36,13 @@ public class Bet {
 	/**
 	 * Description of the property betNextId.
 	 */
-	private static int betNextId = 1;
+	private static int nextId = 1;
 
 	/**
 	 * Description of the property idBet.
 	 */
-	private int idBet = 0;
+	private int id = 0;
 
-	// Start of user code (user defined attributes for Bet)
-
-	// End of user code
-
-	/**
-	 * The constructor.
-	 */
-	
-	
-
-	// End of user code
 	/**
 	 * Returns amount.
 	 * @return amount 
@@ -58,9 +52,71 @@ public class Bet {
 	}
 
 	public Bet(long amount, Subscriber betOwner) {
+		this(amount, betOwner, nextId++);
+	}
+	
+	public Bet(long amount, Subscriber betOwner, int id) {
 		this.amount = amount;
 		this.betOwner = betOwner;
-		this.idBet = betNextId++;
+		this.id = id;
+	}
+	
+	static public DrawBet createDrawBet(int id, String ownerName, long amount, String competitionName) throws BadParametersException, NotExistingCompetitionException {
+		Subscriber owner;
+		try {
+			owner = SubscriberManager.findByUsername(ownerName);
+		} catch (SQLException e) {
+			return null;
+		}
+		Competition competition = CompetitionManager.findBycompetitionName(competitionName);
+		
+		DrawBet bet = new DrawBet(amount, owner, competition);
+		bet.setId(id);
+		return bet;
+	}
+	
+	static public WinnerBet createWinnerBet(int id, String ownerName, long amount, int idWinner) throws BadParametersException, NotExistingCompetitionException {
+		Subscriber owner;
+		try {
+			owner = SubscriberManager.findByUsername(ownerName);
+		} catch (SQLException e) {
+			return null;
+		}
+		// TODO: add exception notExistingEntry...
+		Entry winner = null;
+		try {
+			winner = EntryManager.findById(idWinner);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		WinnerBet bet = new WinnerBet(amount, owner, winner);
+		bet.setId(id);
+		return bet;
+	}
+	
+	static public PodiumBet createPodiumBet(int id, String ownerName, long amount, int idFirst, int idSecond, int idThird) throws BadParametersException, NotExistingCompetitionException {
+		Subscriber owner;
+		try {
+			owner = SubscriberManager.findByUsername(ownerName);
+		} catch (SQLException e) {
+			return null;
+		}
+		// TODO: add exception notExistingEntry...
+		Entry first = null, second = null, third = null;
+		try {
+			first = EntryManager.findById(idFirst);
+			second = EntryManager.findById(idSecond);
+			third = EntryManager.findById(idThird);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		PodiumBet bet = new PodiumBet(amount, owner, first, second, third);
+		bet.setId(id);
+		return bet;
 	}
 
 	/**
@@ -85,7 +141,7 @@ public class Bet {
 	 * @return betNextId 
 	 */
 	public static int getBetNextId() {
-		return betNextId;
+		return nextId;
 	}
 
 	/**
@@ -93,28 +149,37 @@ public class Bet {
 	 * @param newBetNextId 
 	 */
 	public static void setBetNextId(int newBetNextId) {
-		betNextId = newBetNextId;
+		nextId = newBetNextId;
 	}
 
 	/**
 	 * Returns idBet.
 	 * @return idBet 
 	 */
-	public int getIdBet() {
-		return this.idBet;
+	public int getId() {
+		return this.id;
 	}
 
 	/**
 	 * Sets a value to attribute idBet. 
 	 * @param newIdBet 
 	 */
-	public void setIdBet(int newIdBet) {
-		this.idBet = newIdBet;
+	public void setId(int newId) {
+		this.id = newId;
 	}
 
 	public Subscriber getBetOwner() {
 		return betOwner;
 	}
-	
-	
+
+	public boolean isWon() {
+		return false;
+	}
+
+	public void settle(float ratio) {
+		if (!isWon())
+			return;
+		
+		this.betOwner.creditSubscriber((long)(this.amount * ratio));
+	}
 }

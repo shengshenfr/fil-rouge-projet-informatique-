@@ -4,6 +4,8 @@
 package Bet;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 import Bet.Bet;
 // Start of user code (user defined imports)
@@ -20,7 +22,7 @@ public class PodiumBet extends Bet {
 	/**
 	 * Description of the property entrys.
 	 */
-	public HashSet<Entry> podium = new HashSet<Entry>();
+	public List<Entry> podium = new LinkedList<Entry>();
 
 	/**
 	 * The constructor.
@@ -34,15 +36,40 @@ public class PodiumBet extends Bet {
 	 * Returns entrys.
 	 * @return entrys 
 	 */
-	public HashSet<Entry> getPodium() {
+	public List<Entry> getPodium() {
 		return this.podium;
 	}
 	
 	public void setPodium(Entry first, Entry second, Entry third) {
+		for(Entry entry : podium) {
+			entry.removeBet(this);
+		}
+
 		podium.clear();
 		podium.add(first);
 		podium.add(second);
 		podium.add(third);
+		
+		for(Entry entry : podium) {
+			entry.addBet(this);
+		}
+	}
+	
+	@Override
+	public boolean isWon() {
+		if (!this.podium.get(0).getCompetition().isSettled())
+			return false;
+		
+		if (this.podium.get(0).getCompetition().isDraw())
+			return false;
+	
+		for(int i=0; i<podium.size(); i++) {
+			if (this.podium.get(i).getRank() != Rank.getRankIndex(i)) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 
 }
