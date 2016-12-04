@@ -12,8 +12,8 @@ import dbManager.SubscriberManager;
 import java.sql.SQLException;
 
 import Bet.Entry;
-import Betting.Exceptions.BadParametersException;
-import Betting.Exceptions.NotExistingCompetitionException;
+import exceptions.BadParametersException;
+import exceptions.MissingCompetitionException;
 import Individual.Subscriber;
 
 /**
@@ -61,7 +61,7 @@ abstract public class Bet {
 		this.id = id;
 	}
 	
-	static public DrawBet createDrawBet(int id, String ownerName, long amount, String competitionName) throws BadParametersException, NotExistingCompetitionException {
+	static public DrawBet createDrawBet(int id, String ownerName, long amount, String competitionName) throws BadParametersException, MissingCompetitionException {
 		Subscriber owner;
 		try {
 			owner = SubscriberManager.findByUsername(ownerName);
@@ -75,7 +75,7 @@ abstract public class Bet {
 		return bet;
 	}
 	
-	static public WinnerBet createWinnerBet(int id, String ownerName, long amount, int idWinner) throws BadParametersException, NotExistingCompetitionException {
+	static public WinnerBet createWinnerBet(int id, String ownerName, long amount, int idWinner) throws BadParametersException, MissingCompetitionException {
 		Subscriber owner;
 		try {
 			owner = SubscriberManager.findByUsername(ownerName);
@@ -96,7 +96,7 @@ abstract public class Bet {
 		return bet;
 	}
 	
-	static public PodiumBet createPodiumBet(int id, String ownerName, long amount, int idFirst, int idSecond, int idThird) throws BadParametersException, NotExistingCompetitionException {
+	static public PodiumBet createPodiumBet(int id, String ownerName, long amount, int idFirst, int idSecond, int idThird) throws BadParametersException, MissingCompetitionException {
 		Subscriber owner;
 		try {
 			owner = SubscriberManager.findByUsername(ownerName);
