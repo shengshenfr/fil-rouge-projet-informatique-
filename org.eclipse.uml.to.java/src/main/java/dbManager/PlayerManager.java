@@ -41,7 +41,7 @@ public class PlayerManager {
 		{
 			c.setAutoCommit(false);
 			PreparedStatement psPersist = c.prepareStatement("insert into players (playerName) values (?) ");
-			psPersist.setString(1,  player.getPlayerName());
+			psPersist.setString(1,  player.getUserName());
 			
 			psPersist.executeUpdate();
 			psPersist.close();
@@ -83,7 +83,7 @@ public class PlayerManager {
 		  
 		  // 3 - Supplying values for the prepared statement parameters (question marks).
 		  
-		  psUpdate.setString(1,  player.getPlayerName());
+		  psUpdate.setString(1,  player.getUserName());
 		 
 		  
 		//Executing the prepared statement object among the database.
@@ -110,7 +110,7 @@ public class PlayerManager {
 		  
 		  PreparedStatement psUpdate = c.prepareStatement("delete * from players where playerName=?");
 		  
-		  psUpdate.setString(1, player.getPlayerName());
+		  psUpdate.setString(1, player.getUserName());
 		  psUpdate.executeUpdate();
 		  psUpdate.close();
 		  c.close();
@@ -131,7 +131,9 @@ public class PlayerManager {
 		    	
 				try
 				{
-		    	players.add(new Player(resultSet.getString("playerName")));
+		    	players.add(new Player(resultSet.getString("firstName"),
+		    			resultSet.getString("lastName"),
+		    	resultSet.getString("bornDate")));
 		    	}
 		    	catch (SQLException e) {
 					
@@ -165,7 +167,9 @@ public class PlayerManager {
 			
 			while (resultSet.next()) {
 				
-				player = new Player(name);
+				player = new Player(resultSet.getString("firstName"),
+		    			resultSet.getString("lastName"),
+		    	resultSet.getString("bornDate"));
 			}		
 
 			resultSet.close();
