@@ -10,10 +10,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import Individual.UnregistedCompetitor;
+import Individual.Player;
 import exceptions.BadParametersException;
 import exceptions.CompetitionException;
-import exceptions.ExistingCompetitorException;
 import utils.DatabaseConnection;
 
 // Start of user code (user defined imports)
@@ -21,12 +20,12 @@ import utils.DatabaseConnection;
 // End of user code
 
 /**
- * Description of CompetitorManager.
+ * Description of playerManager.
  * 
  * @author Robin
  */
-public class CompetitorManager {
-	// Start of user code (user defined attributes for CompetitorManager)
+public class PlayerManager {
+	// Start of user code (user defined attributes for playerManager)
 
 	// End of user code
 
@@ -36,13 +35,13 @@ public class CompetitorManager {
 	
 //------------------------------------------------------------------------------
 	
-	public static UnregistedCompetitor persist(UnregistedCompetitor competitor) throws SQLException {
+	public static Player persist(Player player) throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		try
 		{
 			c.setAutoCommit(false);
-			PreparedStatement psPersist = c.prepareStatement("insert into competitors (competitorName) values (?) ");
-			psPersist.setString(1,  competitor.getUnregistedSubscriberName());
+			PreparedStatement psPersist = c.prepareStatement("insert into players (playerName) values (?) ");
+			psPersist.setString(1,  player.getPlayerName());
 			
 			psPersist.executeUpdate();
 			psPersist.close();
@@ -66,13 +65,13 @@ public class CompetitorManager {
 		c.setAutoCommit(true);
 		c.close();
 		
-		return competitor;
+		return player;
 	}
 			
 		
 	//-----------------------------------------------------------------------------------------
 		
-		public static void update(UnregistedCompetitor competitor) throws SQLException
+		public static void update(Player player) throws SQLException
 		{
 		  // 1 - Get a database connection from the class 'DatabaseConnection' 
 		  Connection c = DatabaseConnection.getConnection();
@@ -80,11 +79,11 @@ public class CompetitorManager {
 		  // 2 - Creating a Prepared Statement with the SQL instruction.
 		  //     The parameters are represented by question marks. 
 		  
-		  PreparedStatement psUpdate = c.prepareStatement("update competitors set competitorName=?, where competitorName=?");
+		  PreparedStatement psUpdate = c.prepareStatement("update players set playerName=?, where playerName=?");
 		  
 		  // 3 - Supplying values for the prepared statement parameters (question marks).
 		  
-		  psUpdate.setString(1,  competitor.getUnregistedSubscriberName());
+		  psUpdate.setString(1,  player.getPlayerName());
 		 
 		  
 		//Executing the prepared statement object among the database.
@@ -105,13 +104,13 @@ public class CompetitorManager {
 		
 	//------------------------------------------------------------------------------------
 		
-		public static void delete(UnregistedCompetitor competitor) throws SQLException, BadParametersException, CompetitionException, ExistingCompetitorException
+		public static void delete(Player player) throws SQLException, BadParametersException, CompetitionException
 		{
 		  Connection c = DatabaseConnection.getConnection();
 		  
-		  PreparedStatement psUpdate = c.prepareStatement("delete * from where competitorName=?");
+		  PreparedStatement psUpdate = c.prepareStatement("delete * from players where playerName=?");
 		  
-		  psUpdate.setString(1, competitor.getUnregistedSubscriberName());
+		  psUpdate.setString(1, player.getPlayerName());
 		  psUpdate.executeUpdate();
 		  psUpdate.close();
 		  c.close();
@@ -120,19 +119,19 @@ public class CompetitorManager {
 		
 	//------------------------------------------------------------------------------------
 		
-		public static List<UnregistedCompetitor> findAll() throws SQLException
+		public static List<Player> findAll() throws SQLException
 		{
 			Connection c = DatabaseConnection.getConnection();
 			
-		    PreparedStatement psSelect = c.prepareStatement("select * from competitors order by competitorName");
+		    PreparedStatement psSelect = c.prepareStatement("select * from players order by playerName");
 		    ResultSet resultSet = psSelect.executeQuery();
-		    List<UnregistedCompetitor> competitors = new ArrayList<UnregistedCompetitor>();
+		    List<Player> players = new ArrayList<Player>();
 		    while(resultSet.next())
 		    {
 		    	
 				try
 				{
-		    	competitors.add(new UnregistedCompetitor(resultSet.getString("competitorName")));
+		    	players.add(new Player(resultSet.getString("playerName")));
 		    	}
 		    	catch (SQLException e) {
 					
@@ -146,34 +145,34 @@ public class CompetitorManager {
 		    
 		    c.close();
 		    
-		    return competitors;
+		    return players;
 		}
 		
 	//-----------------------------------------------------------------------------------------------------
 		
-		public static UnregistedCompetitor findByName (String name)
+		public static Player findByName (String name)
 				throws SQLException {
 			
 			Connection c = DatabaseConnection.getConnection();	
 			PreparedStatement psSelect = c
-					.prepareStatement("select * from competitors where competitorName = ?" );
+					.prepareStatement("select * from players where playerName = ?" );
 			
 			psSelect.setString(1, name);
 			
 			ResultSet resultSet = psSelect.executeQuery();
 			
-			UnregistedCompetitor competitor = null;
+			Player player = null;
 			
 			while (resultSet.next()) {
 				
-				competitor = new UnregistedCompetitor(name);
+				player = new Player(name);
 			}		
 
 			resultSet.close();
 			psSelect.close();
 			
 			c.close();
-			return competitor;
+			return player;
 			
 			
 		}
@@ -187,7 +186,7 @@ public class CompetitorManager {
 	//---------------------------------------------------------------------------
 
 
-	// Start of user code (user defined methods for CompetitorManager)
+	// Start of user code (user defined methods for playerManager)
 
 	// End of user code
 

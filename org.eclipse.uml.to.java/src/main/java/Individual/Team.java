@@ -41,7 +41,7 @@ public class Team extends AbstractCompetitor{
 	public boolean hasValidName(String teamName) {
 		// TODO Auto-generated method stub
 		
-		Team team = manager.TeamsManager.findByTeam(teamName);
+		Team team = dbManager.TeamManager.findByName(teamName);
 		
 		if(team == null){
 			return true;

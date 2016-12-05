@@ -75,9 +75,9 @@ public class Entry {
 	}
 
 	static public Entry createEntry(int id, String competitionName, String competitorName, int rank)
-			throws BadParametersException, MissingCompetitionException {
+			throws BadParametersException, MissingCompetitionException, SQLException {
 		Competition competition = CompetitionManager.findBycompetitionName(competitionName);
-		Competitor competitor = CompetitorManager.findCompetitorByName(competitorName);
+		Competitor competitor = CompetitorManager.findByName(competitorName);
 		Rank rankObject = Rank.getRankIndex(rank);
 		return new Entry(competition, competitor, id, rankObject);
 	}

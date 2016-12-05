@@ -18,8 +18,6 @@ import exceptions.BadParametersException;
 import exceptions.CompetitionException;
 import exceptions.ExistingCompetitorException;
 import utils.DatabaseConnection;
-import Individual.Player;
-import Individual.Subscriber;
 
 // End of user code
 
@@ -162,6 +160,33 @@ public class TeamManager {
 	    return teams;
 	}
 	
+//-----------------------------------------------------------------------------------------------------
 	
+	public static Team findByName (String name)
+			throws SQLException {
+		
+		Connection c = DatabaseConnection.getConnection();	
+		PreparedStatement psSelect = c
+				.prepareStatement("select * from teams where teamName = ?" );
+		
+		psSelect.setString(1, name);
+		
+		ResultSet resultSet = psSelect.executeQuery();
+		
+		Team team = null;
+		
+		while (resultSet.next()) {
+			
+			team = new Team(name);
+		}		
+
+		resultSet.close();
+		psSelect.close();
+		
+		c.close();
+		return team;
+		
+		
+	}
 
 }
