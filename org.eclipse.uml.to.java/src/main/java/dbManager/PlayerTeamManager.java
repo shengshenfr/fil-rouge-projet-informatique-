@@ -70,7 +70,8 @@ public class PlayerTeamManager {
 	    	
 			try
 			{
-	    	player.add(new Player(resultSet.getString("firstName"),
+	    	player.add(new Player(resultSet.getString("firstName")+resultSet.getString("lastName"),
+	    			resultSet.getString("firstName"),
 	    			resultSet.getString("lastName"),
 	    			resultSet.getString("bornDate")));
 	    	}

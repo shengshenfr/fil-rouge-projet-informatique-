@@ -3,6 +3,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import Individual.AbstractCompetitor;
 import dbManager.TeamManager;
+import dbManager.PlayerTeamManager;
 import exceptions.BadParametersException;
 import exceptions.ExistingCompetitorException;
 import Individual.Player;
@@ -24,20 +25,20 @@ public class Team extends AbstractCompetitor{
 	@Override
 		public void addMember(Player player){
 		// TODO Auto-generated method stub
-		 list<Player_Team> list = manager.Player_TeamsManager.findByPlayer(player.getPlayerName());
+		 ArrayList<Team> list = dbManager.PlayerTeamManager.findByPlayer(player.getPlayerName());
 		 if(list==null){
 			 this.member.add(player);
-			 dbManager.Player_TeamManager.persist(this.teamName,player.getPlayerName());
+			 dbManager.PlayerTeamManager.persist(this.teamName,player.getUserName());
 		 }
 	}
 
 	@Override
 	public void deleteMember(Player player) {
 		// TODO Auto-generated method stub
-		list<Player_Team> list = manager.Player_TeamsManager.findByPlayer(player.getPlayerName());
+		ArrayList<Team> list = dbManager.PlayerTeamManager.findByPlayer(player.getPlayerName());
 		if(list!=null){
 			this.member.remove(player);
-			dbManager.Player_TeamManager.delete(this.teamName,player.getPlayerName());
+			dbManager.PlayerTeamManager.delete(this.teamName,player.getPlayerName());
 		}
 	}
 
