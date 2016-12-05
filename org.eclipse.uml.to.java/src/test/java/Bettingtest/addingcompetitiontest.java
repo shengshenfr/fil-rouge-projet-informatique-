@@ -27,15 +27,16 @@ public class addingcompetitiontest {
 	@Test
 	public static void test() throws AuthentificationException, BadParametersException, CompetitionException, ExistingCompetitionException {
 		BettingSoft b=new BettingSoft();
-		b.createManager("bowenx","wertyui2");
-		Competitor c1=b.createCompetitor("yuan","yao","1994-05-02", "wertyui2");
-		Competitor c2=b.createCompetitor("bowen","xue","1994-08-04", "wertyui2");
+		String MANAGER_PASSWORD = "root";
+		b.createManager("bowenx",MANAGER_PASSWORD);
+		Competitor c1=b.createCompetitor("yuan","yao","1994-05-02", MANAGER_PASSWORD);
+		Competitor c2=b.createCompetitor("bowen","xue","1994-08-04", MANAGER_PASSWORD);
 		Collection mycoll=new HashSet();
 		mycoll.add(c1);
 		mycoll.add(c2);
 		Calendar c=new MyCalendar(1989,9,26);
 		b.addCompetition("abccompetition", c ,mycoll ,
-				"wdofirgd");
+				MANAGER_PASSWORD);
 	}
 
 }

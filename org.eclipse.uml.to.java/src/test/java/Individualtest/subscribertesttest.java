@@ -1,10 +1,12 @@
 package Individualtest;
+import java.sql.SQLException;
 import java.util.Calendar;
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 import Individual.Subscriber;
+import dbManager.SubscriberManager;
 import exceptions.AuthentificationException;
 import exceptions.BadParametersException;
 import exceptions.CantBetException;
@@ -12,8 +14,8 @@ import exceptions.MissingTokenException;
 import utils.MyCalendar;
 
 public class subscribertesttest {
-	public static void main(String[] args) throws BadParametersException, AuthentificationException, MissingTokenException, CantBetException{
-		testcantbet();
+	public static void main(String[] args) throws BadParametersException, AuthentificationException, MissingTokenException, CantBetException, SQLException{
+		testbdd();
 		
 	}
 		public static void testConstructeur() throws BadParametersException{
@@ -122,6 +124,17 @@ public class subscribertesttest {
         public static void testcantbet() throws BadParametersException, CantBetException{
         	Subscriber s= new Subscriber("SYLVIE", "YAO", "YUAN",new MyCalendar(1994,5,2) , 10);
         	s.checkBlance(20);   
+        }
+        /////////////////////////////////////////
+      ///not enough money for bet//
+        @Test
+        public static void testbdd() throws BadParametersException, CantBetException, SQLException{
+        	Subscriber s= new Subscriber("SYLVIE", "YAO", "YUAN",new MyCalendar(1994,5,2) , 10);
+        	try{
+        	SubscriberManager.persist(s);  
+        	}catch(SQLException e){
+        		System.out.println("SQL not match!");
+        	};
         }
         /////////////////////////////////////////
 }
