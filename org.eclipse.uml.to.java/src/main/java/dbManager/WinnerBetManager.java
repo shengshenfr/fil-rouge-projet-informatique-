@@ -10,7 +10,6 @@ import utils.DatabaseConnection;
 import Bet.Bet;
 import Bet.Competition;
 import Bet.WinnerBet;
-import Bet.WinnerBet;
 import exceptions.BadParametersException;
 import exceptions.MissingCompetitionException;
 import exceptions.SubscriberException;
@@ -70,7 +69,7 @@ public class WinnerBetManager {
 		Connection c = DatabaseConnection.getConnection();
 		try {
 			c.setAutoCommit(false);
-			PreparedStatement psPersist = c.prepareStatement("insert into betsWinner(idBet, betOwner, amount, idEntry) values(?,?,?,?,?,?)");
+			PreparedStatement psPersist = c.prepareStatement("insert into betsWinner(idBet, betOwner, amount, idEntry) values(?,?,?,?)");
 			psPersist.setString(2, betWinner.getBetOwner().getUsername());
 			psPersist.setLong(3, betWinner.getAmount());
 			psPersist.setInt(4, betWinner.getWinner().getId());
@@ -201,10 +200,10 @@ public class WinnerBetManager {
 	public static void update(WinnerBet betWinner) throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psUpdate = c
-				.prepareStatement("update betsWinner set betOwner=?, amount=?, idEntry = ?, idEntry2 = ?, idEntry3 = ? where idBet=?");
+				.prepareStatement("update betsWinner set betOwner=?, amount=?, idEntry = ? where idBet=?");
 		psUpdate.setString(1, betWinner.getBetOwner().getUsername());
 		psUpdate.setLong(2, betWinner.getAmount());
-		psUpdate.setInt(6, betWinner.getId());
+		psUpdate.setInt(4, betWinner.getId());
 		psUpdate.setInt(3, betWinner.getWinner().getId());
 		psUpdate.executeUpdate();
 		psUpdate.close();
