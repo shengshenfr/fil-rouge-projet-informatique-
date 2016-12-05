@@ -136,7 +136,7 @@ public class PodiumBetManager {
 						resultSet.getInt("idEntry3")
 				);
 			} catch (MissingCompetitionException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		}
@@ -152,7 +152,7 @@ public class PodiumBetManager {
 //-----------------------------------------------------------------------------------
 
 	/**
-	 * function which delete a betPodium in the betPodium table
+	 * function which delete a (list of)betPodium in the betPodium table
 	 * @param betPodium
 	 * @throws SQLException
 	 */
@@ -167,6 +167,15 @@ public class PodiumBetManager {
 		c.close();
 		
 	}
+	
+
+	public static void deleteListPodiumBet(List<PodiumBet> listPodiumBet) throws SQLException {
+		for (int i=0; i<listPodiumBet.size(); i++ ){
+			delete(listPodiumBet.get(i));
+		}
+			
+	}
+
 
 //--------------------------------------------------------------------------	
 
@@ -198,7 +207,7 @@ public class PodiumBetManager {
 						resultSet.getInt("idEntry3")
 				));
 			} catch (MissingCompetitionException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		}

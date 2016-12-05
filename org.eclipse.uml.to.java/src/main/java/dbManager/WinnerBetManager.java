@@ -143,7 +143,7 @@ public class WinnerBetManager {
 //-----------------------------------------------------------------------------------
 
 	/**
-	 * function which delete a betWinner in the betWinner table
+	 * function which delete a (list of)betWinner in the betWinner table
 	 * @param betWinner
 	 * @throws SQLException
 	 */
@@ -158,6 +158,15 @@ public class WinnerBetManager {
 		c.close();
 		
 	}
+	
+	
+	public static void deleteListWinnerBet(List<WinnerBet> listBetWinner) throws SQLException {
+		for (int i=0; i<listBetWinner.size(); i++ ){
+			delete(listBetWinner.get(i));
+		}
+			
+	}
+
 
 //--------------------------------------------------------------------------	
 

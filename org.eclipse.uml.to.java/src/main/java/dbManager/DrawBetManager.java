@@ -143,7 +143,7 @@ public class DrawBetManager {
 //--------------------------------------------------------------------------	
 	
 	/**
-	 * function which delete a betDraw in the betPodium table
+	 * function which delete a (listof) betDraw in the betPodium table
 	 * @param betDraw
 	 * @throws SQLException
 	 */
@@ -158,6 +158,14 @@ public class DrawBetManager {
 		c.close();
 		
 	}
+	
+	public static void deleteListDrawBet(List<DrawBet> listDrawBet) throws SQLException {
+		for (int i=0; i<listDrawBet.size(); i++ ){
+			delete(listDrawBet.get(i));
+		}
+			
+	}
+
 
 //-------------------------------------------------------------------------	
 	

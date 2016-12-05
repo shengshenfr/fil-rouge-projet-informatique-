@@ -14,6 +14,7 @@ import Individual.Subscriber;
 import exceptions.BadParametersException;
 import exceptions.CompetitionException;
 import exceptions.ExistingCompetitorException;
+import exceptions.MissingCompetitionException;
 import exceptions.SubscriberException;
 import utils.DatabaseConnection;
 
@@ -151,6 +152,179 @@ public static Subscriber findByUsername(String username) throws SQLException, Ba
 
 //-----------------------------------------------------------------------------
 /**
+ * Find a list of subscribers by a firstname.
+ * 
+ * @param username the firstname of the subscriber to retrieve.
+ * @return the list of subscriber (which can be empty)
+ * @throws SQLException
+ * @throws BadParametersException
+ */
+public static List<Subscriber> findByFirstname(String firstname) throws SQLException, BadParametersException, CompetitionException, SubscriberException, ExistingCompetitorException
+{
+	 // 1 - Get a database connection from the class 'DatabaseConnection'
+	Connection c = DatabaseConnection.getConnection();
+	
+	// 2 - Creating a Prepared Statement with the SQL instruction.
+    //     The parameters are represented by question marks. 
+	PreparedStatement psSelect = c.prepareStatement("select * from subscribers where firstname=?");
+	
+	// 3 Supplying values for the prepared statement parameters (question marks).
+	psSelect.setString(1, firstname);
+	
+	// 4 - Executing Prepared Statement object among the database.
+    //     The return value is a Result Set containing the data.
+	
+	ResultSet resultSet = psSelect.executeQuery();
+	List<Subscriber> subscribers = new ArrayList<Subscriber>();
+	
+	// 5 - Retrieving values from the Result Set.
+	while(resultSet.next())
+	{
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(resultSet.getDate("bornDate"));
+		try
+		{
+		subscribers.add(new Subscriber(resultSet.getString("username"),resultSet.getString("firstname"),
+				resultSet.getString("lastname"), calendar, resultSet.getLong("balance")));
+		}
+		catch (BadParametersException e) {
+			
+			e.printStackTrace();
+		}
+		
+	}
+	
+	 // 6 - Closing the Result Set
+    resultSet.close();
+    
+    // 7 - Closing the Prepared Statement.
+    psSelect.close();
+    
+    // 8 - Closing the database connection.
+    c.close();
+    
+    return subscribers;
+		
+}
+
+//-----------------------------------------------------------------------------
+/**
+ * Find a list of subscribers by a lastname.
+ * 
+ * @param username the lastname of the subscriber to retrieve.
+ * @return the list of subscriber (which can be empty)
+ * @throws SQLException
+ * @throws BadParametersException
+ */
+public static List<Subscriber> findByLastname(String lastname) throws SQLException, BadParametersException, CompetitionException, SubscriberException, ExistingCompetitorException
+{
+	 // 1 - Get a database connection from the class 'DatabaseConnection'
+	Connection c = DatabaseConnection.getConnection();
+	
+	// 2 - Creating a Prepared Statement with the SQL instruction.
+    //     The parameters are represented by question marks. 
+	PreparedStatement psSelect = c.prepareStatement("select * from subscribers where lastname=?");
+	
+	// 3 Supplying values for the prepared statement parameters (question marks).
+	psSelect.setString(1, lastname);
+	
+	// 4 - Executing Prepared Statement object among the database.
+    //     The return value is a Result Set containing the data.
+	
+	ResultSet resultSet = psSelect.executeQuery();
+	List<Subscriber> subscribers = new ArrayList<Subscriber>();
+	
+	// 5 - Retrieving values from the Result Set.
+	while(resultSet.next())
+	{
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(resultSet.getDate("bornDate"));
+		try
+		{
+		subscribers.add(new Subscriber(resultSet.getString("username"),resultSet.getString("firstname"),
+				resultSet.getString("lastname"), calendar, resultSet.getLong("balance")));
+		}
+		catch (BadParametersException e) {
+			
+			e.printStackTrace();
+		}
+		
+	}
+	
+	 // 6 - Closing the Result Set
+    resultSet.close();
+    
+    // 7 - Closing the Prepared Statement.
+    psSelect.close();
+    
+    // 8 - Closing the database connection.
+    c.close();
+    
+    return subscribers;
+		
+}
+
+//-----------------------------------------------------------------------------
+
+/**
+ * Find a list of subscribers by a bornDate
+ * 
+ * @param the bornDate of the subscriber to retrieve.
+ * @return the list of subscriber (which can be empty)
+ * @throws SQLException
+ * @throws BadParametersException
+ */
+public static List<Subscriber> findByBornDate(Calendar bornDate) throws SQLException, BadParametersException, CompetitionException, SubscriberException, ExistingCompetitorException
+{
+	 // 1 - Get a database connection from the class 'DatabaseConnection'
+	Connection c = DatabaseConnection.getConnection();
+	
+	// 2 - Creating a Prepared Statement with the SQL instruction.
+    //     The parameters are represented by question marks. 
+	PreparedStatement psSelect = c.prepareStatement("select * from subscribers where bornDate=?");
+	
+	// 3 Supplying values for the prepared statement parameters (question marks).
+	psSelect.setDate(1, convertJavaDateToSqlDate(bornDate.getTime()));
+	
+	// 4 - Executing Prepared Statement object among the database.
+    //     The return value is a Result Set containing the data.
+	
+	ResultSet resultSet = psSelect.executeQuery();
+	List<Subscriber> subscribers = new ArrayList<Subscriber>();
+	
+	// 5 - Retrieving values from the Result Set.
+	while(resultSet.next())
+	{
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(resultSet.getDate("bornDate"));
+		try
+		{
+		subscribers.add(new Subscriber(resultSet.getString("username"),resultSet.getString("firstname"),
+				resultSet.getString("lastname"), calendar, resultSet.getLong("balance")));
+		}
+		catch (BadParametersException e) {
+			
+			e.printStackTrace();
+		}
+		
+	}
+	
+	 // 6 - Closing the Result Set
+    resultSet.close();
+    
+    // 7 - Closing the Prepared Statement.
+    psSelect.close();
+    
+    // 8 - Closing the database connection.
+    c.close();
+    
+    return subscribers;
+		
+}
+
+//-----------------------------------------------------------------------------
+
+/**
  * Find all the subscribers in the database.
  * 
  * @return subscribers
@@ -245,9 +419,14 @@ public static void update(Subscriber subscriber) throws SQLException
  * 
  * @param subscriber the subscriber to be deleted.
  * @throws SQLException
+ * @throws MissingCompetitionException 
+ * @throws ExistingCompetitorException 
+ * @throws SubscriberException 
+ * @throws CompetitionException 
+ * @throws BadParametersException 
  */
 
-public static void delete(Subscriber subscriber) throws SQLException
+public static void delete(Subscriber subscriber) throws SQLException, BadParametersException, CompetitionException, SubscriberException, ExistingCompetitorException, MissingCompetitionException
 {
   Connection c = DatabaseConnection.getConnection();
   
@@ -257,6 +436,9 @@ public static void delete(Subscriber subscriber) throws SQLException
   
   deleteStmt.close();
   
+  WinnerBetManager.deleteListWinnerBet(WinnerBetManager.findByOwner(subscriber.getUsername()));
+  PodiumBetManager.deleteListPodiumBet(PodiumBetManager.findByOwner(subscriber.getUsername()));
+  DrawBetManager.deleteListDrawBet(DrawBetManager.findByOwner(subscriber.getUsername()));
   c.close();
 }
 //-------------------------------------------------------------------------------
