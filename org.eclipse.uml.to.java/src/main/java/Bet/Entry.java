@@ -11,7 +11,7 @@ import exceptions.CompetitionException;
 import exceptions.MissingCompetitionException;
 import Interface.Competitor;
 import dbManager.CompetitionManager;
-import dbManager.CompetitorManager;
+import dbManager.UnregistedCompetitorManager;
 import dbManager.EntryManager;
 
 /**
@@ -77,7 +77,7 @@ public class Entry {
 	static public Entry createEntry(int id, String competitionName, String competitorName, int rank)
 			throws BadParametersException, MissingCompetitionException, SQLException {
 		Competition competition = CompetitionManager.findBycompetitionName(competitionName);
-		Competitor competitor = CompetitorManager.findByName(competitorName);
+		Competitor competitor = UnregistedCompetitorManager.findByName(competitorName);
 		Rank rankObject = Rank.getRankIndex(rank);
 		return new Entry(competition, competitor, id, rankObject);
 	}

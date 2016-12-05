@@ -25,7 +25,7 @@ import utils.DatabaseConnection;
  * 
  * @author Robin
  */
-public class CompetitorManager {
+public class UnregistedCompetitorManager {
 	// Start of user code (user defined attributes for CompetitorManager)
 
 	// End of user code

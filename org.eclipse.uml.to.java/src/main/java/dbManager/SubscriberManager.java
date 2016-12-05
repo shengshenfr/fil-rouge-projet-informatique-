@@ -12,6 +12,9 @@ import java.util.List;
 
 import Individual.Subscriber;
 import exceptions.BadParametersException;
+import exceptions.CompetitionException;
+import exceptions.ExistingCompetitorException;
+import exceptions.SubscriberException;
 import utils.DatabaseConnection;
 
 // Start of user code (user defined imports)
@@ -21,7 +24,7 @@ import utils.DatabaseConnection;
 /**
  * Description of SubscriberManager.
  * 
- * @author Robin
+ * @author Robin, Remy, Yuan, Shen, Bowen, Thomas
  */
 public class SubscriberManager {
 	// Start of user code (user defined attributes for SubscriberManager)
@@ -98,7 +101,7 @@ public class SubscriberManager {
  * @return the subscriber or null if the username does not exist in the database.
  * @throws SQLException
  */
-public static Subscriber findByUsername(String username) throws SQLException
+public static Subscriber findByUsername(String username) throws SQLException, BadParametersException, CompetitionException, SubscriberException, ExistingCompetitorException
 {
 	 // 1 - Get a database connection from the class 'DatabaseConnection'
 	Connection c = DatabaseConnection.getConnection();
@@ -148,12 +151,18 @@ public static Subscriber findByUsername(String username) throws SQLException
 
 //-----------------------------------------------------------------------------
 /**
- * Find all the subscribers in the database with their username (not their id like in the example)
+ * Find all the subscribers in the database.
  * 
- * @return
+ * @return subscribers
+ * 			a list of all the subscribers
  * @throws SQLException
+ * @throws CompetitionException 
+ * @throws BadParametersException 
+ * @throws SubscriberException 
+ * @throws ExistingCompetitorException 
  */
-public static List<Subscriber> findAll() throws SQLException
+
+public static List<Subscriber> findAll() throws SQLException,BadParametersException, CompetitionException, SubscriberException, ExistingCompetitorException
 {
 	Connection c = DatabaseConnection.getConnection();
     PreparedStatement psSelect = c.prepareStatement("select * from subscribers order by username");
@@ -241,10 +250,13 @@ public static void update(Subscriber subscriber) throws SQLException
 public static void delete(Subscriber subscriber) throws SQLException
 {
   Connection c = DatabaseConnection.getConnection();
-  PreparedStatement psUpdate = c.prepareStatement("delete from subscribers where username=?");
-  psUpdate.setString(1, subscriber.getUsername());
-  psUpdate.executeUpdate();
-  psUpdate.close();
+  
+  PreparedStatement deleteStmt = c.prepareStatement("delete from subscribers where username=?");
+  deleteStmt.setString(1, subscriber.getUsername());
+  deleteStmt.executeUpdate();
+  
+  deleteStmt.close();
+  
   c.close();
 }
 //-------------------------------------------------------------------------------

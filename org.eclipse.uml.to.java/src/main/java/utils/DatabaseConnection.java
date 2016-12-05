@@ -6,16 +6,17 @@ import java.sql.SQLException;
 
 
 /**
+ * 
  * Utility class for managing the connection to the database.
  * 
- * Based on Philippe TANGUY's example.
+ * 
  */
 public class DatabaseConnection
 {
-	  private static String username        = "sshen";
-	  private static String password        = "ORA3737";
+	  private static String username        = "postgress";
+	  private static String password        = "root";
 	  private static String host            = "localhost";
-	  private static String numPort         = "54321";
+	  private static String numPort         = "5432";
 	  private static String base            = "enseig";
 	  private static String connectString   = "jdbc:postgresql://" + host + ":" + numPort + "/" + base;
 	  //-----------------------------------------------------------------------------

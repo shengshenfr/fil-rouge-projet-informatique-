@@ -5,7 +5,7 @@ package Bet;
 
 import Interface.Competitor;
 import dbManager.CompetitionManager;
-import dbManager.CompetitorManager;
+import dbManager.UnregistedCompetitorManager;
 import dbManager.EntryManager;
 import dbManager.SubscriberManager;
 

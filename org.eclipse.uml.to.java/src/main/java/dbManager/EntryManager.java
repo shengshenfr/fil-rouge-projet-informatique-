@@ -9,6 +9,7 @@ import Bet.Entry;
 import Bet.Rank;
 import Interface.Competitor;
 import Individual.AbstractCompetitor;
+import Individual.UnregistedCompetitor;
 import exceptions.BadParametersException;
 import exceptions.MissingCompetitionException;
 
@@ -245,7 +246,7 @@ public static Entry persist(Entry entry) throws SQLException {
 		
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psUpdate = c
-				.prepareStatement("update entrys set rank= ?, competitioName=?, competitorName = ? where idEntry=?");
+				.prepareStatement("update Entrys set rank= ?, competitioName=?, competitorName = ? where idEntry=?");
 		psUpdate.setInt(1, Rank.getIndex(entry.getRank()));
 		psUpdate.setString(2, entry.getCompetition().getName());
 		psUpdate.setString(4, ((AbstractCompetitor)entry.getCompetitor()).getAbstractCompetitorName());
@@ -256,22 +257,53 @@ public static Entry persist(Entry entry) throws SQLException {
 	}
 	
 	
+	
+	
 
-	//fonction a mettre dans entryManager
-		public static void addCompetitor(Competition c, Competitor competitor) {
+//-----------------------------------------------------------------------------------
+	//existing competitor in competition :
+	
+	public static boolean existCompetitorInCompetition (Competition competition,AbstractCompetitor competitor) throws SQLException {
+		Connection c = DatabaseConnection.getConnection();
+		
+		PreparedStatement psSelect = c.prepareStatement("select * from Entrys order by idEntry");
+		ResultSet resultSet = psSelect.executeQuery();
+		
+		boolean exist = false;
+		while (resultSet.next()) {
 			
-			
-		}
-
-
-
-	//fonction a mettre dans entryManager
-		public static void deleteCompetitor(Competition c, Competitor competitor) {
-			
-			
+				try {
+					Entry entry = Entry.createEntry(resultSet.getInt("idEntry"),
+							resultSet.getString("competitionName"),
+							resultSet.getString("competitorName"),
+							resultSet.getInt("rank"));
+					
+					if ((entry.getCompetition().getName()== competition.getName())
+							&& ((AbstractCompetitor)entry.getCompetitor()).getAbstractCompetitorName()
+							== competitor.getAbstractCompetitorName())
+							exist = true;
+					
+					
+				} catch (BadParametersException e) {
+					
+					e.printStackTrace();
+				} catch (MissingCompetitionException e) {
+					
+					e.printStackTrace();
+				}
 		}
 		
+		resultSet.close();
+		psSelect.close();
+		c.close();
 
+		return exist;
+		
+	}
+	
+	
+	
+	
 	// End of user code
 
 }

@@ -49,11 +49,4 @@ public class Player_TeamManager {
 	}
 
 
-
-	public static List<Competitor> findAllByCompetition(String competition) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
 }
