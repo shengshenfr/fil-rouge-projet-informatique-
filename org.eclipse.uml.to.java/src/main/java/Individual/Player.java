@@ -3,28 +3,21 @@ import Individual.AbstractCompetitor;
 import Interface.Competitor;
 import exceptions.BadParametersException;
 import exceptions.ExistingCompetitorException;
-import utils.MyCalendar;
-import utils.dateValide;
 
 public class Player extends AbstractCompetitor {
 	
-	private String firstName;
-	private String lastName;
-	private MyCalendar borndate;
+	private String playerName;
+	
 	public Player(){
-	
+		super();
+	}
+	public Player(String firstName,String lastName, String bornDate){
+		super(playerName);
 	}
 	
-	public Player(String firstName2){
-		this.firstName=firstName2;
+	public String getUserName(){
+		return this.playerName;
 	}
-	
-	public Player(String lastName2, String firstName2, MyCalendar myCalendar){
-		this.firstName=firstName2;
-		this.lastName=lastName2;
-		this.borndate=myCalendar;
-	}
-	
 	@Override
 	public boolean hasValidName() {
 		// TODO Auto-generated method stub
@@ -39,6 +32,11 @@ public class Player extends AbstractCompetitor {
 	public void deleteMember(Competitor member) throws BadParametersException, ExistingCompetitorException {
 		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public boolean hasValidName(String teamName) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
