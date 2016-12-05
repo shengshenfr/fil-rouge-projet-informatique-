@@ -13,11 +13,11 @@ import java.sql.SQLException;
  */
 public class DatabaseConnection
 {
-	  private static String username        = "postgress";
+	  private static String username        = "postgres";
 	  private static String password        = "root";
 	  private static String host            = "localhost";
 	  private static String numPort         = "5432";
-	  private static String base            = "enseig";
+	  private static String base            = "postgres";
 	  private static String connectString   = "jdbc:postgresql://" + host + ":" + numPort + "/" + base;
 	  //-----------------------------------------------------------------------------
 	  // Registration of the PostgreSQL JDBC Driver.
