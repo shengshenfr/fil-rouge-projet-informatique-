@@ -44,19 +44,17 @@ public class SubscriberManager {
 	 */
 	public static Subscriber persist(Subscriber subscriber) throws SQLException
 	{
-		// Two steps in this methods which must be managed in an atomic
+		// One step in this methods which must be managed in an atomic
 	    // (unique) transaction:
-	    //   1 - insert the new subscriber;
-	    //   2 - once the insertion is OK, in order to set up the value
-	    //       of the id, a request is done to get this value by
-	    //       requesting the sequence (subscribers_id_seq) in the
-	    //       database.
+		// persistance of a subscriber
+		
 	Connection c = DatabaseConnection.getConnection();
 	try
 	{
 		c.setAutoCommit(false);
 		PreparedStatement psPersist = c.prepareStatement("insert into subscribers(username,firstname,lastname,bornDate,balance) values (?,?,?,?,?)");
 		
+		//ajust valors of attributes
 		psPersist.setString(1,  subscriber.getUsername());
 		psPersist.setString(2,  subscriber.getFirstname());
 		psPersist.setString(3, subscriber.getLastname());
@@ -68,10 +66,12 @@ public class SubscriberManager {
 		
 			
 	}
+	// exception that need to be raised
 	catch (SQLException e)
 	{
 		try
 		{
+			
 			c.rollback();
 		}
 		catch (SQLException e1)
@@ -83,12 +83,18 @@ public class SubscriberManager {
 	}
 	
 	c.setAutoCommit(true);
+	// closing of the connection
 	c.close();
 	
 	return subscriber;
 	}
 
-	
+	/**
+	 * Function which convert a java.util.date to java.sql.date
+	 * 
+	 * @param date
+	 * @return java.sql.date
+	 */
 	public static java.sql.Date convertJavaDateToSqlDate(java.util.Date date) {
 	    return new java.sql.Date(date.getTime());
 	}
@@ -102,6 +108,7 @@ public class SubscriberManager {
  * @return the subscriber or null if the username does not exist in the database.
  * @throws SQLException
  */
+	
 public static Subscriber findByUsername(String username) throws SQLException, BadParametersException, CompetitionException, SubscriberException, ExistingCompetitorException
 {
 	 // 1 - Get a database connection from the class 'DatabaseConnection'
@@ -123,6 +130,7 @@ public static Subscriber findByUsername(String username) throws SQLException, Ba
 	Subscriber subscriber = null;
 	while(resultSet.next())
 	{
+		// conversion of the Date bornDate to calendar using the last function
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(resultSet.getDate("bornDate"));
 		try
@@ -175,6 +183,7 @@ public static List<Subscriber> findByFirstname(String firstname) throws SQLExcep
     //     The return value is a Result Set containing the data.
 	
 	ResultSet resultSet = psSelect.executeQuery();
+	// initialisation of the result
 	List<Subscriber> subscribers = new ArrayList<Subscriber>();
 	
 	// 5 - Retrieving values from the Result Set.
@@ -232,6 +241,7 @@ public static List<Subscriber> findByLastname(String lastname) throws SQLExcepti
     //     The return value is a Result Set containing the data.
 	
 	ResultSet resultSet = psSelect.executeQuery();
+	//initialisation of the result
 	List<Subscriber> subscribers = new ArrayList<Subscriber>();
 	
 	// 5 - Retrieving values from the Result Set.
@@ -295,6 +305,7 @@ public static List<Subscriber> findByBornDate(Calendar bornDate) throws SQLExcep
 	// 5 - Retrieving values from the Result Set.
 	while(resultSet.next())
 	{
+		// conversion of java.sql.Date bornDate to Calendar
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(resultSet.getDate("bornDate"));
 		try
@@ -338,7 +349,9 @@ public static List<Subscriber> findByBornDate(Calendar bornDate) throws SQLExcep
 
 public static List<Subscriber> findAll() throws SQLException,BadParametersException, CompetitionException, SubscriberException, ExistingCompetitorException
 {
+	// initialize the connection
 	Connection c = DatabaseConnection.getConnection();
+	// initialisation of the statement
     PreparedStatement psSelect = c.prepareStatement("select * from subscribers order by username");
     ResultSet resultSet = psSelect.executeQuery();
     List<Subscriber> subscribers = new ArrayList<Subscriber>();
@@ -360,12 +373,16 @@ public static List<Subscriber> findAll() throws SQLException,BadParametersExcept
     	}
     	
     }
+    // closing the resultSet
     resultSet.close();
     
+    // closing the psSelect
     psSelect.close();
     
+    // closing the database connection
     c.close();
     
+    // the result, all the subscribers in the database
     return subscribers;
 }
 
@@ -395,11 +412,7 @@ public static void update(Subscriber subscriber) throws SQLException
   psUpdate.setLong(4, subscriber.getBalance());
   psUpdate.setString(5, subscriber.getUsername());
   
-//Executing the prepared statement object among the database.
-  // If needed, a return value (int) can be obtained. It contains
-  // how many rows of a table were updated.
-  // int nbRows = psUpdate.executeUpdate();
-  
+
   psUpdate.executeUpdate();
 
   // 6 - Closing the Prepared Statement.
@@ -432,18 +445,35 @@ public static void delete(Subscriber subscriber) throws SQLException, BadParamet
   
   PreparedStatement deleteStmt = c.prepareStatement("delete from subscribers where username=?");
   deleteStmt.setString(1, subscriber.getUsername());
+  
+  //updating the statement
   deleteStmt.executeUpdate();
   
+  //closing the statement
   deleteStmt.close();
   
+  // deleting from the database all the bets of the subscriber
+  // including podiumbet, winnerbet and drawbet.
+  
+  //winnerbet
   WinnerBetManager.deleteListWinnerBet(WinnerBetManager.findByOwner(subscriber.getUsername()));
+  
+  //podiumbet
   PodiumBetManager.deleteListPodiumBet(PodiumBetManager.findByOwner(subscriber.getUsername()));
+  
+  //drawbet
   DrawBetManager.deleteListDrawBet(DrawBetManager.findByOwner(subscriber.getUsername()));
+  //closing the database connection
   c.close();
 }
+
+
 //-------------------------------------------------------------------------------
 
-
-
-
 }
+
+/*****************************************************************************************/
+/*****************************************************************************************/
+/****************************************END OF THE CODE**********************************/
+/*****************************************************************************************/
+/*****************************************************************************************/
