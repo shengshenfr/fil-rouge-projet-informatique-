@@ -10,7 +10,6 @@ import java.util.List;
 import Interface.Competitor;
 import Individual.Player;
 import Individual.Team;
-import Individual.UnregistedCompetitor;
 import Interface.Competitor;
 
 

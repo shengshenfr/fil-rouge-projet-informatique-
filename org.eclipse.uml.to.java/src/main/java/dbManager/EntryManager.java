@@ -9,7 +9,6 @@ import Bet.Entry;
 import Bet.Rank;
 import Interface.Competitor;
 import Individual.AbstractCompetitor;
-import Individual.UnregistedCompetitor;
 import exceptions.BadParametersException;
 import exceptions.MissingCompetitionException;
 
