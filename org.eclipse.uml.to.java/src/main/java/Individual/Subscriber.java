@@ -40,7 +40,7 @@ public class Subscriber extends Player {
     private static String REGEX_USERNAME = "^[0-9A-Za-z]{6}$";
     private int LONG_PASSWORD = 8;
     private String REGEX_PASSWORD = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8}$";
-    private String username;
+    private String userName;
     /**
      * Description of the property bornDate.
      */
@@ -48,14 +48,19 @@ public class Subscriber extends Player {
     /**
      * Description of the property bets.
      */
-    private String firstname;
+    private String firstName;
     
-    private String lastname;
-    public Subscriber(String username){
+    private String lastName;
+    public Subscriber(String username,String firstName,String lastName,Calendar borndate){
     	
-    	super(username);
+    	//super(username, firstName, lastName, borndate);
+    	this.userName = username;
+    	this.firstName = firstName;
+    	this.lastName = lastName;
+    	this.bornDate = borndate;
     }
 
+ 
     
     public Subscriber(String username, String firstname, String lastname, Calendar bornDate, long balance) throws BadParametersException{
         System.out.println("creation d'un subscriber");
@@ -69,11 +74,11 @@ public class Subscriber extends Player {
             throw new BadParametersException("REGEX_NAME Wrong!");
         }
         if(username.length()==6&&username.matches(REGEX_USERNAME)){
-            this.username = username;
+            this.userName = username;
             System.out.println("Username is finish");
         }
-        this.firstname = firstname;
-        this.lastname = lastname;
+        this.firstName = firstname;
+        this.lastName = lastname;
         this.bornDate = bornDate;
         this.balance = balance;
         this.password=generatePassword();
@@ -203,7 +208,7 @@ public class Subscriber extends Player {
      * @return username
      */
     public String getUsername() {
-        return this.username;
+        return this.userName;
     }
     
     /**
@@ -211,7 +216,7 @@ public class Subscriber extends Player {
      * @param newUsername
      */
     public void setUsername(String newUsername) {
-        this.username = newUsername;
+        this.userName = newUsername;
     }
     
     
@@ -233,21 +238,21 @@ public class Subscriber extends Player {
     }
     
     public String getFirstname(){
-        return firstname;
+        return firstName;
     }
     public String getLastname(){
-        return lastname;
+        return lastName;
     }
     public void setFirstname(String newFirstname) {
-        this.firstname = newFirstname;
+        this.firstName = newFirstname;
     }
     public void setLastname(String newLastname) {
-        this.lastname = newLastname;
+        this.lastName = newLastname;
     }
     
     public boolean equalsPlayer(AbstractCompetitor competitor) {
         // TODO Auto-generated method stub
-        if(this.username==competitor.getAbstractCompetitorName()){
+        if(this.userName==competitor.getAbstractCompetitorName()){
             return true;
         }
         else{
