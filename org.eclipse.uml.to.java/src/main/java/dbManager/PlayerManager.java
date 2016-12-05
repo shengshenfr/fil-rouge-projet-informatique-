@@ -131,7 +131,8 @@ public class PlayerManager {
 		    	
 				try
 				{
-		    	players.add(new Player(resultSet.getString("firstName"),
+		    	players.add(new Player(resultSet.getString("firstName")+resultSet.getString("lastName"),
+		    			resultSet.getString("firstName"),
 		    			resultSet.getString("lastName"),
 		    	resultSet.getString("bornDate")));
 		    	}
@@ -167,7 +168,8 @@ public class PlayerManager {
 			
 			while (resultSet.next()) {
 				
-				player = new Player(resultSet.getString("firstName"),
+				player = new Player(resultSet.getString("firstName")+resultSet.getString("lastName"),
+						resultSet.getString("firstName"),
 		    			resultSet.getString("lastName"),
 		    	resultSet.getString("bornDate"));
 			}		

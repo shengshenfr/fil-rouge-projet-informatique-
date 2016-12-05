@@ -22,35 +22,37 @@ public class Team extends AbstractCompetitor{
 	}
 // verifier if the team has exist. If not, add the new team in data base.
 	
-	@Override
-		public void addMember(Player player){
+	public void addMember(Player player,Team team) throws SQLException{
 		// TODO Auto-generated method stub
-		 ArrayList<Team> list = dbManager.PlayerTeamManager.findByPlayer(player.getPlayerName());
+		 ArrayList<Team> list = dbManager.PlayerTeamManager.findByPlayer(player.getUserName());
 		 if(list==null){
 			 this.member.add(player);
-			 dbManager.PlayerTeamManager.persist(this.teamName,player.getUserName());
+			 dbManager.PlayerTeamManager.persist(player,team);
 		 }
 	}
 
-	@Override
-	public void deleteMember(Player player) {
+	
+	public void deleteMember(Player player,Team team) throws SQLException {
 		// TODO Auto-generated method stub
-		ArrayList<Team> list = dbManager.PlayerTeamManager.findByPlayer(player.getPlayerName());
+		ArrayList<Team> list = dbManager.PlayerTeamManager.findByPlayer(player.getUserName());
 		if(list!=null){
 			this.member.remove(player);
-			dbManager.PlayerTeamManager.delete(this.teamName,player.getPlayerName());
+			dbManager.PlayerTeamManager.delete(player,team);
 		}
 	}
 
 	@Override
-	public boolean hasValidName(String teamName) throws SQLException {
-		// TODO Auto-generated method stub
+	public boolean hasValidName(String teamName) {
 		
-		Team team = dbManager.TeamManager.findByName(teamName);
-		
-		if(team == null){
-			return true;
-		}else
+		Team team;
+		try {
+			team = dbManager.TeamManager.findByName(teamName);
+			if(team == null){
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 	

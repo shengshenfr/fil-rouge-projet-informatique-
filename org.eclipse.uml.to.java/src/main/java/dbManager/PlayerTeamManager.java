@@ -27,7 +27,7 @@ public class PlayerTeamManager {
 	// TODO create persist, update, delete, findall, findby, and all the functions
 	// TODO between competitiosn , competitors and teams
 	
-	public ArrayList<Team> findByPlayer(String playername) throws SQLException{
+	public static ArrayList<Team> findByPlayer(String playername) throws SQLException{
 		Connection c = DatabaseConnection.getConnection();
 	
 		PreparedStatement psSelect = c.prepareStatement("select teamName from Player_Team where playerName = ? ");
@@ -123,7 +123,7 @@ public class PlayerTeamManager {
 	}
 	
 	
-	public void persist(Player player,Team team) throws SQLException{
+	public static void persist(Player player,Team team) throws SQLException{
 		Connection c = DatabaseConnection.getConnection();
 		try
 		{
@@ -155,7 +155,7 @@ public class PlayerTeamManager {
 	}
 
 	
-	public void delete(Player player,Team team) throws SQLException{
+	public static void delete(Player player,Team team) throws SQLException{
 		 Connection c = DatabaseConnection.getConnection();
 		  
 		  PreparedStatement psdelete = c.prepareStatement("delete * from PlayerTeam where (playerName=?) and (teamName = ?)");
