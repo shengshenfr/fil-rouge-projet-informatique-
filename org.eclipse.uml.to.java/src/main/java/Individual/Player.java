@@ -6,17 +6,23 @@ import exceptions.ExistingCompetitorException;
 
 public class Player extends AbstractCompetitor {
 	
-	private String playerName;
+	private String userName;
+	private String firstName;
+	private String lastName;
+	private String bornDate;
 	
 	public Player(){
 		super();
 	}
-	public Player(String firstName,String lastName, String bornDate){
-		super(playerName);
+	public Player(String userName,String firstName,String lastName, String bornDate){
+		super(userName);
+		this.firstName=firstName;
+		this.lastName=lastName;
+		this.bornDate=bornDate;
 	}
 	
 	public String getUserName(){
-		return this.playerName;
+		return this.userName;
 	}
 	@Override
 	public boolean hasValidName() {

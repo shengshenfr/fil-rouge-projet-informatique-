@@ -180,11 +180,12 @@ public interface Betting {
 	*             raised if the competition does not exist.
 	* @throws CompetitionException
 	*             raised if the closing date is in the past (competition closed).          
+	 * @throws ExistingSubscriberException 
 	*/			
 	public void cancelCompetition(String competition,String managerPwd)
 			throws AuthentificationException, 
 			ExistingCompetitionException,
-			CompetitionException;
+			CompetitionException, ExistingSubscriberException;
 	
 	/**
 	 * change subscriber's password.
@@ -396,12 +397,13 @@ public interface Betting {
 	 * @throws ExistingCompetitorException
 	 *             raised if the competitor is not registered for the
 	 *             competition.
+	 * @throws BadParametersException 
 	 */
 	public void deleteCompetitor(String competition,Competitor competitor, String managerPwd)
 			throws AuthentificationException,
 			ExistingCompetitionException, 
 			CompetitionException,
-			ExistingCompetitorException;
+			ExistingCompetitorException, BadParametersException;
 	
 	/**
 	 * consult informations about a subscriber
