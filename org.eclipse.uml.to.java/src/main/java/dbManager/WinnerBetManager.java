@@ -10,24 +10,27 @@ import utils.DatabaseConnection;
 import Bet.Bet;
 import Bet.Competition;
 import Bet.WinnerBet;
+import Bet.WinnerBet;
 import exceptions.BadParametersException;
 import exceptions.MissingCompetitionException;
-
+import exceptions.SubscriberException;
+import exceptions.CompetitionException;
+import exceptions.ExistingCompetitorException;
 
 // Start of user code (user defined imports)
 
 // End of user code
 
 /**
- * Description of BetPodiumManager.
+ * Description of BetWinnerManager.
  * 
  * DAO class (<i>Data Access Object</i>) for the {@link Bet} class. This class
  * provides the CRUD functionalities :<br>
  * <ul>
- * <li><b>C</b>: create a new betPodium in the database.
+ * <li><b>C</b>: create a new betWinner in the database.
  * <li><b>R</b>: retrieve (or read) a (list of)bet(s) from the database.
- * <li><b>U</b>: update the values stored in the database for a betPodium.
- * <li><b>D</b>: delete a betPodium in the database.
+ * <li><b>U</b>: update the values stored in the database for a betWinner.
+ * <li><b>D</b>: delete a betWinner in the database.
  * </ul>
  * 
  *
@@ -36,30 +39,30 @@ import exceptions.MissingCompetitionException;
 
 public class WinnerBetManager {
 	
-	// Start of user code (user defined attributes for BetPodiumManager)
+	// Start of user code (user defined attributes for BetWinnerManager)
 
 		// End of user code
 
 		/**
-		 * Store a betPodium in the database for a specific subscriber (the subscriber is
-		 * included inside the Bet object). This betPodium is not stored yet, so his
+		 * Store a betWinner in the database for a specific subscriber (the subscriber is
+		 * included inside the Bet object). This betWinner is not stored yet, so his
 		 * <code>id</code> value is <code>NULL</code>. Once the bet is stored, the
 		 * method returns the bet with the <code>id</code> value setted.
 		 * 
-		 * @param betPodium
-		 *            the betPodium to be stored.
-		 * @return the betPodium with the updated value for the id.
+		 * @param betWinner
+		 *            the betWinner to be stored.
+		 * @return the betWinner with the updated value for the id.
 		 * @throws SQLException
 		 */
 		
 		/*******************************************************************/
 	
-	//persist for betPodium
+	//persist for betWinner
 	
-	public static Bet persist(WinnerBet betPodium) throws SQLException {
+	public static WinnerBet persist(WinnerBet betWinner) throws SQLException {
 		// Two steps in this method which must be managed in an atomic
 		// (unique) transaction:
-		// 1 - insert the new betPodium;
+		// 1 - insert the new betWinner;
 		// 2 - once the insertion is OK, in order to set up the value
 		// of the id, a request is done to get this value by
 		// requesting the sequence (bets_id_seq) in the
@@ -67,11 +70,11 @@ public class WinnerBetManager {
 		Connection c = DatabaseConnection.getConnection();
 		try {
 			c.setAutoCommit(false);
-			PreparedStatement psPersist = c.prepareStatement("insert into betsPodium(idBet, betOwner, amount, idEntry) values(?,?,?,?,?,?)");
-			psPersist.setString(2, betPodium.getBetOwner().getUsername());
-			psPersist.setLong(3, betPodium.getAmount());
-			psPersist.setInt(4, betPodium.getWinner().getId());
-			psPersist.setInt(1, betPodium.getId());
+			PreparedStatement psPersist = c.prepareStatement("insert into betsWinner(idBet, betOwner, amount, idEntry) values(?,?,?,?,?,?)");
+			psPersist.setString(2, betWinner.getBetOwner().getUsername());
+			psPersist.setLong(3, betWinner.getAmount());
+			psPersist.setInt(4, betWinner.getWinner().getId());
+			psPersist.setInt(1, betWinner.getId());
 			
 			psPersist.executeUpdate();
 			psPersist.close();
@@ -92,7 +95,7 @@ public class WinnerBetManager {
 		
 		c.setAutoCommit(true);
 		c.close();
-		return betPodium;		
+		return betWinner;		
 	}
 
 
@@ -104,7 +107,7 @@ public class WinnerBetManager {
 	
 	// -----------------------------------------------------------------------------
 		/**
-		 * Find a betPodium by his id.
+		 * Find a betWinner by his id.
 		 * 
 		 * @param id
 		 *            the id of the bet to retrieve.
@@ -112,16 +115,17 @@ public class WinnerBetManager {
 		 * @throws SQLException
 		 * @throws NotExistingCompetitionException 
 		 * @throws BadParametersException 
+		 * @throws MissingCompetitionException 
 		 */
 	
-	public static WinnerBet findById(Integer idBet) throws SQLException, BadParametersException, MissingCompetitionException {
+	public static WinnerBet findById(Integer idBet) throws SQLException, BadParametersException, CompetitionException, SubscriberException, ExistingCompetitorException, MissingCompetitionException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psSelect = c
-				.prepareStatement("select * from betsPodium where idBet=?");
+				.prepareStatement("select * from betsWinner where idBet=?");
 		ResultSet resultSet = psSelect.executeQuery();
-		WinnerBet betPodium = null;
+		WinnerBet betWinner = null;
 		while (resultSet.next()) {
-			betPodium = Bet.createWinnerBet(
+			betWinner = Bet.createWinnerBet(
 					resultSet.getInt("idBet"),
 					resultSet.getString("betOwner"),
 					resultSet.getLong("amount"),
@@ -133,23 +137,23 @@ public class WinnerBetManager {
 		psSelect.close();
 		c.close();
 
-		return betPodium;
+		return betWinner;
 	}
 	
 	
 //-----------------------------------------------------------------------------------
 
 	/**
-	 * function which delete a betPodium in the betPodium table
-	 * @param betPodium
+	 * function which delete a betWinner in the betWinner table
+	 * @param betWinner
 	 * @throws SQLException
 	 */
 
-	public static void delete(WinnerBet betPodium) throws SQLException {
+	public static void delete(WinnerBet betWinner) throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psUpdate = c
-				.prepareStatement("delete from betsPodium where idBet=?");
-		psUpdate.setInt(1, betPodium.getId());
+				.prepareStatement("delete from betsWinner where idBet=?");
+		psUpdate.setInt(1, betWinner.getId());
 		psUpdate.executeUpdate();
 		psUpdate.close();
 		c.close();
@@ -159,24 +163,25 @@ public class WinnerBetManager {
 //--------------------------------------------------------------------------	
 
 	/**
-	 * function which list all the betPodium of an owner
+	 * function which list all the betWinner of an owner
 	 * @param betOwner
 	 * @throws SQLException
 	 * @throws NotExistingCompetitionException 
 	 * @throws BadParametersException 
+	 * @throws MissingCompetitionException 
 	 */
 
 	public static List<WinnerBet> findByOwner(String betOwner) 
-		throws SQLException, BadParametersException, MissingCompetitionException {
+		throws SQLException, BadParametersException, CompetitionException, SubscriberException, ExistingCompetitorException, MissingCompetitionException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psSelect = c.prepareStatement("select * from"
-				+ "betsPodium where betOwner=? order by idBet");
+				+ "betsWinner where betOwner=? order by idBet");
 		psSelect.setString(1, betOwner);
 		
 		ResultSet resultSet = psSelect.executeQuery();
-		List<WinnerBet> betsPodium = new ArrayList<WinnerBet>();
+		List<WinnerBet> betsWinner = new ArrayList<WinnerBet>();
 		while (resultSet.next()) {
-			betsPodium.add(Bet.createWinnerBet(
+			betsWinner.add(Bet.createWinnerBet(
 					resultSet.getInt("idBet"),
 					resultSet.getString("betOwner"),
 					resultSet.getLong("amount"),
@@ -187,20 +192,20 @@ public class WinnerBetManager {
 		psSelect.close();
 		c.close();
 
-		return betsPodium;
+		return betsWinner;
 	}
 
 
 //--------------------------------------------------------------------------	
 
-	public static void update(WinnerBet betPodium) throws SQLException {
+	public static void update(WinnerBet betWinner) throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psUpdate = c
-				.prepareStatement("update betsPodium set betOwner=?, amount=?, idEntry = ?, idEntry2 = ?, idEntry3 = ? where idBet=?");
-		psUpdate.setString(1, betPodium.getBetOwner().getUsername());
-		psUpdate.setLong(2, betPodium.getAmount());
-		psUpdate.setInt(6, betPodium.getId());
-		psUpdate.setInt(3, betPodium.getWinner().getId());
+				.prepareStatement("update betsWinner set betOwner=?, amount=?, idEntry = ?, idEntry2 = ?, idEntry3 = ? where idBet=?");
+		psUpdate.setString(1, betWinner.getBetOwner().getUsername());
+		psUpdate.setLong(2, betWinner.getAmount());
+		psUpdate.setInt(6, betWinner.getId());
+		psUpdate.setInt(3, betWinner.getWinner().getId());
 		psUpdate.executeUpdate();
 		psUpdate.close();
 		c.close();
@@ -209,21 +214,22 @@ public class WinnerBetManager {
 	
 // -----------------------------------------------------------------------------
 		/**
-		 * Find all the betsPodium in the database.
+		 * Find all the betsWinner in the database.
 		 * 
 		 * @return
 		 * @throws SQLException
 		 * @throws NotExistingCompetitionException 
 		 * @throws BadParametersException 
+		 * @throws MissingCompetitionException 
 		 */
-		public static List<Bet> findAll() throws SQLException, BadParametersException, MissingCompetitionException {
+		public static List<Bet> findAll() throws SQLException, BadParametersException, CompetitionException, SubscriberException, ExistingCompetitorException, MissingCompetitionException {
 			Connection c = DatabaseConnection.getConnection();
 			PreparedStatement psSelect = c
-					.prepareStatement("select * from betsPodium order by betOwner,idBet");
+					.prepareStatement("select * from betsWinner order by betOwner,idBet");
 			ResultSet resultSet = psSelect.executeQuery();
-			List<Bet> betsPodium = new ArrayList<Bet>();
+			List<Bet> betsWinner = new ArrayList<Bet>();
 			while (resultSet.next()) {
-				betsPodium.add(Bet.createWinnerBet(
+				betsWinner.add(Bet.createWinnerBet(
 						resultSet.getInt("idBet"),
 						resultSet.getString("betOwner"),
 						resultSet.getLong("amount"),
@@ -234,26 +240,19 @@ public class WinnerBetManager {
 			psSelect.close();
 			c.close();
 
-			return betsPodium;
+			return betsWinner;
 		}
 	
-	
-
-//-------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------
 		
-		public static Collection<Bet> findPodiumByCompetition(String competition) {
-			
-			return null;
-		}
-
-//----------------------------------------------------------------------------
-//--------------------------------------------------------------------------
-	//find all the Podium bets on one competition	
-			
-		public static List<WinnerBet> findAllPodiumBetsByCompetition(Competition competition) throws SQLException {
+		//----------------------------------------------------------------------------
+		//--------------------------------------------------------------------------
+			//find all the Winner bets on one competition	
+					
+		public static List<WinnerBet> findAllWinnerBetsByCompetition(Competition competition) throws SQLException, BadParametersException, CompetitionException, SubscriberException, ExistingCompetitorException {
 			Connection c = DatabaseConnection.getConnection();
 			PreparedStatement psSelect = c
-					.prepareStatement("select * from betsPodium, entrys where betsPodium.idBet = entrys.idEntry and entrys.competitionName = ? ");
+					.prepareStatement("select * from betsWinner, entrys where betsWinner.idBet = entrys.idEntry and entrys.competitionName = ? ");
 			psSelect.setString(1, competition.getName());
 			ResultSet resultSet = psSelect.executeQuery();
 			List<WinnerBet> betsOnCompetition = new ArrayList<WinnerBet>();
@@ -270,24 +269,28 @@ public class WinnerBetManager {
 			resultSet.close();
 			psSelect.close();
 			c.close();
-			
+					
 			return betsOnCompetition;
 		}
-		
+				
 	//-----------------------------------------------------------------------------------
-		// delete all the podium bets on a competition
+		// delete all the Winner bets on a competition
 		
-		public static void deleleAllPodiumBetsOnCompetition(Competition competition) throws SQLException {
+		public static void deleleAllWinnerBetsOnCompetition(Competition competition) throws SQLException,BadParametersException, CompetitionException, SubscriberException, ExistingCompetitorException  {
 			Connection c1 = DatabaseConnection.getConnection();
 			
-			List<WinnerBet> betsOnCompetition = findAllPodiumBetsByCompetition(competition);
+			List<WinnerBet> betsOnCompetition = findAllWinnerBetsByCompetition(competition);
 			int betsOnCompetitionSize = betsOnCompetition.size();
 			for(int i =0; i < betsOnCompetitionSize; i++){
 				delete(betsOnCompetition.get(i));
 			}
 			c1.close();
-			System.out.println("bets podium on the competition" 
+			System.out.println("bets Winner on the competition" 
 								+ competition + "have been deleted");		
 			
 		}
+				
+		//------------------------------------------------------------
+
+
 }
