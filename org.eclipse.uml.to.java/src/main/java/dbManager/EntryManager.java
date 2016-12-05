@@ -8,6 +8,7 @@ import Bet.Competition;
 import Bet.Entry;
 import Bet.Rank;
 import Interface.Competitor;
+import Individual.AbstractCompetitor;
 import exceptions.BadParametersException;
 import exceptions.MissingCompetitionException;
 
@@ -72,7 +73,7 @@ public static Entry persist(Entry entry) throws SQLException {
 
 			PreparedStatement psPersist = c.prepareStatement("insert into Entrys(idEntry, competitionName, competitorName, rank) values(?,?,?,?)");
 			psPersist.setString(2, entry.getCompetition().getName());
-			psPersist.setString(3, entry.getCompetitor().getName());
+			psPersist.setString(3, ((AbstractCompetitor)entry.getCompetitor()).getAbstractCompetitorName());
 			psPersist.setInt(4, Rank.getIndex(entry.getRank()));
 			psPersist.setInt(1, entry.getId());
 
@@ -247,7 +248,7 @@ public static Entry persist(Entry entry) throws SQLException {
 				.prepareStatement("update entrys set rank= ?, competitioName=?, competitorName = ? where idEntry=?");
 		psUpdate.setInt(1, Rank.getIndex(entry.getRank()));
 		psUpdate.setString(2, entry.getCompetition().getName());
-		psUpdate.setString(4, entry.getCompetitor().getName());
+		psUpdate.setString(4, ((AbstractCompetitor)entry.getCompetitor()).getAbstractCompetitorName());
 		psUpdate.setInt(3,  entry.getId());
 		psUpdate.executeUpdate();
 		psUpdate.close();
