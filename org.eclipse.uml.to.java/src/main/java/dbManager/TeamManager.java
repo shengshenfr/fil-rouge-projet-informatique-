@@ -35,12 +35,12 @@ public class TeamManager {
      * team is stored, the method returns the team with the
      * <code>id</code> value setted.
      * 
-     * @param team the team to be stored.
+     * @param name the team to be stored.
      * @return the team with the updated value for the id.
      * @throws SQLException
 	 */
 	
-	public static Team persist(Team team) throws SQLException
+	public static String persist(String name) throws SQLException
 	{
 		// Two steps in this methods which must be managed in an atomic
 	    // (unique) transaction:
@@ -51,7 +51,7 @@ public class TeamManager {
 	{
 		c.setAutoCommit(false);
 		PreparedStatement psPersist = c.prepareStatement("insert into teams (teamName) values (?) ");
-		psPersist.setString(1,  team.getTeamName());
+		psPersist.setString(1,name);
 		
 		psPersist.executeUpdate();
 		psPersist.close();
@@ -75,7 +75,7 @@ public class TeamManager {
 	c.setAutoCommit(true);
 	c.close();
 	
-	return team;
+	return name;
 	}
 		
 	
@@ -93,7 +93,7 @@ public class TeamManager {
 	  
 	  // 3 - Supplying values for the prepared statement parameters (question marks).
 	  
-	  psUpdate.setString(1,  team.getName());
+	  psUpdate.setString(1,  team.getTeamName());
 	 
 	  
 	//Executing the prepared statement object among the database.
