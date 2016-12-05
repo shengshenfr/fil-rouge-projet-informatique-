@@ -12,7 +12,6 @@ import Interface.Competitor;
 import utils.DatabaseConnection;
 import Individual.Player;
 import Individual.Team;
-import Individual.UnregistedCompetitor;
 import Interface.Competitor;
 
 
