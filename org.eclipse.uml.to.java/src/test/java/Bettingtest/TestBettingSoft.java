@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import Interface.*;
 import Betting.BettingSoft;
-import Betting.Manager;
+
 import Individual.*;
 import Bet.*;
 import dbManager.*;
@@ -89,7 +89,7 @@ public class TestBettingSoft {
 		assert(subscriber.getUsername()=="doubi");
 	}
 	
-	public void testCreditSubscriber() throws SQLException, AuthentificationException, ExistingSubscriberException, SubscriberException, BadParametersException{
+	public void testCreditSubscriber() throws SQLException, AuthentificationException, ExistingSubscriberException, SubscriberException, BadParametersException, CompetitionException, ExistingCompetitorException{
 		System.out.println((SubscriberManager.findByUsername("wdoubi")).getBalance());
 		
 		Bsport.debitSubscriber("doubi",200, MANAGER_PASSWORD);
@@ -99,7 +99,7 @@ public class TestBettingSoft {
 		
 	}
 	
-	public void testDebitSubscriber() throws SQLException, AuthentificationException, ExistingSubscriberException, SubscriberException, BadParametersException{
+	public void testDebitSubscriber() throws SQLException, AuthentificationException, ExistingSubscriberException, SubscriberException, BadParametersException, CompetitionException, ExistingCompetitorException{
 		System.out.println((SubscriberManager.findByUsername("wdoubi")).getBalance());
 		
 		Bsport.debitSubscriber("doubi",200, MANAGER_PASSWORD);
@@ -129,7 +129,7 @@ public class TestBettingSoft {
 	}
 
 	
-	public void testBetOnWinner() throws SQLException, AuthentificationException, CompetitionException, ExistingCompetitionException, SubscriberException, BadParametersException{
+	public void testBetOnWinner() throws SQLException, AuthentificationException, CompetitionException, ExistingCompetitionException, SubscriberException, BadParametersException, ExistingCompetitorException{
 		Subscriber subscriber1 = SubscriberManager.findByUsername("doubi");
 		System.out.println(subscriber1.getUsername() +" has "+subscriber1.getBalance()+" tokens.");
 		
@@ -144,14 +144,14 @@ public class TestBettingSoft {
 		assert((SubscriberManager.findByUsername("wdoubi")).getBalance()==900);
 		
 	}
-	public void testSettleWinner() throws AuthentificationException, ExistingCompetitionException, CompetitionException, SQLException{
+	public void testSettleWinner() throws AuthentificationException, ExistingCompetitionException, CompetitionException, SQLException, BadParametersException, SubscriberException, ExistingCompetitorException{
 		Competitor winner = TeamManager.findByName("competition1");
 		Bsport.settleWinner("competition1", winner, MANAGER_PASSWORD);
 		for (Subscriber sub : SubscriberManager.findAll()){
 			System.out.println(sub.getUsername()+" has now "+sub.getBalance()+" tokens.");
 		}
 	}
-	public void testBetOnPodium() throws SQLException, AuthentificationException, CompetitionException, ExistingCompetitionException, SubscriberException, BadParametersException{
+	public void testBetOnPodium() throws SQLException, AuthentificationException, CompetitionException, ExistingCompetitionException, SubscriberException, BadParametersException, ExistingCompetitorException{
 		subscriber = SubscriberManager.findByUsername("doubi");
 		System.out.println(subscriber.getUsername() +" has "+subscriber.getBalance()+" tokens.");
 		
@@ -160,7 +160,7 @@ public class TestBettingSoft {
 		assert((SubscriberManager.findByUsername("wdoubi")).getBalance()==800);
 	}
 		
-	public void testSettlePodium() throws AuthentificationException, ExistingCompetitionException, CompetitionException, SQLException{
+	public void testSettlePodium() throws AuthentificationException, ExistingCompetitionException, CompetitionException, SQLException, BadParametersException, SubscriberException, ExistingCompetitorException{
 		
 		Bsport.settlePodium("competition2",competitor3, competitor4, competitor5,subscriber.getPassword());
 		for (Subscriber sub : SubscriberManager.findAll()){
