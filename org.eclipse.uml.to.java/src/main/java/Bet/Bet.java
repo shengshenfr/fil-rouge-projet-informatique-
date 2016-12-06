@@ -5,7 +5,6 @@ package Bet;
 
 import Interface.Competitor;
 import dbManager.CompetitionManager;
-import dbManager.UnregistedCompetitorManager;
 import dbManager.EntryManager;
 import dbManager.SubscriberManager;
 
@@ -14,8 +13,10 @@ import java.sql.SQLException;
 import Bet.Entry;
 import exceptions.BadParametersException;
 import exceptions.CompetitionException;
+import exceptions.ExistingCompetitorException;
 import exceptions.MissingCompetitionException;
 import exceptions.MissingTokenException;
+import exceptions.SubscriberException;
 import Individual.Subscriber;
 
 /**
@@ -63,7 +64,7 @@ abstract public class Bet {
 		this.id = id;
 	}
 	
-	static public DrawBet createDrawBet(int id, String ownerName, long amount, String competitionName) throws BadParametersException, MissingCompetitionException {
+	static public DrawBet createDrawBet(int id, String ownerName, long amount, String competitionName) throws BadParametersException, MissingCompetitionException, CompetitionException, SubscriberException, ExistingCompetitorException {
 		Subscriber owner;
 		try {
 			owner = SubscriberManager.findByUsername(ownerName);
@@ -77,7 +78,7 @@ abstract public class Bet {
 		return bet;
 	}
 	
-	static public WinnerBet createWinnerBet(int id, String ownerName, long amount, int idWinner) throws BadParametersException, MissingCompetitionException {
+	static public WinnerBet createWinnerBet(int id, String ownerName, long amount, int idWinner) throws BadParametersException, MissingCompetitionException, CompetitionException, SubscriberException, ExistingCompetitorException {
 		Subscriber owner;
 		try {
 			owner = SubscriberManager.findByUsername(ownerName);
@@ -98,7 +99,7 @@ abstract public class Bet {
 		return bet;
 	}
 	
-	static public PodiumBet createPodiumBet(int id, String ownerName, long amount, int idFirst, int idSecond, int idThird) throws BadParametersException, MissingCompetitionException {
+	static public PodiumBet createPodiumBet(int id, String ownerName, long amount, int idFirst, int idSecond, int idThird) throws BadParametersException, MissingCompetitionException, CompetitionException, SubscriberException, ExistingCompetitorException {
 		Subscriber owner;
 		try {
 			owner = SubscriberManager.findByUsername(ownerName);

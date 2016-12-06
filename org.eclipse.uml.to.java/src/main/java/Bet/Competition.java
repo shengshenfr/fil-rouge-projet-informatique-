@@ -18,7 +18,6 @@ import exceptions.CompetitionException;
 import exceptions.MissingCompetitorException;
 import Interface.Competitor;
 import dbManager.CompetitionManager;
-import dbManager.UnregistedCompetitorManager;
 import dbManager.EntryManager;
 
 /**
