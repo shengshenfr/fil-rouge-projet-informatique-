@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.Date;
 
 import Interface.*;
-import Betting.Manager;
+
 import Individual.*;
 import Bet.*;
 import dbManager.*;
@@ -119,11 +119,8 @@ public class BettingSoft implements Betting {
 			//Add to SQL
 			EntryManager.persist(new Entry(c, competitor));
 		}
-		catch(SQLException e){
+		catch(SQLException|MissingCompetitionException e){
 			System.out.println(e);
-		} catch (MissingCompetitionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 
@@ -382,7 +379,7 @@ public class BettingSoft implements Betting {
 
 	@Override
 	public ArrayList<Competitor> consultResultsCompetition(String competition) throws ExistingCompetitionException {
-		
+		ArrayList<Competitor> winners = new ArrayList<Competitor>();
 	
 		try{
 			Competition c = CompetitionManager.findBycompetitionName(competition);
@@ -397,16 +394,23 @@ public class BettingSoft implements Betting {
 				throw new CompetitionException("The competition is not start, you cannot get the competitor list");
 			
 			
-			List<Entry> winners = EntryManager.findAllByCompetition(competition);
-
-			return winners;
-		
+			
+			List<Entry> entrylist = EntryManager.findAllByCompetition(competition);
+			for (Entry entry : entrylist){
+				Competitor competitor = entry.getCompetitor();
+				Rank rank = entry.getRank();
+				int r = Rank.getIndex(rank);
+				winners.add(r,competitor);
+			}
+			
+			
 		}
 	
-		catch(SQLException | BadParametersException | CompetitionException | ExistingCompetitorException e){
+		catch(SQLException | MissingCompetitionException | CompetitionException e){
 			System.out.println(e);
+		
 		}
-
+		return winners;
 	}
 
 	@Override
@@ -574,15 +578,9 @@ public class BettingSoft implements Betting {
 			//Update subscriber's information in the database
 			SubscriberManager.update(subscriber);
 		}
-		catch (MissingCompetitionException|  BadParametersException | SQLException e){
+		catch (MissingCompetitionException|  BadParametersException | SQLException|  SubscriberException| ExistingCompetitorException e){
 			System.out.println(e);
-		} catch (SubscriberException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExistingCompetitorException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 	}
 
 	@Override
@@ -631,17 +629,9 @@ public class BettingSoft implements Betting {
 			CompetitionManager.delete(c);
 			} 
 		
-		catch (SQLException | MissingCompetitionException e){
+		catch (SQLException | MissingCompetitionException|BadParametersException|SubscriberException|ExistingCompetitorException  e){
 			System.out.println(e);
-			} catch (BadParametersException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SubscriberException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExistingCompetitorException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
 		}
 	}
 
@@ -674,11 +664,9 @@ public class BettingSoft implements Betting {
 	
 			//Delete in SQL
 		}
-		catch (SQLException e){
+		catch (SQLException|MissingCompetitionException e){
 			System.out.println(e);
-		} catch (MissingCompetitionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
 		}
 	}
 
@@ -719,25 +707,9 @@ public class BettingSoft implements Betting {
 		}
 		
 		
-		catch( SQLException | ExistingSubscriberException e) {
+		catch( SQLException | ExistingSubscriberException | BadParametersException|CompetitionException | SubscriberException |ExistingCompetitorException |MissingCompetitionException e) {
 			return null;
-		} catch (BadParametersException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CompetitionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SubscriberException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExistingCompetitorException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (MissingCompetitionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-		return null;
 	}
 
 	@Override
@@ -755,20 +727,22 @@ public class BettingSoft implements Betting {
 				infoCompetition.add(c.getName());
 				infoCompetition.add(c.getClosingCalendar().toString());
 								
-				List<WinnerBet> betsList = BetManager.findAllSimpleBetsByCompetition(c);
+				List<WinnerBet> betsList = WinnerBetManager.findAllWinnerBetsByCompetition(c);
 				for (WinnerBet bet : betsList) {
 					infoCompetition.add(bet.toString());
 				}
-								
-				ArrayList<Competitor> competitors = c.getCompetitors();
-				for (Competitor comptr : competitors) {
-					infoCompetition.add(comptr.toString());
+				List<Entry> entrylist = EntryManager.findAllByCompetition(c.getName());			
+				
+				for (Entry entry : entrylist) {
+					List<String> entry_data = new ArrayList<String>();
+					entry_data.add(entry.getCompetitor().toString());
+					infoCompetition.addAll(entry_data);
 				}
 				
 				collectionCompetition.add(infoCompetition);
 			}
 		}
-		catch (SQLException | BadParametersException e){
+		catch (SQLException | BadParametersException |  CompetitionException|  SubscriberException|  ExistingCompetitorException e){
 			return null;
 		}
 		return collectionCompetition;
@@ -777,19 +751,46 @@ public class BettingSoft implements Betting {
 	@Override
 	public List<List<String>> listCompetitors(String competition)
 			throws ExistingCompetitionException, CompetitionException {
-
+		
+		
+		List<List<String>> collectionCompetitor = new ArrayList<List<String>>();
+		List<Competitor> competitors;
 		try{
 			Competition c = CompetitionManager.findBycompetitionName(competition);
 			if (c == null)
 				throw new ExistingCompetitionException("Competition "+ competition + " is not exist");
-		List<Entry> competitors = EntryManager.findAllByCompetition(competition);
-
-			return competitors;
+			
+			List<Entry> entrylist = EntryManager.findAllByCompetition(competition);	
+			
+			for (Entry entry : entrylist) {
+				
+				Competitor competitor = entry.getCompetitor();
+				competitors.add(competitor);
+			}
+			
+			List<String> infoCompetitor = new ArrayList<String>();
+			for (int i=0; i<competitors.size();i++){
+				Competitor comp = competitors.get(i);
+				if (comp instanceof Player) {
+					infoCompetitor.add(((Player) comp).getUserName());
+					infoCompetitor.add(((Player) comp).getFirstName());
+					infoCompetitor.add(((Player) comp).getBornDate().toString());
+				} else if (comp instanceof Team) {
+					
+					infoCompetitor.add(((Team) competitors).getTeamName());
+				}
+				
+				
+				collectionCompetitor.add(infoCompetitor);
+			}
+			
+		
 		}
 		catch (BadParametersException | SQLException e){
-			return null;
+			e.printStackTrace();
 		}
 		
+		return collectionCompetitor;
 	}
 
 	@Override
