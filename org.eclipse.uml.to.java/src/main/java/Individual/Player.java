@@ -24,6 +24,15 @@ public class Player extends AbstractCompetitor {
 	public String getUserName(){
 		return this.userName;
 	}
+	public String getFirstName(){
+		return this.firstName;
+	}
+	public String getlastName(){
+		return this.lastName;
+	}
+	public String getbornDate(){
+		return this.bornDate;
+	}
 	@Override
 	public boolean hasValidName() {
 		// TODO Auto-generated method stub

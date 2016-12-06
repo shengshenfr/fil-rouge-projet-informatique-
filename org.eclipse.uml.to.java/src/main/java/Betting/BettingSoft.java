@@ -754,7 +754,7 @@ public class BettingSoft implements Betting {
 		
 		
 		List<List<String>> collectionCompetitor = new ArrayList<List<String>>();
-		List<Competitor> competitors;
+		List<Competitor> competitors = null;
 		try{
 			Competition c = CompetitionManager.findBycompetitionName(competition);
 			if (c == null)
@@ -774,23 +774,24 @@ public class BettingSoft implements Betting {
 				if (comp instanceof Player) {
 					infoCompetitor.add(((Player) comp).getUserName());
 					infoCompetitor.add(((Player) comp).getFirstName());
-					infoCompetitor.add(((Player) comp).getBornDate().toString());
+					infoCompetitor.add(((Player) comp).getbornDate());
 				} else if (comp instanceof Team) {
 					
 					infoCompetitor.add(((Team) competitors).getTeamName());
 				}
-				
-				
 				collectionCompetitor.add(infoCompetitor);
 			}
-			
+			return collectionCompetitor;
 		
 		}
-		catch (BadParametersException | SQLException e){
+		catch (SQLException e){
+			e.printStackTrace();
+		} catch (MissingCompetitionException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		return collectionCompetitor;
+		return null;
 	}
 
 	@Override
@@ -876,22 +877,50 @@ public class BettingSoft implements Betting {
 				CompetitionManager.delete(c);
 			}
 			else if (!bets_competition_podium.isEmpty()){
-				for (Bet bet : bets_competition_podium) {
+				//List Entry which is the result and 
+					Entry winnerentry=new Entry(c,winner);
+					Entry secondentry=new Entry(c,second);
+					Entry thirdentry=new Entry(c,third);
+					List<Entry> podiumentryresult=null;
+					podiumentryresult.add(winnerentry);
+					podiumentryresult.add(secondentry);
+					podiumentryresult.add(thirdentry);
+				//set the rank of every entry in the entry manager
+					List<Entry> listentry=EntryManager.findAllByCompetition(c.getName());
+					for(Entry listen:listentry){
+						if(listen.equals(winnerentry)){
+							listen.setRank(Rank.FIRST);
+						}
+						else if(listen.equals(secondentry)){
+							listen.setRank(Rank.SECOND);
+						}
+						else if(listen.equals(thirdentry)){
+							listen.setRank(Rank.THIRD);
+						}
+					}
+				//compare with every bet
+				for (PodiumBet bet : bets_competition_podium) {
 					sum_balance += bet.getAmount();
-					if ((bet.getWinner().equals(winner))&& (bet.getSecond().equals(second)) && (bet.getThird().equals(third))){
+					List<Entry> podiumentry=bet.getPodium();
+					if(podiumentry.equals(podiumentryresult)){
 						sum_balance_winner += bet.getAmount();
 					}
+		
 				}
 
 				if (sum_balance_winner == 0) { //there are no good bet podium => credit all subscriber
-					for (Bet bet : bets_competition_podium) {
-						Subscriber.creditSubscriber(bet.getUsername(), bet.getAmount(), managerPwd);
+					for (PodiumBet bet : bets_competition_podium) {
+						Subscriber s=bet.getBetOwner();
+						creditSubscriber(bet.getBetOwner().getUsername(), bet.getAmount(), managerPwd);
 					}
 				}
 				else{
-					for (Bet bet : bets_competition_podium) {
-						if ((bet.getWinner().equals(winner))&& (bet.getSecond().equals(second)) && (bet.getThird().equals(third)))
-							Subscriber.creditSubscriber(bet.getUsername(), (long) bet.getAmount()*sum_balance/sum_balance_winner, managerPwd);
+					for (PodiumBet bet : bets_competition_podium) {
+						List<Entry> podiumentry=bet.getPodium();
+						if(podiumentry.equals(podiumentryresult)){
+							Subscriber s=bet.getBetOwner();
+							creditSubscriber(bet.getBetOwner().getUsername(),(long) bet.getAmount()*sum_balance/sum_balance_winner, managerPwd);
+						}		
 					}
 				}
 				//Delete the bets in the DB
@@ -900,8 +929,23 @@ public class BettingSoft implements Betting {
 		
 					CompetitionManager.delete(c);
 			}
-		} catch (ExistingSubscriberException |BadParametersException | SQLException | NotExistingCompetitorException e){
+		} catch (ExistingSubscriberException e){
 			System.out.println(e);
+		} catch (MissingCompetitionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadParametersException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SubscriberException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExistingCompetitorException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}	
 	}
 
@@ -922,7 +966,7 @@ public class BettingSoft implements Betting {
 			if (c.getClosingCalendar().after(today))
 				throw new CompetitionException ("This competition still open");
 
-			if (!(c.getCompetitors().contains(winner)))
+			if (!(EntryManager.existCompetitorInCompetition(c,(AbstractCompetitor)winner)))
 				throw new CompetitionException("the competitors isn't in the competition!");
 
 			
@@ -935,28 +979,44 @@ public class BettingSoft implements Betting {
 			long sum_balance_winner = 0;
 			long sum_balance = 0;
 
+			// if bets_competition is empty => there are no bet on this competition => delete this competition
 			if (bets_competition_winner.isEmpty()){
-				CompetitionManager.delete(c);
+					CompetitionManager.delete(c);
 			}
 			else if (!bets_competition_winner.isEmpty()){
-				for (Bet bet : bets_competition_winner) {
+			//List Entry which is the result
+					Entry winnerentryresult=new Entry(c,winner);
+			//set the rank of every entry in the entry manager
+					List<Entry> listentry=EntryManager.findAllByCompetition(c.getName());
+					for(Entry listen:listentry){
+						if(listen.equals(winnerentryresult)){
+							listen.setRank(Rank.FIRST);
+						}
+					}
+			//compare with every bet and set the rank of every entry in the bet
+			for (WinnerBet bet : bets_competition_winner) {
 					sum_balance += bet.getAmount();
-					if (bet.getWinner().equals((winner))){
-						sum_balance_winner += bet.getAmount();
+					Entry winnerentry=bet.getWinner();
+					if(winnerentry.equals(winnerentryresult)){
+							sum_balance_winner += bet.getAmount();
+						}
 					}
-				}
 
-				if (sum_balance_winner == 0) { //there are no good bet podium => credit all subscriber
-					for (Bet bet : bets_competition_winner) {
-						Subscriber.creditSubscriber(bet.getUsername(), bet.getAmount(), managerPwd);
+			if (sum_balance_winner == 0) { //there are no good bet winner => credit all subscriber
+			for (WinnerBet bet : bets_competition_winner) {
+					Subscriber s=bet.getBetOwner();
+					creditSubscriber(bet.getBetOwner().getUsername(), bet.getAmount(), managerPwd);
 					}
-				}
-				else{ 
-					for (Bet bet : bets_competition_winner) {
-						if (bet.getWinner().equals((winner)))
-							Subscriver.creditSubscriber(bet.getUsername(), (long) bet.getAmount()*sum_balance/sum_balance_winner, managerPwd);
+			}
+			else{
+				for (WinnerBet bet : bets_competition_winner) {
+					Entry winnerentry=bet.getWinner();
+					if(winnerentry.equals(winnerentryresult)){
+							Subscriber s=bet.getBetOwner();
+							creditSubscriber(bet.getBetOwner().getUsername(),(long) bet.getAmount()*sum_balance/sum_balance_winner, managerPwd);
+							}		
 					}
-				}
+			}
 				//Delete the bets in the DB
 			
 					WinnerBetManager.deleleAllWinnerBetsOnCompetition(c);
@@ -964,8 +1024,23 @@ public class BettingSoft implements Betting {
 					CompetitionManager.delete(c);
 			}
 		}
-		catch (ExistingSubscriberException |BadParametersException | SQLException | NotExistingCompetitorException e){
+		catch (ExistingSubscriberException e){
 				System.out.println(e);
+		} catch (BadParametersException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SubscriberException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExistingCompetitorException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MissingCompetitionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

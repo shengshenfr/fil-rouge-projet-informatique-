@@ -463,7 +463,7 @@ public interface Betting {
 	 * @throws CompetitionException
 	 *             raised if competition closed.
 	 */
-	public Collection<Competition> listCompetitors(String competition)
+	public List<List<String>> listCompetitors(String competition)
 			throws ExistingCompetitionException,
 			CompetitionException;
 	
