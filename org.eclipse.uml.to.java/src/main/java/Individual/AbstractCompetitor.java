@@ -54,4 +54,9 @@ public abstract class AbstractCompetitor implements Competitor {
 		this.abstractCompetitorName = newAbstractCompetitorName;
 	}
 
+	public boolean hasValidName(String teamName) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
