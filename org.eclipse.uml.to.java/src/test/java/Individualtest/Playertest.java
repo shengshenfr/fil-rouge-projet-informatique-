@@ -9,9 +9,10 @@ import exceptions.AuthentificationException;
 import exceptions.BadParametersException;
 import exceptions.CantBetException;
 import exceptions.MissingTokenException;
+import Individual.Player;
 import utils.MyCalendar;
-import Individual.UnregistedCompetitor;
-public class UnregisteredCompetitortest {
+
+public class Playertest {
 	public static void main(String[] args) throws BadParametersException{
 		testConstructeur();
 		
@@ -19,8 +20,8 @@ public class UnregisteredCompetitortest {
 	@Test
 	public static void testConstructeur() throws BadParametersException{
 		//test UnregisteredCompetitor.UnregisteredCompetitor///////////////
-		UnregistedCompetitor uc= new UnregistedCompetitor("SYLVIE");
-		assertTrue(uc.getUnregistedSubscriberName().equals("SYLVIE"));
+		Player uc= new Player("SYLVIE","POPO","puupu","19/06/95");
+		assertTrue(uc.getUserName().equals("SYLVIE"));
         ////////////////////////////////////////////
 	}
 

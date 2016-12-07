@@ -53,7 +53,7 @@ public class BettingSoft implements Betting {
 	 *            the name of manager.
 	 * @throws ExistingCompetitorException  
 	 */
-	public void createManager(String manager_username) throws BadParametersException {
+	public void createManager(String manager_username, String password) throws BadParametersException {
 		// manager should exist
 		if (manager!=null)
 			throw new BadParametersException("manager is existed");

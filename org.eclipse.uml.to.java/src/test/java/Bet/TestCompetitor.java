@@ -11,10 +11,10 @@ public class TestCompetitor implements Competitor {
 		return true;
 	}
 
-	@Override
+	/*@Override
 	public String getName() {
 		return "Test";
-	}
+	}*/
 
 	@Override
 	public void addMember(Competitor member)
