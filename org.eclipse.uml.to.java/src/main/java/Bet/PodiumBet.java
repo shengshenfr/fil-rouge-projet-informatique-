@@ -103,10 +103,10 @@ public class PodiumBet extends Bet {
 	
 	@Override
 	public boolean isWon() {
-		if (!this.podium.get(0).getCompetition().isSettled())
+		if (this.podium.get(0).getCompetition().isSettled()==0)
 			return false;
 		
-		if (this.podium.get(0).getCompetition().isDraw())
+		if (this.podium.get(0).getCompetition().isDraw()==1)
 			return false;
 	
 		for(int i=0; i<podium.size(); i++) {

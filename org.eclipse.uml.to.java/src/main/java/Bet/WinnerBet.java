@@ -77,10 +77,10 @@ public class WinnerBet extends Bet {
 	
 	@Override
 	public boolean isWon() {
-		if (!this.winner.getCompetition().isSettled())
+		if (this.winner.getCompetition().isSettled()==0)
 			return false;
 		
-		if (this.winner.getCompetition().isDraw())
+		if (this.winner.getCompetition().isDraw()==1)
 			return false;
 		
 		return this.winner.getRank() == Rank.FIRST;

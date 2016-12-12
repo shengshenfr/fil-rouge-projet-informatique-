@@ -302,7 +302,7 @@ public class Competition {
 			}
 		}
 		
-		this.settled = true;
+		this.settled = 1;
 		
 		// Compute winner tokens
 		this.computeWinnerToken();
@@ -314,9 +314,9 @@ public class Competition {
 		if (!this.isOver()) {
 			throw new CompetitionException("Competition is not over yet!");
 		}
-		this.setDraw(true);
+		this.setDraw(1);
 		
-		this.settled = true;
+		this.settled = 1;
 		
 		// Compute winner tokens
 		this.computeWinnerToken();
