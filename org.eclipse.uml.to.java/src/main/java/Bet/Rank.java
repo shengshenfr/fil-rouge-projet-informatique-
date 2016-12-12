@@ -10,7 +10,7 @@ package Bet;
 /**
  * Description of Enumeration.
  * 
- * @author Robin, Rémy
+ * @author Robin, Rï¿½my
  */
 public enum Rank {
 	FIRST,

@@ -52,14 +52,15 @@ public class SubscriberManager {
 	try
 	{
 		c.setAutoCommit(false);
-		PreparedStatement psPersist = c.prepareStatement("insert into subscribers(username,firstname,lastname,bornDate,balance) values (?,?,?,?,?)");
+		PreparedStatement psPersist = c.prepareStatement("insert into subscriber(username,password,firstname,lastname,bornDate,balance) values (?,?,?,?,?,?)");
 		
 		//ajust valors of attributes
 		psPersist.setString(1,  subscriber.getUsername());
-		psPersist.setString(2,  subscriber.getFirstname());
-		psPersist.setString(3, subscriber.getLastname());
-		psPersist.setDate(4, convertJavaDateToSqlDate(subscriber.getBornDate().getTime()));
-		psPersist.setLong(5, subscriber.getBalance());
+		psPersist.setString(2,  subscriber.getPassword());
+		psPersist.setString(3,  subscriber.getFirstname());
+		psPersist.setString(4, subscriber.getLastname());
+		psPersist.setDate(5, convertJavaDateToSqlDate(subscriber.getBornDate().getTime()));
+		psPersist.setLong(6, subscriber.getBalance());
 		
 		psPersist.executeUpdate();
 		psPersist.close();
@@ -116,7 +117,7 @@ public static Subscriber findByUsername(String username) throws SQLException, Ba
 	
 	// 2 - Creating a Prepared Statement with the SQL instruction.
     //     The parameters are represented by question marks. 
-	PreparedStatement psSelect = c.prepareStatement("select * from subscribers where username=?");
+	PreparedStatement psSelect = c.prepareStatement("select * from subscriber where username=?");
 	
 	// 3 Supplying values for the prepared statement parameters (question marks).
 	psSelect.setString(1, username);
@@ -132,17 +133,9 @@ public static Subscriber findByUsername(String username) throws SQLException, Ba
 	{
 		// conversion of the Date bornDate to calendar using the last function
 		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(resultSet.getDate("bornDate"));
-		try
-		{
-		subscriber = new Subscriber(resultSet.getString("username"),resultSet.getString("firstname"),
+		calendar.setTime(resultSet.getDate("borndate"));
+		subscriber = new Subscriber(resultSet.getString("username"),resultSet.getString("password"),resultSet.getString("firstname"),
 				resultSet.getString("lastname"), calendar, resultSet.getLong("balance"));
-		}
-		catch (BadParametersException e) {
-			
-			e.printStackTrace();
-		}
-		
 	}
 	
 	 // 6 - Closing the Result Set
@@ -174,7 +167,7 @@ public static List<Subscriber> findByFirstname(String firstname) throws SQLExcep
 	
 	// 2 - Creating a Prepared Statement with the SQL instruction.
     //     The parameters are represented by question marks. 
-	PreparedStatement psSelect = c.prepareStatement("select * from subscribers where firstname=?");
+	PreparedStatement psSelect = c.prepareStatement("select * from subscriber where firstname=?");
 	
 	// 3 Supplying values for the prepared statement parameters (question marks).
 	psSelect.setString(1, firstname);
@@ -191,15 +184,8 @@ public static List<Subscriber> findByFirstname(String firstname) throws SQLExcep
 	{
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(resultSet.getDate("bornDate"));
-		try
-		{
-		subscribers.add(new Subscriber(resultSet.getString("username"),resultSet.getString("firstname"),
+		subscribers.add(new Subscriber(resultSet.getString("username"),resultSet.getString("password"),resultSet.getString("firstname"),
 				resultSet.getString("lastname"), calendar, resultSet.getLong("balance")));
-		}
-		catch (BadParametersException e) {
-			
-			e.printStackTrace();
-		}
 		
 	}
 	
@@ -232,7 +218,7 @@ public static List<Subscriber> findByLastname(String lastname) throws SQLExcepti
 	
 	// 2 - Creating a Prepared Statement with the SQL instruction.
     //     The parameters are represented by question marks. 
-	PreparedStatement psSelect = c.prepareStatement("select * from subscribers where lastname=?");
+	PreparedStatement psSelect = c.prepareStatement("select * from subscriber where lastname=?");
 	
 	// 3 Supplying values for the prepared statement parameters (question marks).
 	psSelect.setString(1, lastname);
@@ -249,15 +235,8 @@ public static List<Subscriber> findByLastname(String lastname) throws SQLExcepti
 	{
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(resultSet.getDate("bornDate"));
-		try
-		{
-		subscribers.add(new Subscriber(resultSet.getString("username"),resultSet.getString("firstname"),
+		subscribers.add(new Subscriber(resultSet.getString("username"),resultSet.getString("password"),resultSet.getString("firstname"),
 				resultSet.getString("lastname"), calendar, resultSet.getLong("balance")));
-		}
-		catch (BadParametersException e) {
-			
-			e.printStackTrace();
-		}
 		
 	}
 	
@@ -291,7 +270,7 @@ public static List<Subscriber> findByBornDate(Calendar bornDate) throws SQLExcep
 	
 	// 2 - Creating a Prepared Statement with the SQL instruction.
     //     The parameters are represented by question marks. 
-	PreparedStatement psSelect = c.prepareStatement("select * from subscribers where bornDate=?");
+	PreparedStatement psSelect = c.prepareStatement("select * from subscriber where bornDate=?");
 	
 	// 3 Supplying values for the prepared statement parameters (question marks).
 	psSelect.setDate(1, convertJavaDateToSqlDate(bornDate.getTime()));
@@ -308,15 +287,8 @@ public static List<Subscriber> findByBornDate(Calendar bornDate) throws SQLExcep
 		// conversion of java.sql.Date bornDate to Calendar
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(resultSet.getDate("bornDate"));
-		try
-		{
-		subscribers.add(new Subscriber(resultSet.getString("username"),resultSet.getString("firstname"),
+		subscribers.add(new Subscriber(resultSet.getString("username"),resultSet.getString("password"),resultSet.getString("firstname"),
 				resultSet.getString("lastname"), calendar, resultSet.getLong("balance")));
-		}
-		catch (BadParametersException e) {
-			
-			e.printStackTrace();
-		}
 		
 	}
 	
@@ -352,7 +324,7 @@ public static List<Subscriber> findAll() throws SQLException,BadParametersExcept
 	// initialize the connection
 	Connection c = DatabaseConnection.getConnection();
 	// initialisation of the statement
-    PreparedStatement psSelect = c.prepareStatement("select * from subscribers order by username");
+    PreparedStatement psSelect = c.prepareStatement("select * from subscriber order by username");
     ResultSet resultSet = psSelect.executeQuery();
     List<Subscriber> subscribers = new ArrayList<Subscriber>();
     while(resultSet.next())
@@ -360,17 +332,8 @@ public static List<Subscriber> findAll() throws SQLException,BadParametersExcept
     	
     	Calendar calendar = Calendar.getInstance();
 		calendar.setTime(resultSet.getDate("bornDate"));
-		try
-		{
-    	subscribers.add(new Subscriber(resultSet.getString("username"),
-    								   resultSet.getString("firstname"),
-    								   resultSet.getString("lastname"),
-    								   calendar, resultSet.getLong("balance")));
-    	}
-    	catch (BadParametersException e) {
-			
-			e.printStackTrace();
-    	}
+		subscribers.add(new Subscriber(resultSet.getString("username"),resultSet.getString("password"),resultSet.getString("firstname"),
+				resultSet.getString("lastname"), calendar, resultSet.getLong("balance")));
     	
     }
     // closing the resultSet
@@ -394,7 +357,7 @@ public static List<Subscriber> findAll() throws SQLException,BadParametersExcept
  * @throws SQLException
  */
 
-public static void update(Subscriber subscriber) throws SQLException
+public static void updateToken(Subscriber subscriber) throws SQLException
 {
   // 1 - Get a database connection from the class 'DatabaseConnection' 
   Connection c = DatabaseConnection.getConnection();
@@ -402,19 +365,16 @@ public static void update(Subscriber subscriber) throws SQLException
   // 2 - Creating a Prepared Statement with the SQL instruction.
   //     The parameters are represented by question marks. 
   
-  PreparedStatement psUpdate = c.prepareStatement("update subscribers set firstname=?, lastname=?, bornDate=?, balance=?, where username=?");
+  PreparedStatement psUpdate = c.prepareStatement("update subscriber set balance=? where username=?");
   
   // 3 - Supplying values for the prepared statement parameters (question marks).
-  
-  psUpdate.setString(1,  subscriber.getFirstname());
-  psUpdate.setString(2, subscriber.getLastname());
-  psUpdate.setDate(3,  convertJavaDateToSqlDate(subscriber.getBornDate().getTime()));
-  psUpdate.setLong(4, subscriber.getBalance());
-  psUpdate.setString(5, subscriber.getUsername());
+ 
+  psUpdate.setLong(1, subscriber.getBalance());
+  psUpdate.setString(2, subscriber.getUsername());
   
 
   psUpdate.executeUpdate();
-
+  
   // 6 - Closing the Prepared Statement.
   
   psUpdate.close();
@@ -443,9 +403,9 @@ public static void delete(Subscriber subscriber) throws SQLException, BadParamet
 {
   Connection c = DatabaseConnection.getConnection();
   
-  PreparedStatement deleteStmt = c.prepareStatement("delete from subscribers where username=?");
-  deleteStmt.setString(1, subscriber.getUsername());
-  
+  PreparedStatement deleteStmt = c.prepareStatement("delete subscriber where username='"+subscriber.getUsername()+"'");
+  //deleteStmt.setString(1, subscriber.getUsername());
+  System.out.println("okkkkkdelete");
   //updating the statement
   deleteStmt.executeUpdate();
   

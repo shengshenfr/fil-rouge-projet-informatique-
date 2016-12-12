@@ -8,7 +8,8 @@ import Bet.Competition;
 import Bet.Entry;
 import Bet.Rank;
 import Interface.Competitor;
-import Individual.AbstractCompetitor;
+
+import Individual.*;
 import exceptions.BadParametersException;
 import exceptions.MissingCompetitionException;
 
@@ -70,15 +71,24 @@ public static Entry persist(Entry entry) throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		try {
 			c.setAutoCommit(false);
-
-			PreparedStatement psPersist = c.prepareStatement("insert into Entrys(idEntry, competitionName, competitorName, rank) values(?,?,?,?)");
-			psPersist.setString(2, entry.getCompetition().getName());
-			psPersist.setString(3, ((AbstractCompetitor)entry.getCompetitor()).getAbstractCompetitorName());
-			psPersist.setInt(4, Rank.getIndex(entry.getRank()));
-			psPersist.setInt(1, entry.getId());
-
+			
+			
+			PreparedStatement psPersist = c.prepareStatement("insert into Entry( competitionName, competitorName, rank,idEntry) values(?,?,?,?)");
+			psPersist.setString(1, entry.getCompetition().getName());
+			if( entry.getCompetitor() instanceof Player){
+				psPersist.setString(2, ((Player)entry.getCompetitor()).getUserName());
+				
+			}
+			else if( entry.getCompetitor() instanceof Team){
+				psPersist.setString(2,((Team)entry.getCompetitor()).getTeamName());
+			}
+//			System.out.println(Rank.getIndex(entry.getRank()));
+			psPersist.setInt(3, Rank.getIndex(entry.getRank()));
+			psPersist.setInt(4, entry.getId());
+//			System.out.println(entry.getId());
+//			System.out.println(entry.getId());
 			psPersist.executeUpdate();
-
+			
 			psPersist.close();
 
 		}
@@ -120,8 +130,8 @@ public static Entry persist(Entry entry) throws SQLException {
 	public static Entry findById(Integer idEntry) throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psSelect = c
-				.prepareStatement("select * from Entrys where idEntry=?");
-		
+				.prepareStatement("select * from Entry where idEntry=?");
+		psSelect.setInt(1, idEntry);
 		ResultSet resultSet = psSelect.executeQuery();
 		Entry entry = null;
 		while (resultSet.next()) {
@@ -156,7 +166,7 @@ public static Entry persist(Entry entry) throws SQLException {
 		
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psUpdate = c
-				.prepareStatement("delete from Entrys where idEntry=?");
+				.prepareStatement("delete from Entry where idEntry=?");
 		psUpdate.setInt(1, entry.getId());
 		
 		psUpdate.executeUpdate();
@@ -174,8 +184,7 @@ public static Entry persist(Entry entry) throws SQLException {
 	public static List<Entry> findAllByCompetition(String competitionName) throws SQLException {
 		
 		Connection c = DatabaseConnection.getConnection();
-		PreparedStatement psSelect = c.prepareStatement("select * from"
-				+ "Entrys where competitionName=? order by idEntry");
+		PreparedStatement psSelect = c.prepareStatement("select * from Entry where competitionName=? order by idEntry");
 		psSelect.setString(1, competitionName);
 		
 		ResultSet resultSet = psSelect.executeQuery();
@@ -203,6 +212,29 @@ public static Entry persist(Entry entry) throws SQLException {
 
 		return entrys;
 	}
+	
+	//-----------------------------------------------------------------------
+	// list all the competitors in a competition
+
+	public static List<AbstractCompetitor> findCompetitorsByCompetition(String competitionName) throws SQLException {
+		
+		Connection c = DatabaseConnection.getConnection();
+		PreparedStatement psSelect = c.prepareStatement("select competitorName from Entry where competitionName=?");
+		psSelect.setString(1, competitionName);
+		
+		ResultSet resultSet = psSelect.executeQuery();
+		List<AbstractCompetitor> competitors = new ArrayList<AbstractCompetitor>();
+		while (resultSet.next()) {
+			
+			competitors.add(new AbstractCompetitor(resultSet.getString("competitorName")));
+
+		}
+		resultSet.close();
+		psSelect.close();
+		c.close();
+
+		return competitors;
+	}
 		
 	
 	//-----------------------------------------------------------------------
@@ -212,7 +244,7 @@ public static Entry persist(Entry entry) throws SQLException {
 
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psSelect = c.prepareStatement("select * from"
-				+ "Entrys where competitorName=? order by idEntry");
+				+ "Entry where competitorName=? order by idEntry");
 		psSelect.setString(1, competitorName);
 		
 		ResultSet resultSet = psSelect.executeQuery();
@@ -245,7 +277,7 @@ public static Entry persist(Entry entry) throws SQLException {
 		
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psUpdate = c
-				.prepareStatement("update Entrys set rank= ?, competitioName=?, competitorName = ? where idEntry=?");
+				.prepareStatement("update Entry set rank= ?, competitioName=?, competitorName = ? where idEntry=?");
 		psUpdate.setInt(1, Rank.getIndex(entry.getRank()));
 		psUpdate.setString(2, entry.getCompetition().getName());
 		psUpdate.setString(4, ((AbstractCompetitor)entry.getCompetitor()).getAbstractCompetitorName());
@@ -264,32 +296,17 @@ public static Entry persist(Entry entry) throws SQLException {
 	
 	public static boolean existCompetitorInCompetition (Competition competition,AbstractCompetitor competitor) throws SQLException {
 		Connection c = DatabaseConnection.getConnection();
+		System.out.println(competitor.getAbstractCompetitorName());
+		System.out.println(competition.getName());
+		PreparedStatement psSelect = c.prepareStatement("select * from Entry where competitorName=? and competitionName=?");
+		psSelect.setString(1,competitor.getAbstractCompetitorName());
 		
-		PreparedStatement psSelect = c.prepareStatement("select * from Entrys order by idEntry");
+		psSelect.setString(2,competition.getName());
 		ResultSet resultSet = psSelect.executeQuery();
 		
 		boolean exist = false;
 		while (resultSet.next()) {
-			
-				try {
-					Entry entry = Entry.createEntry(resultSet.getInt("idEntry"),
-							resultSet.getString("competitionName"),
-							resultSet.getString("competitorName"),
-							resultSet.getInt("rank"));
-					
-					if ((entry.getCompetition().getName()== competition.getName())
-							&& ((AbstractCompetitor)entry.getCompetitor()).getAbstractCompetitorName()
-							== competitor.getAbstractCompetitorName())
-							exist = true;
-					
-					
-				} catch (BadParametersException e) {
-					
-					e.printStackTrace();
-				} catch (MissingCompetitionException e) {
-					
-					e.printStackTrace();
-				}
+			exist=true;
 		}
 		
 		resultSet.close();

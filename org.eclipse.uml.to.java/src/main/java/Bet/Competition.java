@@ -23,19 +23,19 @@ import dbManager.EntryManager;
 /**
  * Description of Competition.
  * 
- * @author Robin, Rémy
+ * @author Robin, Rï¿½my
  */
 @SuppressWarnings("unused")
 public class Competition {
 	/**
 	 * Description of the property settled.
 	 */
-	private boolean settled = false;
+	private int settled = 0;
 
 	/**
 	 * Description of the property isDraw.
 	 */
-	private boolean draw = false;
+	private int draw = 0;
 
 	/**
 	 * Description of the property name.
@@ -48,8 +48,8 @@ public class Competition {
 	private Calendar closingDate = null;
 
 	/**
-	 * Description of the property competitors.
-	 */
+//	 * Description of the property competitors.
+//	 */
 	private HashSet<Entry> entries = new HashSet<Entry>();
 	
 	private HashSet<DrawBet> drawBets = new HashSet<DrawBet>();
@@ -77,13 +77,7 @@ public class Competition {
 			throw new BadParametersException("The closing date must be in the future!");
 		}
 		this.closingDate = closingDate;
-
-		try {
-			CompetitionManager.persist(this);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			// TODO: raise Exception
-		}
+		this.startingDate = new GregorianCalendar(); 
 	}
 
 	public Competition(String competitionName, Calendar startingDate, Calendar closingDate) throws BadParametersException {
@@ -91,7 +85,7 @@ public class Competition {
 		this.startingDate = startingDate;
 	}
 	
-	public static Competition createCompetition(String competitionName, Date startingDate, Date closingDate, boolean settled, boolean draw) throws BadParametersException {
+	public static Competition createCompetition(String competitionName, Date startingDate, Date closingDate, int settled,int draw,long totalTokens) throws BadParametersException {
 		Calendar startingCalendar = new GregorianCalendar();
 		startingCalendar.setTimeInMillis(startingDate.getTime());
 		Calendar closingCalendar = new GregorianCalendar();
@@ -100,6 +94,7 @@ public class Competition {
 		Competition competition = new Competition(competitionName, startingCalendar, closingCalendar);
 		competition.setSettled(settled);
 		competition.setDraw(draw);
+		competition.setTotalToken(totalTokens);
 		return competition;
 	}
 	
@@ -116,7 +111,7 @@ public class Competition {
 	 * Returns settled.
 	 * @return settled 
 	 */
-	public boolean isSettled() {
+	public int isSettled() {
 		return this.settled;
 	}
 
@@ -124,7 +119,7 @@ public class Competition {
 	 * Sets a value to attribute settled. 
 	 * @param newSettled 
 	 */
-	public void setSettled(boolean newSettled) {
+	public void setSettled(int newSettled) {
 		this.settled = newSettled;
 	}
 
@@ -132,7 +127,7 @@ public class Competition {
 	 * Returns isDraw.
 	 * @return isDraw 
 	 */
-	public boolean isDraw() {
+	public int isDraw() {
 		return this.draw;
 	}
 
@@ -140,7 +135,7 @@ public class Competition {
 	 * Sets a value to attribute isDraw. 
 	 * @param newIsDraw 
 	 */
-	public void setDraw(boolean newIsDraw) {
+	public void setDraw(int newIsDraw) {
 		this.draw = newIsDraw;
 		save();
 	}
@@ -187,13 +182,6 @@ public class Competition {
 		return this.startingDate;
 	}
 	
-	public Date getStartingDate() {
-		return new Date(getStartingCalendar().getTimeInMillis());
-	}
-	
-	public Date getClosingDate() {
-		return new Date(getClosingCalendar().getTimeInMillis());
-	}
 
 	/**
 	 * Sets a value to attribute startingDate. 

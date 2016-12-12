@@ -84,11 +84,20 @@ public class Subscriber extends Player {
         this.password=generatePassword();
     }
     
+    public Subscriber(String username,String password, String firstname, String lastname, Calendar bornDate, long balance){
+    	this.firstName = firstname;
+        this.lastName = lastname;
+        this.bornDate = bornDate;
+        this.balance = balance;
+        this.password=password;
+        this.userName=username;
+    }
+    
     
     public boolean authenticate(String pwd) throws AuthentificationException {
         // Start of user code for method authenticate
         // End of user code
-        if(!(this.password==pwd)){
+        if(!this.password.equals(pwd)){
             throw new AuthentificationException("password is incorrect!");
         }
         else{return true;}

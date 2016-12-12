@@ -22,7 +22,7 @@ import Individual.Subscriber;
 /**
  * Description of Bet.
  * 
- * @author Robin, Rémy
+ * @author Robin, Rï¿½my
  */
 @SuppressWarnings("unused")
 abstract public class Bet {
@@ -78,7 +78,7 @@ abstract public class Bet {
 		return bet;
 	}
 	
-	static public WinnerBet createWinnerBet(int id, String ownerName, long amount, int idWinner) throws BadParametersException, MissingCompetitionException, CompetitionException, SubscriberException, ExistingCompetitorException {
+	static public WinnerBet createWinnerBet(int id,  long amount, int idWinner,String ownerName) throws BadParametersException, MissingCompetitionException, CompetitionException, SubscriberException, ExistingCompetitorException {
 		Subscriber owner;
 		try {
 			owner = SubscriberManager.findByUsername(ownerName);

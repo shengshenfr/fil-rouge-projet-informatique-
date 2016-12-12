@@ -3,6 +3,8 @@
  *******************************************************************************/
 package Individual;
 
+import exceptions.BadParametersException;
+import exceptions.ExistingCompetitorException;
 import Interface.Competitor;
 
 // End of user code
@@ -12,7 +14,7 @@ import Interface.Competitor;
  * 
  * @author Robin
  */
-public abstract class AbstractCompetitor implements Competitor {
+public class AbstractCompetitor implements Competitor {
 	/**
 	 * Description of the property abstractCompetitorName.
 	 */
@@ -57,6 +59,26 @@ public abstract class AbstractCompetitor implements Competitor {
 	public boolean hasValidName(String teamName) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public boolean hasValidName() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void addMember(Competitor member)
+			throws ExistingCompetitorException, BadParametersException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteMember(Competitor member) throws BadParametersException,
+			ExistingCompetitorException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

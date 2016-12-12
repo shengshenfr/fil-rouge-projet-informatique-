@@ -14,7 +14,7 @@ import exceptions.CompetitionException;
 /**
  * Description of WinnerBet.
  * 
- * @author Robin, Rémy
+ * @author Robin, Rï¿½my
  */
 public class WinnerBet extends Bet {
 	/**
@@ -31,13 +31,7 @@ public class WinnerBet extends Bet {
 			this.setWinner(winner);
 		} catch (CompetitionException e1) {
 		}
-		
-		try {
-			WinnerBetManager.persist(this);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			// TODO: raise Exception
-		}
+
 	}
 	
 	protected void save() {

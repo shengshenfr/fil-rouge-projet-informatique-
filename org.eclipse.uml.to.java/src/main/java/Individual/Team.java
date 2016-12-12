@@ -14,11 +14,8 @@ public class Team extends AbstractCompetitor{
 	private String teamName;
 	private ArrayList<Player> member;
 	
-	public Team(String name) throws SQLException{
-		if(!hasValidName(name)){
-			this.teamName = name;
-			dbManager.TeamManager.persist(name);
-		}
+	public Team(String name){
+		this.teamName = name;
 	}
 // verifier if the team has exist. If not, add the new team in data base.
 	

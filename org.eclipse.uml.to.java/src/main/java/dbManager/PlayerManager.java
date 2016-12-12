@@ -40,12 +40,15 @@ public class PlayerManager {
 		try
 		{
 			c.setAutoCommit(false);
-			PreparedStatement psPersist = c.prepareStatement("insert into players (playerName) values (?) ");
+			PreparedStatement psPersist = c.prepareStatement("insert into player (userName,firstName,lastName,bornDate) values (?,?,?,?) ");
 			psPersist.setString(1,  player.getUserName());
+			psPersist.setString(2,  player.getFirstName());
+			psPersist.setString(3,  player.getlastName());
+			psPersist.setString(4,  player.getbornDate());
 			
 			psPersist.executeUpdate();
 			psPersist.close();
-			
+			System.out.println("playerinformation ok");
 				
 		}
 		catch (SQLException e)
@@ -79,11 +82,13 @@ public class PlayerManager {
 		  // 2 - Creating a Prepared Statement with the SQL instruction.
 		  //     The parameters are represented by question marks. 
 		  
-		  PreparedStatement psUpdate = c.prepareStatement("update players set playerName=?, where playerName=?");
+		  PreparedStatement psUpdate = c.prepareStatement("update player set firstName=?,lastName=?,bornDate=? where userName=?");
 		  
 		  // 3 - Supplying values for the prepared statement parameters (question marks).
 		  
-		  psUpdate.setString(1,  player.getUserName());
+		  psUpdate.setString(1,  player.getFirstName());
+		  psUpdate.setString(2,  player.getlastName());
+		  psUpdate.setString(3,  player.getbornDate());
 		 
 		  
 		//Executing the prepared statement object among the database.
@@ -108,7 +113,7 @@ public class PlayerManager {
 		{
 		  Connection c = DatabaseConnection.getConnection();
 		  
-		  PreparedStatement psUpdate = c.prepareStatement("delete * from players where playerName=?");
+		  PreparedStatement psUpdate = c.prepareStatement("delete * from player where userName=?");
 		  
 		  psUpdate.setString(1, player.getUserName());
 		  psUpdate.executeUpdate();
@@ -123,7 +128,7 @@ public class PlayerManager {
 		{
 			Connection c = DatabaseConnection.getConnection();
 			
-		    PreparedStatement psSelect = c.prepareStatement("select * from players order by playerName");
+		    PreparedStatement psSelect = c.prepareStatement("select * from player order by userName");
 		    ResultSet resultSet = psSelect.executeQuery();
 		    List<Player> players = new ArrayList<Player>();
 		    while(resultSet.next())
@@ -157,8 +162,7 @@ public class PlayerManager {
 				throws SQLException {
 			
 			Connection c = DatabaseConnection.getConnection();	
-			PreparedStatement psSelect = c
-					.prepareStatement("select * from players where playerName = ?" );
+			PreparedStatement psSelect = c.prepareStatement("select * from player where userName = ?" );
 			
 			psSelect.setString(1, name);
 			

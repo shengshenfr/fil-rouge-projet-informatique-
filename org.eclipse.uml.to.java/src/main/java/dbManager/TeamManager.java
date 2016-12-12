@@ -50,8 +50,10 @@ public class TeamManager {
 	try
 	{
 		c.setAutoCommit(false);
-		PreparedStatement psPersist = c.prepareStatement("insert into teams (teamName) values (?) ");
+		System.out.println("insertbefore");
+		PreparedStatement psPersist = c.prepareStatement("insert into team (teamName) values (?) ");
 		psPersist.setString(1,name);
+		System.out.println("insertafter");
 		
 		psPersist.executeUpdate();
 		psPersist.close();
@@ -89,7 +91,7 @@ public class TeamManager {
 	  // 2 - Creating a Prepared Statement with the SQL instruction.
 	  //     The parameters are represented by question marks. 
 	  
-	  PreparedStatement psUpdate = c.prepareStatement("update teams set teamName=?, where teamName=?");
+	  PreparedStatement psUpdate = c.prepareStatement("update team set teamName=? where teamName=?");
 	  
 	  // 3 - Supplying values for the prepared statement parameters (question marks).
 	  
@@ -118,7 +120,7 @@ public class TeamManager {
 	{
 	  Connection c = DatabaseConnection.getConnection();
 	  
-	  PreparedStatement psUpdate = c.prepareStatement("delete * from teams where teamName=?");
+	  PreparedStatement psUpdate = c.prepareStatement("delete * from team where teamName=?");
 	  
 	  psUpdate.setString(1, team.getTeamName());
 	  psUpdate.executeUpdate();
@@ -133,7 +135,7 @@ public class TeamManager {
 	{
 		Connection c = DatabaseConnection.getConnection();
 		
-	    PreparedStatement psSelect = c.prepareStatement("select * from teams order by username");
+	    PreparedStatement psSelect = c.prepareStatement("select * from team order by username");
 	    ResultSet resultSet = psSelect.executeQuery();
 	    List<Team> teams = new ArrayList<Team>();
 	    while(resultSet.next())
@@ -167,7 +169,7 @@ public class TeamManager {
 		
 		Connection c = DatabaseConnection.getConnection();	
 		PreparedStatement psSelect = c
-				.prepareStatement("select * from teams where teamName = ?" );
+				.prepareStatement("select * from team where teamName = ?" );
 		
 		psSelect.setString(1, name);
 		

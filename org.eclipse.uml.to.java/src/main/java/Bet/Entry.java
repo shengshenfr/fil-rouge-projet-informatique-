@@ -17,7 +17,7 @@ import dbManager.PlayerManager;
 /**
  * Description of Entry.
  * 
- * @author Robin, Rémy
+ * @author Robin, Rï¿½my
  */
 public class Entry {
 	private int id = 0;
@@ -56,13 +56,7 @@ public class Entry {
 		this.competition.addEntry(this);
 		this.id = id;
 		this.rank = rank;
-		
-		try {
-			EntryManager.persist(this);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			// TODO: raise Exception
-		}
+
 	}
 
 	/**
@@ -71,7 +65,7 @@ public class Entry {
 	 * @throws BadParametersException
 	 */
 	public Entry(Competition competition, Competitor competitor) throws BadParametersException {
-		this(competition, competitor, nextId++, null);
+		this(competition, competitor, ++nextId, Rank.NOT_PODIUM);
 	}
 
 	static public Entry createEntry(int id, String competitionName, String competitorName, int rank)
@@ -184,6 +178,14 @@ public class Entry {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	public boolean equals(Entry entry2){
+		if((this.competition.equals(entry2.competition))&&(this.competitor.equals(entry2.competitor))){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 
 }

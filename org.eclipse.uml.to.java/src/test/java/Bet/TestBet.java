@@ -29,7 +29,7 @@ import Individual.Subscriber;
 /**
  * Description of Bet.
  * 
- * @author Rémy
+ * @author Rï¿½my
  */
 public class TestBet {
 	
