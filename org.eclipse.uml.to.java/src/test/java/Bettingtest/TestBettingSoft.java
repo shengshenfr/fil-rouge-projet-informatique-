@@ -91,7 +91,7 @@ public class TestBettingSoft {
 	}
 	
 	//testUnsubscriber
-	public void testUnsubscriber() throws AuthentificationException, ExistingSubscriberException{
+	public void testUnsubscriber() throws AuthentificationException, ExistingSubscriberException, BadParametersException, SQLException, CompetitionException, SubscriberException, ExistingCompetitorException, MissingSubscriberException, MissingCompetitionException{
 		Bsport.unsubscribe("java00", MANAGER_PASSWORD);
 		
 		for (List<String> s : Bsport.listSubscribers(MANAGER_PASSWORD)){

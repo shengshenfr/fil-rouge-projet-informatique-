@@ -1106,8 +1106,8 @@ public class BettingSoft implements Betting {
 
 	@Override
 	public String subscribe(String lastName, String firstName, String username, String borndate, String managerPwd)
-			throws AuthentificationException, ExistingSubscriberException, SubscriberException, BadParametersException {
-		try{
+			throws AuthentificationException, ExistingSubscriberException, SubscriberException, BadParametersException, SQLException, CompetitionException, ExistingCompetitorException {
+	
 			//managerPWDcan not be null
 			if(managerPwd==null){
 				throw new BadParametersException("managerPWD is null");
@@ -1129,19 +1129,7 @@ public class BettingSoft implements Betting {
 			System.out.println("okkkkkkk persitover");
 
 			return s.getPassword();
-			
-		}
 
-		catch (SQLException  e){
-			return null;
-		} catch (CompetitionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExistingCompetitorException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	@Override

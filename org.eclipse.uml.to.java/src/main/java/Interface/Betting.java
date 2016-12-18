@@ -579,13 +579,16 @@ public interface Betting {
 	 * @throws BadParametersException
 	 *             raised if last name, first name, username or borndate 
 	 *             are invalid or not instantiated.         
+	 * @throws SQLException 
+	 * @throws ExistingCompetitorException 
+	 * @throws CompetitionException 
 	 * 
 	 */
 	public String subscribe(String lastName, String firstName, String username, String borndate, String managerPwd)
 			throws AuthentificationException,
 			ExistingSubscriberException, 
 			SubscriberException,
-			BadParametersException;
+			BadParametersException, SQLException, CompetitionException, ExistingCompetitorException;
 	
 	/**
 	 * delete a subscriber. His currents bets are canceled. He looses betted tokens.
