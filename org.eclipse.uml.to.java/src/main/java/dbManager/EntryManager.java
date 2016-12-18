@@ -225,7 +225,12 @@ public static Entry persist(Entry entry) throws SQLException {
 		List<AbstractCompetitor> competitors = new ArrayList<AbstractCompetitor>();
 		while (resultSet.next()) {
 			
-			competitors.add(new AbstractCompetitor(resultSet.getString("competitorName")));
+			try {
+				competitors.add(new AbstractCompetitor(resultSet.getString("competitorName")));
+			} catch (BadParametersException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		}
 		resultSet.close();
