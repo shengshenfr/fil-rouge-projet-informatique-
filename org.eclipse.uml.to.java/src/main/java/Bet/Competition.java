@@ -16,6 +16,7 @@ import java.util.List;
 import exceptions.BadParametersException;
 import exceptions.CompetitionException;
 import exceptions.MissingCompetitorException;
+import utils.MyCalendar;
 import Interface.Competitor;
 import dbManager.CompetitionManager;
 import dbManager.EntryManager;
@@ -73,11 +74,11 @@ public class Competition {
 		}
 		this.name = competitionName;
 		
-		if (closingDate.before(Calendar.getInstance())) {
+		if (closingDate.before(MyCalendar.getDate())) {
 			throw new BadParametersException("The closing date must be in the future!");
 		}
 		this.closingDate = closingDate;
-		this.startingDate = new GregorianCalendar(); 
+		this.startingDate = MyCalendar.getDate(); 
 		
 		for(int i = 0; i < 3; ++i) {
 			this.winnerToken.add(0L);
@@ -90,9 +91,9 @@ public class Competition {
 	}
 	
 	public static Competition createCompetition(String competitionName, Date startingDate, Date closingDate, boolean settled, boolean draw, long totalTokens) throws BadParametersException {
-		Calendar startingCalendar = new GregorianCalendar();
+		Calendar startingCalendar = MyCalendar.getDate();
 		startingCalendar.setTimeInMillis(startingDate.getTime());
-		Calendar closingCalendar = new GregorianCalendar();
+		Calendar closingCalendar = MyCalendar.getDate();
 		closingCalendar.setTimeInMillis(startingDate.getTime());
 		Competition competition = new Competition(competitionName, startingCalendar, closingCalendar);
 		competition.setSettled(settled);
@@ -199,7 +200,7 @@ public class Competition {
 	}
 	
 	public boolean isOver() {
-		return this.closingDate.after(Calendar.getInstance());
+		return this.closingDate.after(MyCalendar.getDate());
 	}
 
 	public HashSet<Entry> getEntries() {

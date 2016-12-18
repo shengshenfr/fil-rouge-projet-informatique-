@@ -69,11 +69,11 @@ public class WinnerBetManager {
 		Connection c = DatabaseConnection.getConnection();
 		try {
 			c.setAutoCommit(false);
-			PreparedStatement psPersist = c.prepareStatement("insert into WinnerBet(idBet, amount, idEntry,betOwner) values(?,?,?,?)");
-			psPersist.setString(4, betWinner.getBetOwner().getUsername());
-			psPersist.setLong(2, betWinner.getAmount());
-			psPersist.setInt(3, betWinner.getWinner().getId());
-			psPersist.setInt(1, betWinner.getId());
+			PreparedStatement psPersist = c.prepareStatement("insert into WinnerBet(amount, idEntry,betOwner,idbet) values(?,?,?,?)");
+			psPersist.setString(3, betWinner.getBetOwner().getUsername());
+			psPersist.setLong(1, betWinner.getAmount());
+			psPersist.setInt(2, betWinner.getWinner().getId());
+			psPersist.setInt(4, betWinner.getId());
 			
 			psPersist.executeUpdate();
 			psPersist.close();

@@ -383,7 +383,7 @@ public class BetOnPodiumValidationTests {
 		try {
 			increment.getBetting().unsubscribe(new String("titi"),
 					increment.getManagerPassword());
-		} catch (AuthenticationException | ExistingSubscriberException e) {
+		} catch (AuthentificationException | ExistingSubscriberException e) {
 			assert (false);
 		}
 
@@ -829,7 +829,7 @@ public class BetOnPodiumValidationTests {
 		try {
 			increment.getBetting().unsubscribe(new String("titi"),
 					increment.getManagerPassword());
-		} catch (AuthenticationException | ExistingSubscriberException e) {
+		} catch (AuthentificationException | ExistingSubscriberException e) {
 			assert (false);
 		}
 

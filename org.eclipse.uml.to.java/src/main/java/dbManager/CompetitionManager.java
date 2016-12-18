@@ -101,10 +101,14 @@ public class CompetitionManager {
 	 * 
 	 * @param competitionName the competitionName of the competition to retrieve.
 	 * @return the competition or null if the competitionName does not exist in the database.
+	 * @throws BadParametersException 
 	 * @throws SQLException
 	 */
-	public static Competition findBycompetitionName(String name) throws MissingCompetitionException
+	public static Competition findBycompetitionName(String name) throws MissingCompetitionException, BadParametersException
 	{
+		if (name == null) {
+			throw new BadParametersException("The competition name should not be null!");
+		}
 		Competition competition = null;
 		try {
 			// 1 - Get a database connection from the class 'DatabaseConnection'

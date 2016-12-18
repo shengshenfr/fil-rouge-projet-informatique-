@@ -22,10 +22,6 @@ public class AddCompetitionValidationTests {
 
 	private Scanner sc = new Scanner(System.in);
 	public String c = "x";
-	
-	public static void main(String[] str) {
-		AddCompetitionValidationTests test = new AddCompetitionValidationTests();
-	}
 
 	public String getResponse() {
 		String s = "x";
@@ -150,7 +146,8 @@ public class AddCompetitionValidationTests {
 							1983, 12, 13).getTime()),
 					increment.getManagerPassword()));
 		} catch (Exception e) {
-			System.out.println("Exception imprévue " + e.getClass());
+			e.printStackTrace();
+			System.out.println("Exception imprévue " + e.toString());
 			e.printStackTrace();
 		}
 	}

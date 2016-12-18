@@ -70,13 +70,13 @@ public class PodiumBetManager {
 		Connection c = DatabaseConnection.getConnection();
 		try {
 			c.setAutoCommit(false);
-			PreparedStatement psPersist = c.prepareStatement("insert into betsPodium(idBet, betOwner, amount,idEntry,idEntry2,idEntry3) values(?,?,?,?,?,?)");
-			psPersist.setString(2, betPodium.getBetOwner().getUsername());
-			psPersist.setLong(3, betPodium.getAmount());
-			psPersist.setInt(4, betPodium.getPodium().get(0).getId());
-			psPersist.setInt(5, betPodium.getPodium().get(1).getId());
-			psPersist.setInt(6, betPodium.getPodium().get(2).getId());
-			psPersist.setInt(1, betPodium.getId());
+			PreparedStatement psPersist = c.prepareStatement("insert into betsPodium(betOwner, amount,idEntry,idEntry2,idEntry3,idbet) values(?,?,?,?,?,?)");
+			psPersist.setString(1, betPodium.getBetOwner().getUsername());
+			psPersist.setLong(2, betPodium.getAmount());
+			psPersist.setInt(3, betPodium.getPodium().get(0).getId());
+			psPersist.setInt(4, betPodium.getPodium().get(1).getId());
+			psPersist.setInt(5, betPodium.getPodium().get(2).getId());
+			psPersist.setInt(6, betPodium.getId());
 			
 			psPersist.executeUpdate();
 			psPersist.close();

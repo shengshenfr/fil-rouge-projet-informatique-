@@ -73,7 +73,7 @@ public static Entry persist(Entry entry) throws SQLException {
 			c.setAutoCommit(false);
 			
 			
-			PreparedStatement psPersist = c.prepareStatement("insert into Entry( competitionName, competitorName, rank,idEntry) values(?,?,?,?)");
+			PreparedStatement psPersist = c.prepareStatement("insert into Entry( competitionName, competitorName, rank, idEntry) values(?,?,?,?)");
 			psPersist.setString(1, entry.getCompetition().getName());
 			if( entry.getCompetitor() instanceof Player){
 				psPersist.setString(2, ((Player)entry.getCompetitor()).getUserName());
@@ -88,7 +88,6 @@ public static Entry persist(Entry entry) throws SQLException {
 //			System.out.println(entry.getId());
 //			System.out.println(entry.getId());
 			psPersist.executeUpdate();
-			
 			psPersist.close();
 
 		}

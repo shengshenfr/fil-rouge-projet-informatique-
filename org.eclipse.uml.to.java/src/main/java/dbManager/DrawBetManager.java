@@ -67,14 +67,13 @@ public class DrawBetManager {
 		Connection c = DatabaseConnection.getConnection();
 		try {
 			c.setAutoCommit(false);
-			PreparedStatement psPersist = c.prepareStatement("insert into betsDraw(idBet, betOwner, amount,competitionName) values(?,?,?,?)");
-			psPersist.setString(2, betDraw.getBetOwner().getUsername());
-			psPersist.setLong(3, betDraw.getAmount());
-			psPersist.setString(4, betDraw.getCompetition().getName());
-			psPersist.setInt(1, betDraw.getId());
+			PreparedStatement psPersist = c.prepareStatement("insert into betsDraw(betOwner, amount,competitionName,idbet) values(?,?,?,?)");
+			psPersist.setString(1, betDraw.getBetOwner().getUsername());
+			psPersist.setLong(2, betDraw.getAmount());
+			psPersist.setString(3, betDraw.getCompetition().getName());
+			psPersist.setInt(4, betDraw.getId());
 			
 			psPersist.executeUpdate();
-
 			psPersist.close();
 		}
 		
