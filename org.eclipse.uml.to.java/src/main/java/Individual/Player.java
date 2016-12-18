@@ -14,8 +14,12 @@ public class Player extends AbstractCompetitor {
 	public Player(){
 		super();
 	}
-	public Player(String userName,String firstName,String lastName, String bornDate){
+	public Player(String userName,String firstName,String lastName, String bornDate) throws BadParametersException{
 		super(userName);
+		System.out.println("creation d'un player");
+        if(firstName==null||lastName==null||bornDate==null){
+            throw new BadParametersException("can't have null name or bornDate!!!");
+        }
 		this.firstName=firstName;
 		this.lastName=lastName;
 		this.bornDate=bornDate;
