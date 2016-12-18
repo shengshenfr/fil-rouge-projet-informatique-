@@ -77,7 +77,7 @@ public class Subscriber extends Player {
         if(username==null||firstname==null||lastname==null||bornDate==null){
             throw new BadParametersException("can't have null name or bornDate!!!");
         }
-        if(username.length()>LONG_USERNAMEMIN){
+        if(username.length()<LONG_USERNAMEMIN){
             throw new BadParametersException("the length of username should be bigger than 6.");
         }
         if(!username.matches(REGEX_USERNAME)||!firstname.matches(REGEX_USERNAME)||!lastname.matches(REGEX_USERNAME)){
@@ -101,7 +101,7 @@ public class Subscriber extends Player {
 				e.printStackTrace();
 			}
         }
-        if(username.length()>LONG_USERNAMEMIN){
+        if(username.length()<LONG_USERNAMEMIN){
             try {
 				throw new BadParametersException("the length of username should be 6.");
 			} catch (BadParametersException e) {
