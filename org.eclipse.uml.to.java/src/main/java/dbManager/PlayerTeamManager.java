@@ -19,7 +19,7 @@ import Interface.Competitor;
 @SuppressWarnings("unused")
 
 /*
- * @author Robin
+ * @author Bowen
  */
 
 public class PlayerTeamManager {
@@ -28,9 +28,12 @@ public class PlayerTeamManager {
 	// TODO create persist, update, delete, findall, findby, and all the functions
 	// TODO between competitiosn , competitors and teams
 	
+	
+	// use playername to find teams
 	public static ArrayList<Team> findByPlayer(String playername) throws SQLException{
 		Connection c = DatabaseConnection.getConnection();
-	
+		
+		
 		PreparedStatement psSelect = c.prepareStatement("select teamName from Player_Team where playerName = ? ");
 		psSelect.setString(1, playername);
 		ResultSet resultSet = psSelect.executeQuery();	
@@ -58,9 +61,11 @@ public class PlayerTeamManager {
 	}
 	
 	
+	// list the players in one team in use of teamname
 	public ArrayList<Player> findByTeam(String teamname) throws SQLException{
 		Connection c = DatabaseConnection.getConnection();
-	
+		
+		
 		PreparedStatement psSelect = c.prepareStatement("select userName,firstName,lastName,bornDate,playerName from Player inner join PlayerTeam on playerName = userName  where teamName = ?");
 		psSelect.setString(1, teamname);
 		ResultSet resultSet = psSelect.executeQuery();	
@@ -71,6 +76,8 @@ public class PlayerTeamManager {
 	    	
 			try
 			{
+				
+			// use the informations of the table to construct players on type of Player
 	    	player.add(new Player(resultSet.getString("firstName")+resultSet.getString("lastName"),
 	    			resultSet.getString("firstName"),
 	    			resultSet.getString("lastName"),
@@ -94,8 +101,11 @@ public class PlayerTeamManager {
 	}
 	
 	
+	// To judge whether a player is in one team
 	public boolean isPlayerTeam(Player player,Team team) throws SQLException{
 		Connection c = DatabaseConnection.getConnection();
+		
+		// list all of the players in this team
 		PreparedStatement psSelect = c.prepareStatement("select playerName from PlayerTeam where teamName=?");
 		psSelect.setString(1,team.getTeamName());
 		ResultSet resultSet = psSelect.executeQuery();	
@@ -105,7 +115,8 @@ public class PlayerTeamManager {
 	    	
 	    	
 			try
-			{
+			{	
+			   // find if the player is in the list of the team
 	    	   if(resultSet.getString("playerName")==player.getUserName()){
 	    		   isPlayerTeam = true;
 	    		   break;
@@ -126,7 +137,7 @@ public class PlayerTeamManager {
 		
 	}
 	
-	
+	// to create a pair of one player and one team
 	public static void persist(Player player,Team team) throws SQLException{
 		Connection c = DatabaseConnection.getConnection();
 		try
@@ -158,7 +169,7 @@ public class PlayerTeamManager {
 		c.close();
 	}
 
-	
+	// to delete a pair of one player and one team
 	public static void delete(Player player,Team team) throws SQLException{
 		 Connection c = DatabaseConnection.getConnection();
 		  
@@ -171,7 +182,7 @@ public class PlayerTeamManager {
 		  c.close();
 	}
 	
-	
+	// to update a pair one player and one team
 	public void updateTeam(Player player,Team team) throws SQLException{
 		Connection c = DatabaseConnection.getConnection();
 		PreparedStatement psUpdate = c.prepareStatement("update PlayerTeam set teamName = ? where playerName = ? ");
