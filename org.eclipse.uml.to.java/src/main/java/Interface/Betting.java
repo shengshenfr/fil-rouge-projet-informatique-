@@ -73,13 +73,15 @@ public interface Betting {
 	 * @throws BadParametersException
 	 *             raised if the (firstname, lastname, borndate or name if team
 	 *             competitors) of the competitor is invalid.
+	 * @throws MissingCompetitionException 
+	 * @throws SQLException 
 	 */
 	public void addCompetitor(String competition, Competitor competitor, String managerPwd)
 			throws AuthentificationException,
 			ExistingCompetitionException, 
 			CompetitionException,
 			ExistingCompetitorException, 
-			BadParametersException;
+			BadParametersException, MissingCompetitionException, SQLException;
 	
 	/**
 	 * authenticate manager.
@@ -125,13 +127,18 @@ public interface Betting {
 	 *             raised if subscriber has not enough tokens.
 	 * @throws BadParametersException
 	 *             raised if number of tokens less than 0.
+	 * @throws ExistingCompetitorException 
+	 * @throws SQLException 
+	 * @throws ExistingSubscriberException 
+	 * @throws MissingCompetitionException 
+	 * @throws MissingTokenException 
 	 */
 	public void betOnPodium(long numberTokens, String competition, Competitor winner, Competitor second, Competitor third, String username, String pwdSubs)
 			throws AuthentificationException, 
 			CompetitionException,
 			ExistingCompetitionException, 
 			SubscriberException,
-			BadParametersException;
+			BadParametersException, SQLException, ExistingCompetitorException, ExistingSubscriberException, MissingCompetitionException, MissingTokenException;
 	
 	/**
 	 * bet a winner for a competition <br>
@@ -160,6 +167,10 @@ public interface Betting {
 	 *             raised if subscriber has not enough tokens.
 	 * @throws BadParametersException
 	 *             raised if number of tokens less than 0.
+	 * @throws ExistingCompetitorException 
+	 * @throws SQLException 
+	 * @throws MissingCompetitionException 
+	 * @throws MissingTokenException 
 	 * 
 	 */	
 	public void betOnWinner(long numberTokens, String competition, Competitor winner, String username, String pwdSubs)
@@ -167,7 +178,7 @@ public interface Betting {
 			CompetitionException, 
 			ExistingCompetitionException,
 			SubscriberException, 
-			BadParametersException;
+			BadParametersException, SQLException, ExistingCompetitorException, MissingCompetitionException, MissingTokenException;
 			
 	/**
 	* cancel a competition.
@@ -184,11 +195,16 @@ public interface Betting {
 	* @throws CompetitionException
 	*             raised if the closing date is in the past (competition closed).          
 	 * @throws ExistingSubscriberException 
+	 * @throws BadParametersException 
+	 * @throws MissingCompetitionException 
+	 * @throws ExistingCompetitorException 
+	 * @throws SubscriberException 
+	 * @throws SQLException 
 	*/			
 	public void cancelCompetition(String competition,String managerPwd)
 			throws AuthentificationException, 
 			ExistingCompetitionException,
-			CompetitionException, ExistingSubscriberException;
+			CompetitionException, ExistingSubscriberException, MissingCompetitionException, BadParametersException, SQLException, SubscriberException, ExistingCompetitorException;
 	
 	/**
 	 * change subscriber's password.
@@ -205,10 +221,14 @@ public interface Betting {
 	 * 
 	 * @throws BadParametersException
 	 *             raised if the new password is invalid.
+	 * @throws ExistingCompetitorException 
+	 * @throws SubscriberException 
+	 * @throws CompetitionException 
+	 * @throws SQLException 
 	 */
 	public void changeSubsPwd(String username, String newPwd, String currentPwd)
 			throws AuthentificationException, 
-			BadParametersException;
+			BadParametersException, SQLException, CompetitionException, SubscriberException, ExistingCompetitorException;
 
 	/**
 	 * consult bets on a competition.

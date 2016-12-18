@@ -105,8 +105,7 @@ public class BettingSoft implements Betting {
 	@Override
 	public void addCompetitor(String competition, Competitor competitor, String managerPwd)
 			throws AuthentificationException, ExistingCompetitionException, CompetitionException,
-			ExistingCompetitorException, BadParametersException {
-		try{
+			ExistingCompetitorException, BadParametersException, MissingCompetitionException, SQLException {
 			// Authenticate manager
 			authenticateMngr(managerPwd);
 			System.out.println(competition);
@@ -124,10 +123,6 @@ public class BettingSoft implements Betting {
 			//Add to SQL
 			EntryManager.persist(new Entry(c, competitor));
 			System.out.println("persistentryok");
-		}
-		catch(SQLException|MissingCompetitionException e){
-			System.out.println(e);
-		}
 	}
 
 	@Override
@@ -139,15 +134,14 @@ public class BettingSoft implements Betting {
 	@Override
 	public void betOnPodium(long numberTokens, String competition, Competitor winner, Competitor second,
 			Competitor third, String username, String pwdSubs) throws AuthentificationException, CompetitionException,
-			ExistingCompetitionException, SubscriberException, BadParametersException {
-		try{
+			ExistingCompetitionException, SubscriberException, BadParametersException, SQLException, ExistingCompetitorException, ExistingSubscriberException, MissingCompetitionException, MissingTokenException {
 			//Authenticate subscriber
 			Subscriber subscriber = SubscriberManager.findByUsername(username);
 			if (subscriber == null)
 				throw new ExistingSubscriberException("Subscriber  username = "+ username + " is not exist");
 
 
-			//find competition
+			//find competitions
 			Competition c = CompetitionManager.findBycompetitionName(competition);
 			if (c == null)
 				throw new ExistingCompetitionException("Competition "+ competition + " is not exist");
@@ -179,20 +173,12 @@ public class BettingSoft implements Betting {
 
 			//Persist the bet
 			PodiumBetManager.persist(podium_bet);
-		}
-		catch ( ExistingSubscriberException | SQLException |MissingCompetitionException |MissingTokenException e){
-			System.out.println(e);
-		} catch (ExistingCompetitorException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	@Override
 	public void betOnWinner(long numberTokens, String competition, Competitor winner, String username, String pwdSubs)
 			throws AuthentificationException, CompetitionException, ExistingCompetitionException, SubscriberException,
-			BadParametersException{
-		try{
+			BadParametersException, SQLException, ExistingCompetitorException, MissingCompetitionException, MissingTokenException{
 			//Authenticate subscriber
 			Subscriber subscriber = SubscriberManager.findByUsername(username);
 //			System.out.println(subscriber.getBalance());
@@ -234,13 +220,6 @@ public class BettingSoft implements Betting {
 			else{
 				System.out.println("password incorrect");
 			}
-		}
-		catch (  SQLException|MissingCompetitionException|MissingTokenException  e){
-			System.out.println(e);
-		} catch (ExistingCompetitorException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	
@@ -288,8 +267,8 @@ public class BettingSoft implements Betting {
 	}
 	@Override
 	public void cancelCompetition(String competition, String managerPwd)
-			throws AuthentificationException, ExistingCompetitionException, CompetitionException, ExistingSubscriberException {
-		try{
+			throws AuthentificationException, ExistingCompetitionException, CompetitionException, ExistingSubscriberException, MissingCompetitionException, BadParametersException, SQLException, SubscriberException, ExistingCompetitorException {
+
 			authenticateMngr(managerPwd);
 			Competition c = CompetitionManager.findBycompetitionName(competition);
 			//check if the competition is existed
@@ -330,38 +309,15 @@ public class BettingSoft implements Betting {
 
 			// Delete competition in SQL
 			CompetitionManager.delete(c);
-	}
-	catch(SQLException |   MissingCompetitionException| BadParametersException e){
-		System.out.println(e);
-	} catch (SubscriberException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	} catch (ExistingCompetitorException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
+	
 	}
 
 	@Override
 	public void changeSubsPwd(String username, String newPwd, String currentPwd)
-			throws AuthentificationException, BadParametersException {
-		try{
+			throws AuthentificationException, BadParametersException, SQLException, CompetitionException, SubscriberException, ExistingCompetitorException {
 			Subscriber subscriber = SubscriberManager.findByUsername(username);
 			subscriber.changeSubsPwd(username, currentPwd, newPwd);
 			SubscriberManager.updateToken(subscriber);
-		}
-		catch (SQLException e){
-			System.out.println(e);
-		} catch (CompetitionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SubscriberException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExistingCompetitorException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	@Override
