@@ -15,6 +15,13 @@ public class Team extends AbstractCompetitor{
 	private ArrayList<Player> member;
 	
 	public Team(String name){
+		if(name==null){
+			try {
+				throw new BadParametersException("can't have null name!!!");
+			} catch (BadParametersException e) {
+				e.printStackTrace();
+			}
+		}
 		this.teamName = name;
 	}
 // verifier if the team has exist. If not, add the new team in data base.
@@ -57,22 +64,6 @@ public class Team extends AbstractCompetitor{
 		return this.teamName;
 	}
 
-	@Override
-	public boolean hasValidName() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
-	@Override
-	public void addMember(Competitor member) throws ExistingCompetitorException, BadParametersException {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void deleteMember(Competitor member) throws BadParametersException, ExistingCompetitorException {
-		// TODO Auto-generated method stub
-		
-	}
 	
 }

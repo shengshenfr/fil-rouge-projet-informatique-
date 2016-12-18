@@ -1,4 +1,6 @@
 package Individual;
+import java.sql.SQLException;
+
 import Individual.AbstractCompetitor;
 import Interface.Competitor;
 import exceptions.BadParametersException;
@@ -38,8 +40,17 @@ public class Player extends AbstractCompetitor {
 		return this.bornDate;
 	}
 	@Override
-	public boolean hasValidName() {
+	public boolean hasValidName(String name) {
 		// TODO Auto-generated method stub
+		Player player;
+		try {
+			player = dbManager.PlayerManager.findByName(name);
+			if(player == null){
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return false;
 	}
 	@Override
@@ -52,10 +63,7 @@ public class Player extends AbstractCompetitor {
 		// TODO Auto-generated method stub
 		
 	}
-	@Override
-	public boolean hasValidName(String teamName) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+
+	
 
 }
