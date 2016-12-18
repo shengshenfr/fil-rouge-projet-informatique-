@@ -317,6 +317,37 @@ public static Entry persist(Entry entry) throws SQLException {
 		
 	}
 	
+	public static List<Entry> findAllByCompetitorAndCompetition(String competitorName, String competitionName) throws SQLException{
+
+		Connection c = DatabaseConnection.getConnection();
+		PreparedStatement psSelect = c.prepareStatement("select * from"
+				+ "Entry where competitorName=? and competitionName=? order by idEntry");
+		psSelect.setString(1, competitorName);
+		psSelect.setString(2, competitionName);
+		
+		ResultSet resultSet = psSelect.executeQuery();
+		List<Entry> entrys = new ArrayList<Entry>();
+		while (resultSet.next()) {
+			
+			try {
+				entrys.add(Entry.createEntry(resultSet.getInt("idEntry"), resultSet
+						.getString("competitionName"), resultSet
+						.getString("competitorName"), resultSet.getInt("rank")));
+			} catch (BadParametersException e) {
+				
+				e.printStackTrace();
+			} catch (MissingCompetitionException e) {
+				
+				e.printStackTrace();
+			}
+		}
+		resultSet.close();
+		psSelect.close();
+		c.close();
+
+		return entrys;
+	}
+	
 	
 	
 	

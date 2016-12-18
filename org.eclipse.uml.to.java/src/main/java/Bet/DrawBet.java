@@ -88,9 +88,9 @@ public class DrawBet extends Bet {
 	
 	@Override
 	public boolean isWon() {
-		if (this.competition.isSettled()==0)
+		if (!this.competition.isSettled())
 			return false;
-		return this.competition.isDraw()==1;
+		return this.competition.isDraw();
 	}
 
 }

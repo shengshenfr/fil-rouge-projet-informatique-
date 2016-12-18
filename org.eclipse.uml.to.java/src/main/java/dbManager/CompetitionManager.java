@@ -52,12 +52,12 @@ public class CompetitionManager {
 		Connection c = DatabaseConnection.getConnection();
 		try {
 			c.setAutoCommit(false);
-			PreparedStatement psPersist = c.prepareStatement("insert into Competition (name,closingDate, startingDate,setteled,isDraw,totalTokens) values(?,?,?,?,?,?)");
+			PreparedStatement psPersist = c.prepareStatement("insert into Competition (name,closingDate, startingDate,settled,isDraw,totalTokens) values(?,?,?,?,?,?)");
 			psPersist.setString(1, competition.getName());
 			psPersist.setDate(2, convertJavaDateToSqlDate(competition.getClosingCalendar().getTime()));
 			psPersist.setDate(3, convertJavaDateToSqlDate(competition.getStartingCalendar().getTime()));
-			psPersist.setInt(4, competition.isSettled());
-			psPersist.setInt(5, competition.isDraw());
+			psPersist.setBoolean(4, competition.isSettled());
+			psPersist.setBoolean(5, competition.isDraw());
 			psPersist.setLong(6, competition.getTotalToken());
 
 			psPersist.executeUpdate();
@@ -128,8 +128,8 @@ public class CompetitionManager {
 						resultSet.getString("name"),
 						resultSet.getDate("closingDate"),
 						resultSet.getDate("startingDate"),
-						resultSet.getInt("setteled"),
-						resultSet.getInt("isDraw"),
+						resultSet.getBoolean("settled"),
+						resultSet.getBoolean("isDraw"),
 						resultSet.getLong("totalTokens")
 				);
 				
@@ -179,8 +179,8 @@ public class CompetitionManager {
 						resultSet.getString("name"),
 						resultSet.getDate("startingDate"),
 						resultSet.getDate("closingDate"),
-						resultSet.getInt("setteled"),
-						resultSet.getInt("isDraw"),
+						resultSet.getBoolean("settled"),
+						resultSet.getBoolean("isDraw"),
 						resultSet.getLong("totalTokens")
 				));
 		    	
@@ -212,14 +212,14 @@ public class CompetitionManager {
 	  // 2 - Creating a Prepared Statement with the SQL instruction.
 	  //     The parameters are represented by question marks. 
 	  
-	  PreparedStatement psUpdate = c.prepareStatement("update competition set closingDate=?,startingDate=?, setteled=?, isDraw=?,totalTokens=?  where name=?");
+	  PreparedStatement psUpdate = c.prepareStatement("update competition set closingDate=?,startingDate=?, settled=?, isDraw=?,totalTokens=?  where name=?");
 	  
 	  // 3 - Supplying values for the prepared statement parameters (question marks).
 	  
 	  psUpdate.setDate(1, convertJavaDateToSqlDate(competition.getClosingCalendar().getTime()));
 	  psUpdate.setDate(2, convertJavaDateToSqlDate(competition.getStartingCalendar().getTime()));
-	  psUpdate.setInt(3,  competition.isSettled());
-	  psUpdate.setInt(4, competition.isDraw());
+	  psUpdate.setBoolean(3,  competition.isSettled());
+	  psUpdate.setBoolean(4, competition.isDraw());
 	  psUpdate.setLong(5, competition.getTotalToken());
 	  psUpdate.setString(6, competition.getName());
 	  
@@ -240,5 +240,62 @@ public class CompetitionManager {
 	}
 
 
+	public static long getTotalToken(int betType) {
+		long totalToken = 0;
+		try {
+			Connection c = DatabaseConnection.getConnection();
+		    PreparedStatement psSelect = c.prepareStatement("select sum(b.amount) as totalToken from winnerbet b left join entry e on e.idEntry=b.idEntry where e.competitionName=?");
+		    ResultSet resultSet = psSelect.executeQuery();
+		    totalToken = resultSet.getLong("totalToken");
+		    
+		    psSelect = c.prepareStatement("select sum(b.amount) as totalToken from podiumbet b left join entry e on (e.idEntryFirst=b.idEntry or e.idEntrySecond=b.idEntry or e.idEntryThird=b.idEntry) where e.competitionName=?");
+		    resultSet = psSelect.executeQuery();
+		    totalToken += resultSet.getLong("totalToken");
+		    
+		    psSelect = c.prepareStatement("select sum(amount) as totalToken from drawbet where competitionName=?");
+		    resultSet = psSelect.executeQuery();
+		    totalToken += resultSet.getLong("totalToken");
+		    
+		    resultSet.close();
+		    
+		    psSelect.close();
+		    
+		    c.close(); 
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+	    
+	    return totalToken;
+	}
+
+	public static long getWinnerToken() {
+		long winnerToken = 0;
+		try {
+			Connection c = DatabaseConnection.getConnection();
+		    PreparedStatement psSelect = c.prepareStatement("select sum(b.amount) as totalToken from winnerbet b left join entry e on e.idEntry=b.idEntry where e.competitionName=?");
+		    ResultSet resultSet = psSelect.executeQuery();
+		    winnerToken = resultSet.getLong("totalToken");
+		    
+		    psSelect = c.prepareStatement("select sum(b.amount) as totalToken from podiumbet b left join entry e on (e.idEntryFirst=b.idEntry or e.idEntrySecond=b.idEntry or e.idEntryThird=b.idEntry) where e.competitionName=?");
+		    resultSet = psSelect.executeQuery();
+		    winnerToken += resultSet.getLong("totalToken");
+		    
+		    psSelect = c.prepareStatement("select sum(amount) as totalToken from drawbet left where competitionName=?");
+		    resultSet = psSelect.executeQuery();
+		    winnerToken += resultSet.getLong("totalToken");
+		    
+		    resultSet.close();
+		    
+		    psSelect.close();
+		    
+		    c.close(); 
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+		}
+	    
+	    return winnerToken;
+	}
 		
 }

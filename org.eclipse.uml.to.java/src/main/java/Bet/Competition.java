@@ -23,19 +23,19 @@ import dbManager.EntryManager;
 /**
  * Description of Competition.
  * 
- * @author Robin, R�my
+ * @author Remy
  */
 @SuppressWarnings("unused")
 public class Competition {
 	/**
 	 * Description of the property settled.
 	 */
-	private int settled = 0;
+	private boolean settled = false;
 
 	/**
 	 * Description of the property isDraw.
 	 */
-	private int draw = 0;
+	private boolean draw = false;
 
 	/**
 	 * Description of the property name.
@@ -61,7 +61,7 @@ public class Competition {
 	
 	private long totalToken = 0L;
 	
-	private long winnerToken = 0L;
+	private List<Long> winnerToken = new LinkedList<Long>();
 
 	/**
 	 * The constructor.
@@ -78,6 +78,10 @@ public class Competition {
 		}
 		this.closingDate = closingDate;
 		this.startingDate = new GregorianCalendar(); 
+		
+		for(int i = 0; i < 3; ++i) {
+			this.winnerToken.add(0L);
+		}
 	}
 
 	public Competition(String competitionName, Calendar startingDate, Calendar closingDate) throws BadParametersException {
@@ -85,16 +89,15 @@ public class Competition {
 		this.startingDate = startingDate;
 	}
 	
-	public static Competition createCompetition(String competitionName, Date startingDate, Date closingDate, int settled,int draw,long totalTokens) throws BadParametersException {
+	public static Competition createCompetition(String competitionName, Date startingDate, Date closingDate, boolean settled, boolean draw, long totalTokens) throws BadParametersException {
 		Calendar startingCalendar = new GregorianCalendar();
 		startingCalendar.setTimeInMillis(startingDate.getTime());
 		Calendar closingCalendar = new GregorianCalendar();
 		closingCalendar.setTimeInMillis(startingDate.getTime());
-		//TODO : persist competition & entries
 		Competition competition = new Competition(competitionName, startingCalendar, closingCalendar);
 		competition.setSettled(settled);
 		competition.setDraw(draw);
-		competition.setTotalToken(totalTokens);
+		competition.totalToken = totalTokens;
 		return competition;
 	}
 	
@@ -111,7 +114,7 @@ public class Competition {
 	 * Returns settled.
 	 * @return settled 
 	 */
-	public int isSettled() {
+	public boolean isSettled() {
 		return this.settled;
 	}
 
@@ -119,7 +122,7 @@ public class Competition {
 	 * Sets a value to attribute settled. 
 	 * @param newSettled 
 	 */
-	public void setSettled(int newSettled) {
+	public void setSettled(boolean newSettled) {
 		this.settled = newSettled;
 	}
 
@@ -127,7 +130,7 @@ public class Competition {
 	 * Returns isDraw.
 	 * @return isDraw 
 	 */
-	public int isDraw() {
+	public boolean isDraw() {
 		return this.draw;
 	}
 
@@ -135,7 +138,7 @@ public class Competition {
 	 * Sets a value to attribute isDraw. 
 	 * @param newIsDraw 
 	 */
-	public void setDraw(int newIsDraw) {
+	public void setDraw(boolean newIsDraw) {
 		this.draw = newIsDraw;
 		save();
 	}
@@ -155,6 +158,7 @@ public class Competition {
 	public void setName(String newName) {
 		this.name = newName;
 		save();
+		//TODO: check validity
 	}
 
 	/**
@@ -172,6 +176,7 @@ public class Competition {
 	public void setClosingDate(Calendar newClosingDate) {
 		this.closingDate = newClosingDate;
 		save();
+		//TODO: Check posteriority
 	}
 
 	/**
@@ -190,6 +195,7 @@ public class Competition {
 	public void setStartingDate(Calendar newStartingDate) {
 		this.startingDate = newStartingDate;
 		save();
+		//TODO: check anteriority to closingDate
 	}
 	
 	public boolean isOver() {
@@ -200,25 +206,16 @@ public class Competition {
 		return entries;
 	}
 
-	public Collection<Competition> consultBets(){
-		return null; // TODO
-	}
-
 	public long getTotalToken() {
-		this.computeTotalToken();
 		return totalToken;
 	}
-
-	public void setTotalToken(long totalToken) {
-		this.totalToken = totalToken;
+	
+	public long getTotalToken(int betType) {
+		return CompetitionManager.getTotalToken(betType);
 	}
 
-	public long getWinnerToken() {
-		return winnerToken;
-	}
-
-	public void setWinnerToken(long winnerToken) {
-		this.winnerToken = winnerToken;
+	public long getWinnerToken(int betType) {
+		return winnerToken.get(betType);
 	}
 	
 	public void addBet(DrawBet drawBet) {
@@ -229,8 +226,26 @@ public class Competition {
 		drawBets.remove(drawBet);
 	}
 	
-	public HashSet<DrawBet> getDrawBets() {
-		return drawBets;
+	public HashSet<Bet> getDrawBets() {
+		HashSet<Bet> bets = new HashSet<Bet>();
+		bets.addAll(drawBets);
+		return bets;
+	}
+	
+	public HashSet<Bet> getWinnerBets() {
+		HashSet<Bet> bets = new HashSet<Bet>();
+		for(Entry entry : entries) {
+			bets.addAll(entry.getWinnerBets());
+		}
+		return bets;
+	}
+	
+	public HashSet<Bet> getPodiumBets() {
+		HashSet<Bet> bets = new HashSet<Bet>();
+		for(Entry entry : entries) {
+			bets.addAll(entry.getPodiumBets());
+		}
+		return bets;
 	}
 	
 	public HashSet<Bet> getBets() {
@@ -243,19 +258,35 @@ public class Competition {
 		return bets;
 	}
 	
+	private HashSet<Bet> getBets(int betType) {
+		switch(betType) {
+		case 0:
+			return this.getWinnerBets();
+		case 1:
+			return this.getPodiumBets();
+		case 2:
+			return this.getDrawBets();
+		}
+		return null;
+	}
+	
 	public void computeTotalToken() {
-		totalToken = 0;
-		for(Bet bet : getBets()) {
-			totalToken += bet.getAmount();
+		this.totalToken = 0;
+		for(int i = 0; i < 3; ++i) {
+			this.totalToken += CompetitionManager.getTotalToken(i);
 		}
 	}
 	
 	public void computeWinnerToken() {
-		winnerToken = 0;
-		for(Bet bet : getBets()) {
-			if (bet.isWon()) {
-				winnerToken += bet.getAmount();
+		this.winnerToken.clear();
+		for(int i = 0; i < 3; ++i) {
+			long tokens = 0;
+			for(Bet bet : getBets(i)) {
+				if (bet.isWon()) {
+					tokens += bet.getAmount();
+				}
 			}
+			this.winnerToken.add(tokens);
 		}
 	}
 	
@@ -279,6 +310,27 @@ public class Competition {
 		for(Entry e : getEntries()) {
 			e.cancel();
 		}
+		try {
+			CompetitionManager.delete(this);
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	public void settleWinner(Competitor winner) throws MissingCompetitorException, CompetitionException {
+		List<Competitor> competitors = new LinkedList<Competitor>();
+		competitors.add(winner);
+		settle(competitors);
+		this.distributeGains(0);
+	}
+	
+	public void settlePodium(Competitor first, Competitor second, Competitor third) throws MissingCompetitorException, CompetitionException {
+		List<Competitor> competitors = new LinkedList<Competitor>();
+		competitors.add(first);
+		competitors.add(second);
+		competitors.add(third);
+		settle(competitors);
+		this.distributeGains(1);
 	}
 
 	public void settle(List<Competitor> competitors) throws MissingCompetitorException, CompetitionException {
@@ -302,25 +354,23 @@ public class Competition {
 			}
 		}
 		
-		this.settled = 1;
+		this.settled = true;
 		
 		// Compute winner tokens
 		this.computeWinnerToken();
-		this.distributeGains();
-		save();
 	}
 	
 	public void settleDraw() throws CompetitionException {
 		if (!this.isOver()) {
 			throw new CompetitionException("Competition is not over yet!");
 		}
-		this.setDraw(1);
+		this.setDraw(true);
 		
-		this.settled = 1;
+		this.settled = true;
 		
 		// Compute winner tokens
 		this.computeWinnerToken();
-		this.distributeGains();
+		this.distributeGains(2);
 		save();
 	}
 
@@ -333,11 +383,11 @@ public class Competition {
 		return null;
 	}
 	
-	private void distributeGains() {
+	private void distributeGains(int betType) {
 		if (getTotalToken() == 0)
 			return;
-		float ratio = getWinnerToken() / getTotalToken();
-		for(Bet bet : getBets()) {
+		float ratio = getWinnerToken(betType) / getTotalToken(betType);
+		for(Bet bet : getBets(betType)) {
 			if (bet.isWon()) {
 				bet.settle(ratio);
 			}
