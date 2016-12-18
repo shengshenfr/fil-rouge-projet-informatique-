@@ -1128,6 +1128,9 @@ public class BettingSoft implements Betting {
 			authenticateMngr(managerPwd);
 
 			// check if a subscriber with the same username exists
+			if(username==null){
+				throw new BadParametersException("the username is null!");
+			}
 			Subscriber s = SubscriberManager.findByUsername(username);
 			if (s == null)
 				throw new MissingSubscriberException("Subcriber " + username + " is not exist.");
