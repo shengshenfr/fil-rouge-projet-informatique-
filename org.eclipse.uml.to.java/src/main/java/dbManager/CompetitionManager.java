@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import Bet.Bet;
 import Bet.Competition;
 import exceptions.BadParametersException;
 import exceptions.MissingCompetitionException;
@@ -242,19 +243,27 @@ public class CompetitionManager {
 
 	public static long getTotalToken(int betType) {
 		long totalToken = 0;
+		ResultSet resultSet = null;
+		PreparedStatement psSelect = null;
 		try {
 			Connection c = DatabaseConnection.getConnection();
-		    PreparedStatement psSelect = c.prepareStatement("select sum(b.amount) as totalToken from winnerbet b left join entry e on e.idEntry=b.idEntry where e.competitionName=?");
-		    ResultSet resultSet = psSelect.executeQuery();
-		    totalToken = resultSet.getLong("totalToken");
-		    
-		    psSelect = c.prepareStatement("select sum(b.amount) as totalToken from podiumbet b left join entry e on (e.idEntryFirst=b.idEntry or e.idEntrySecond=b.idEntry or e.idEntryThird=b.idEntry) where e.competitionName=?");
-		    resultSet = psSelect.executeQuery();
-		    totalToken += resultSet.getLong("totalToken");
-		    
-		    psSelect = c.prepareStatement("select sum(amount) as totalToken from drawbet where competitionName=?");
-		    resultSet = psSelect.executeQuery();
-		    totalToken += resultSet.getLong("totalToken");
+			switch(betType) {
+			case Bet.WINNER_BET:
+			    psSelect = c.prepareStatement("select sum(b.amount) as totalToken from winnerbet b left join entry e on e.idEntry=b.idEntry where e.competitionName=?");
+			    resultSet = psSelect.executeQuery();
+			    totalToken = resultSet.getLong("totalToken");
+			    break;
+			case Bet.PODIUM_BET:
+			    psSelect = c.prepareStatement("select sum(b.amount) as totalToken from podiumbet b left join entry e on (e.idEntryFirst=b.idEntry or e.idEntrySecond=b.idEntry or e.idEntryThird=b.idEntry) where e.competitionName=?");
+			    resultSet = psSelect.executeQuery();
+			    totalToken += resultSet.getLong("totalToken");
+			    break;
+			case Bet.DRAW_BET:
+			    psSelect = c.prepareStatement("select sum(amount) as totalToken from drawbet where competitionName=?");
+			    resultSet = psSelect.executeQuery();
+			    totalToken += resultSet.getLong("totalToken");
+			    break;
+			}
 		    
 		    resultSet.close();
 		    
@@ -267,35 +276,6 @@ public class CompetitionManager {
 		}
 	    
 	    return totalToken;
-	}
-
-	public static long getWinnerToken() {
-		long winnerToken = 0;
-		try {
-			Connection c = DatabaseConnection.getConnection();
-		    PreparedStatement psSelect = c.prepareStatement("select sum(b.amount) as totalToken from winnerbet b left join entry e on e.idEntry=b.idEntry where e.competitionName=?");
-		    ResultSet resultSet = psSelect.executeQuery();
-		    winnerToken = resultSet.getLong("totalToken");
-		    
-		    psSelect = c.prepareStatement("select sum(b.amount) as totalToken from podiumbet b left join entry e on (e.idEntryFirst=b.idEntry or e.idEntrySecond=b.idEntry or e.idEntryThird=b.idEntry) where e.competitionName=?");
-		    resultSet = psSelect.executeQuery();
-		    winnerToken += resultSet.getLong("totalToken");
-		    
-		    psSelect = c.prepareStatement("select sum(amount) as totalToken from drawbet left where competitionName=?");
-		    resultSet = psSelect.executeQuery();
-		    winnerToken += resultSet.getLong("totalToken");
-		    
-		    resultSet.close();
-		    
-		    psSelect.close();
-		    
-		    c.close(); 
-		} catch (SQLException e) {
-			
-			e.printStackTrace();
-		}
-	    
-	    return winnerToken;
 	}
 		
 }

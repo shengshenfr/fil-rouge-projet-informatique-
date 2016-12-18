@@ -22,7 +22,7 @@ import Individual.Subscriber;
 /**
  * Description of Bet.
  * 
- * @author Robin, R�my
+ * @author Remy
  */
 @SuppressWarnings("unused")
 abstract public class Bet {
@@ -45,6 +45,10 @@ abstract public class Bet {
 	 * Description of the property idBet.
 	 */
 	private int id = 0;
+	
+	final public static int WINNER_BET = 0;
+	final public static int PODIUM_BET = 1;
+	final public static int DRAW_BET = 2;
 
 	/**
 	 * Returns amount.

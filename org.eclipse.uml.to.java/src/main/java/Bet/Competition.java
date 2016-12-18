@@ -260,11 +260,11 @@ public class Competition {
 	
 	private HashSet<Bet> getBets(int betType) {
 		switch(betType) {
-		case 0:
+		case Bet.WINNER_BET:
 			return this.getWinnerBets();
-		case 1:
+		case Bet.PODIUM_BET:
 			return this.getPodiumBets();
-		case 2:
+		case Bet.DRAW_BET:
 			return this.getDrawBets();
 		}
 		return null;
@@ -321,7 +321,7 @@ public class Competition {
 		List<Competitor> competitors = new LinkedList<Competitor>();
 		competitors.add(winner);
 		settle(competitors);
-		this.distributeGains(0);
+		this.distributeGains(Bet.WINNER_BET);
 	}
 	
 	public void settlePodium(Competitor first, Competitor second, Competitor third) throws MissingCompetitorException, CompetitionException {
@@ -330,7 +330,7 @@ public class Competition {
 		competitors.add(second);
 		competitors.add(third);
 		settle(competitors);
-		this.distributeGains(1);
+		this.distributeGains(Bet.PODIUM_BET);
 	}
 
 	public void settle(List<Competitor> competitors) throws MissingCompetitorException, CompetitionException {
@@ -370,7 +370,7 @@ public class Competition {
 		
 		// Compute winner tokens
 		this.computeWinnerToken();
-		this.distributeGains(2);
+		this.distributeGains(Bet.DRAW_BET);
 		save();
 	}
 
@@ -384,9 +384,17 @@ public class Competition {
 	}
 	
 	private void distributeGains(int betType) {
-		if (getTotalToken() == 0)
+		long tokens;
+		// if the competition is a draw we need to count all the tokens, not only the draw ones
+		if (betType == Bet.DRAW_BET) {
+			tokens = this.getTotalToken();
+		}
+		else {
+			tokens = this.getTotalToken(betType);
+		}
+		if (tokens == 0)
 			return;
-		float ratio = getWinnerToken(betType) / getTotalToken(betType);
+		float ratio = tokens / getTotalToken(betType);
 		for(Bet bet : getBets(betType)) {
 			if (bet.isWon()) {
 				bet.settle(ratio);

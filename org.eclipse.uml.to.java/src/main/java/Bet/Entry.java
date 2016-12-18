@@ -17,7 +17,7 @@ import dbManager.PlayerManager;
 /**
  * Description of Entry.
  * 
- * @author Robin, R�my
+ * @author Remy
  */
 public class Entry {
 	private int id = 0;

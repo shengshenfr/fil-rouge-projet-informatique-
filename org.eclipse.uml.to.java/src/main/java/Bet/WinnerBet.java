@@ -14,7 +14,7 @@ import exceptions.CompetitionException;
 /**
  * Description of WinnerBet.
  * 
- * @author Robin, R�my
+ * @author Remy
  */
 public class WinnerBet extends Bet {
 	/**

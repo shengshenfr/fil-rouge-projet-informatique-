@@ -18,7 +18,7 @@ import exceptions.CompetitionException;
 /**
  * Description of PodiumBet.
  * 
- * @author Robin, Rémy
+ * @author Remy
  */
 public class PodiumBet extends Bet {
 	/**

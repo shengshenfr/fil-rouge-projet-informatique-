@@ -13,7 +13,7 @@ import exceptions.CompetitionException;
 /**
  * Description of DrawBet.
  * 
- * @author Robin, Rémy
+ * @author Remy
  */
 public class DrawBet extends Bet {
 	/**
