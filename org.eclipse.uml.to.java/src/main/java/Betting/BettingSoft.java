@@ -399,7 +399,11 @@ public class BettingSoft implements Betting {
 		}
 		catch(  CompetitionException|   MissingCompetitionException| SQLException e){
 			return null;
+		} catch (BadParametersException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		return null;
 	}
 
 	@Override
@@ -434,6 +438,9 @@ public class BettingSoft implements Betting {
 		catch(SQLException | MissingCompetitionException | CompetitionException e){
 			System.out.println(e);
 		
+		} catch (BadParametersException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return winners;
 	}
@@ -815,6 +822,9 @@ public class BettingSoft implements Betting {
 		} catch (MissingCompetitionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (BadParametersException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		return null;
@@ -1118,6 +1128,9 @@ public class BettingSoft implements Betting {
 			authenticateMngr(managerPwd);
 
 			// check if a subscriber with the same username exists
+			if(username==null){
+				throw new BadParametersException("the username is null!");
+			}
 			Subscriber s = SubscriberManager.findByUsername(username);
 			if (s == null)
 				throw new MissingSubscriberException("Subcriber " + username + " is not exist.");

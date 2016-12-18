@@ -19,6 +19,8 @@ public class AbstractCompetitor implements Competitor {
 	 * Description of the property abstractCompetitorName.
 	 */
 	private String abstractCompetitorName = null;
+    private static int LONG_NAME = 6;
+    private static String REGEX_NAME = "^[0-9A-Za-z]{6}$";
 
 	// Start of user code (user defined attributes for AbstractCompetitor)
 
@@ -26,11 +28,21 @@ public class AbstractCompetitor implements Competitor {
 
 	/**
 	 * The constructor.
+	 * @throws BadParametersException 
 	 */
-	public AbstractCompetitor(String name) {
+	public AbstractCompetitor(String name) throws BadParametersException {
 		// Start of user code constructor for AbstractCompetitor)
-		this.abstractCompetitorName=name;
-		// End of user code
+		
+        if(abstractCompetitorName==null){
+            throw new BadParametersException("can't have null name!!!");
+        }
+        if(!abstractCompetitorName.matches(REGEX_NAME)){
+            throw new BadParametersException("REGEX_NAME Wrong!");
+        }
+        if(abstractCompetitorName.length()!=6){
+        	throw new BadParametersException("Length of name is Wrong!");
+        }
+        this.abstractCompetitorName=name;
 	}
 
 	// Start of user code (user defined methods for AbstractCompetitor)
@@ -56,15 +68,21 @@ public class AbstractCompetitor implements Competitor {
 		this.abstractCompetitorName = newAbstractCompetitorName;
 	}
 
-	public boolean hasValidName(String teamName) {
+	public boolean hasValidName(String name) {
 		// TODO Auto-generated method stub
-		return false;
+		 if(!name.matches(REGEX_NAME)){
+	            return false;
+	        }
+		return true;
 	}
 
 	@Override
 	public boolean hasValidName() {
 		// TODO Auto-generated method stub
-		return false;
+		 if(!abstractCompetitorName.matches(REGEX_NAME)){
+	            return false;
+	        }
+		return true;
 	}
 
 	@Override

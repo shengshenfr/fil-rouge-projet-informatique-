@@ -144,7 +144,10 @@ public class PlayerManager {
 		    	catch (SQLException e) {
 					
 					e.printStackTrace();
-		    	}
+		    	} catch (BadParametersException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		    	
 		    }
 		    resultSet.close();
@@ -172,10 +175,15 @@ public class PlayerManager {
 			
 			while (resultSet.next()) {
 				
-				player = new Player(resultSet.getString("firstName")+resultSet.getString("lastName"),
-						resultSet.getString("firstName"),
-		    			resultSet.getString("lastName"),
-		    	resultSet.getString("bornDate"));
+				try {
+					player = new Player(resultSet.getString("firstName")+resultSet.getString("lastName"),
+							resultSet.getString("firstName"),
+							resultSet.getString("lastName"),
+					resultSet.getString("bornDate"));
+				} catch (BadParametersException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}		
 
 			resultSet.close();

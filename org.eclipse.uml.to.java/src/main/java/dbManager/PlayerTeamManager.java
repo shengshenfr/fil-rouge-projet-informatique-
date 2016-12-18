@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import Interface.Competitor;
+import exceptions.BadParametersException;
 import utils.DatabaseConnection;
 import Individual.Player;
 import Individual.Team;
@@ -78,7 +79,10 @@ public class PlayerTeamManager {
 	    	catch (SQLException e) {
 				
 				e.printStackTrace();
-	    	}
+	    	} catch (BadParametersException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	    	
 	    }
 	    resultSet.close();

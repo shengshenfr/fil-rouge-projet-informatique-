@@ -148,7 +148,10 @@ public class AbstractCompetitorManager {
 	    	catch (SQLException e) {
 				
 				e.printStackTrace();
-	    	}
+	    	} catch (BadParametersException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	    	
 	    }
 	    resultSet.close();
@@ -177,7 +180,12 @@ public class AbstractCompetitorManager {
 		
 		while (resultSet.next()) {
 			
-			abstractCompetitor = new AbstractCompetitor(name);
+			try {
+				abstractCompetitor = new AbstractCompetitor(name);
+			} catch (BadParametersException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}		
 
 		resultSet.close();
