@@ -26,7 +26,7 @@ import utils.*;
 public class BettingSoft implements Betting {
 
 	
-	private static final String REGEX_USERNAME = "^[A-Za-z]{*}$";
+	private static final String REGEX_USERNAME = "^[A-Za-z]*$";
 	private final String MANAGER_PASSWORD = "root";
 
 	//-----------------------Methods------------------------------\\
@@ -769,34 +769,29 @@ public class BettingSoft implements Betting {
 	@Override
 	public List<List<String>> listCompetitions() {
 		List<List<String>> collectionCompetition = new ArrayList<List<String>>();
-		try{
-			List<Competition>  competitions = CompetitionManager.findAll();
-			System.out.println(competitions);
+		List<Competition>  competitions = CompetitionManager.findAll();
+		System.out.println(competitions);
+		
+		for (Competition c:competitions){
 			
-			for (Competition c:competitions){
-				
-				List<String> infoCompetition = new ArrayList<String>();
-				
-				infoCompetition.add(c.getName());
-				infoCompetition.add(c.getClosingCalendar().toString());
-								
+			List<String> infoCompetition = new ArrayList<String>();
+			
+			infoCompetition.add(c.getName());
+			infoCompetition.add(c.getClosingCalendar().toString());
+							
 //				List<WinnerBet> betsList = WinnerBetManager.findAllWinnerBetsByCompetition(c);
 //				for (WinnerBet bet : betsList) {
 //					infoCompetition.add(bet.toString());
 //				}
-				List<Entry> entrylist = EntryManager.findAllByCompetition(c.getName());			
-				System.out.println(entrylist);
-				for (Entry entry : entrylist) {
-					List<String> entry_data = new ArrayList<String>();
-					entry_data.add(entry.getCompetitor().toString());
-					infoCompetition.addAll(entry_data);
-				}
-				
-				collectionCompetition.add(infoCompetition);
-			}
-		}
-		catch (SQLException e){
-			return null;
+//				List<Entry> entrylist = EntryManager.findAllByCompetition(c.getName());			
+//				System.out.println(entrylist);
+//				for (Entry entry : entrylist) {
+//					List<String> entry_data = new ArrayList<String>();
+//					entry_data.add(entry.getCompetitor().toString());
+//					infoCompetition.addAll(entry_data);
+//				}
+			
+			collectionCompetition.add(infoCompetition);
 		}
 		return collectionCompetition;
 	}
@@ -1121,8 +1116,9 @@ public class BettingSoft implements Betting {
 				
 			// Create the new subscriber
 			// Check if the subscriber is over 18 years old or not is in the method setborndate of Subscriber 
+			
 			Subscriber s = new Subscriber(username,firstName,lastName,dateValide.change_date(borndate), 0);
-			System.out.println(s.getUsername());
+		
 
 			// Add subscriber to SQL
 			SubscriberManager.persist(s);

@@ -33,13 +33,13 @@ public class AbstractCompetitor implements Competitor {
 	public AbstractCompetitor(String name) throws BadParametersException {
 		// Start of user code constructor for AbstractCompetitor)
 		
-        if(abstractCompetitorName==null){
+        if(name==null){
             throw new BadParametersException("can't have null name!!!");
         }
-        if(!abstractCompetitorName.matches(REGEX_NAME)){
-            throw new BadParametersException("REGEX_NAME Wrong!");
-        }
-        if(abstractCompetitorName.length()!=6){
+//        if(!name.matches(REGEX_NAME)){
+//            throw new BadParametersException("REGEX_NAME Wrong!");
+//        }
+        if(name.length()<4){
         	throw new BadParametersException("Length of name is Wrong!");
         }
         this.abstractCompetitorName=name;

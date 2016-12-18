@@ -37,8 +37,8 @@ public class Subscriber extends Player {
     private long balance = 0L;
     
     private static int LONG_USERNAMEMIN = 4;
-    private static String REGEX_USERNAME = "^[A-Za-z]{*}$";
-    private static String REGEX_NAME = "^[A-Z][A-Za-z]{*}$";
+    private static String REGEX_USERNAME = "^[A-Za-z]*$";
+    private static String REGEX_NAME = "^[A-Z][A-Za-z]*$";
     private int LONG_PASSWORD = 8;
     private String REGEX_PASSWORD = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8}$";
     private String userName;
@@ -53,7 +53,7 @@ public class Subscriber extends Player {
     
     private String lastName;
     public Subscriber(String username,String firstName,String lastName,Calendar borndate) throws BadParametersException{
-    	System.out.println("creation d'un subscriber");
+    	System.out.println("creation d'un subscriber"+username);
         if(username==null||firstName==null||lastName==null||bornDate==null){
             throw new BadParametersException("can't have null name or bornDate!!!");
         }
@@ -83,12 +83,13 @@ public class Subscriber extends Player {
         if(!username.matches(REGEX_USERNAME)||!firstname.matches(REGEX_USERNAME)||!lastname.matches(REGEX_USERNAME)){
             throw new BadParametersException("REGEX_NAME Wrong!");
         }
-
+        this.userName = username;
         this.firstName = firstname;
         this.lastName = lastname;
         this.bornDate = bornDate;
         this.balance = balance;
         this.password=generatePassword();
+        
     }
     
     public Subscriber(String username,String password, String firstname, String lastname, Calendar bornDate, long balance){
@@ -117,7 +118,7 @@ public class Subscriber extends Player {
 				e.printStackTrace();
 			}
         }
-   
+        this.userName = username;
     	this.firstName = firstname;
         this.lastName = lastname;
         this.bornDate = bornDate;

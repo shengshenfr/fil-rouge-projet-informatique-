@@ -22,6 +22,7 @@ public class Player extends AbstractCompetitor {
         if(firstName==null||lastName==null||bornDate==null){
             throw new BadParametersException("can't have null name or bornDate!!!");
         }
+        this.userName=userName;
 		this.firstName=firstName;
 		this.lastName=lastName;
 		this.bornDate=bornDate;

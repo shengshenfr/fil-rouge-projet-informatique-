@@ -36,49 +36,55 @@ public class TestBettingSoft {
 	//Initializer 
 	@BeforeClass
 	public void init() throws BadParametersException, AuthentificationException, ExistingSubscriberException, SubscriberException, CompetitionException, ExistingCompetitionException, ExistingCompetitorException, SQLException{
-		yesterday = Calendar.getInstance();
-		yesterday.add(Calendar.DATE, -1);
-		tomorrow = Calendar.getInstance();
-		tomorrow.add(Calendar.DATE, 1);
-		
-		Bsport.subscribe("sheng", "shen", "java00", "11/11/1111", MANAGER_PASSWORD);
-		
-		Bsport.subscribe("chen", "long", "doubi1", "10/01/1970", MANAGER_PASSWORD);
-		Bsport.subscribe("hehe", "what", "wocao1", "01/01/2001", MANAGER_PASSWORD);
-		
-		Bsport.creditSubscriber("doubi1",1000, MANAGER_PASSWORD);
-		Bsport.creditSubscriber("wocao1",2000, MANAGER_PASSWORD);
-		
-		competition1 = new Competition("Competition 1", tomorrow);
-	    competition2 = new Competition("Competition 2", tomorrow);
-		
-	    Bsport.createCompetitor("zhao", "yi", "01/11/1111", MANAGER_PASSWORD);
-		//System.out.println("jjjjjjjjjjjjjjjjjj");
-		Bsport.createCompetitor("qian", "er","02/11/1111", MANAGER_PASSWORD);
-		Bsport.createCompetitor("sun", "san","03/11/1111", MANAGER_PASSWORD);
-		Bsport.createCompetitor("li", "si","04/11/1111", MANAGER_PASSWORD);
-		Bsport.createCompetitor("zhou", "wu","05/11/1111", MANAGER_PASSWORD);
-		
-		Bsport.createCompetitor("Team1", MANAGER_PASSWORD);
-		//System.out.println("jjjjjjjjjjjjjjjjjj");
-		Bsport.createCompetitor("Team2", MANAGER_PASSWORD);
-		
-
-		
-		ArrayList<Competitor> competitor1 = new ArrayList<Competitor>();
-		competitor1 = new ArrayList<Competitor>(Arrays.asList(
-				(Competitor) PlayerManager.findByName("yizhao")));
-		
-		
-		Bsport.addCompetition("competition15", new MyCalendar(2017,12,5), competitor1, MANAGER_PASSWORD);
-		
-		Competitor competitor2 = (Competitor) PlayerManager.findByName("erqian");
-		Bsport.addCompetitor("competition15",competitor2,MANAGER_PASSWORD);
-		
-		competitor3 = PlayerManager.findByName("sansun");
-		competitor4 = PlayerManager.findByName("sili");
-		competitor5 = PlayerManager.findByName("wuzhou");
-			
+//		yesterday = Calendar.getInstance();
+//		yesterday.add(Calendar.DATE, -1);
+//		tomorrow = Calendar.getInstance();
+//		tomorrow.add(Calendar.DATE, 1);
+//		
+//		Bsport.subscribe(new String("Duran"),
+//				new String("Albert"), new String("fanfan"),
+//				new String("11-03-1987"), MANAGER_PASSWORD);
+//		
+//		Bsport.subscribe("chen", "long", "doubi1", "10/01/1970", MANAGER_PASSWORD);
+//		Bsport.subscribe("hehe", "what", "wocao1", "01/01/2001", MANAGER_PASSWORD);
+//		
+//		Bsport.creditSubscriber("doubi1",1000, MANAGER_PASSWORD);
+//		Bsport.creditSubscriber("wocao1",2000, MANAGER_PASSWORD);
+//		
+//		competition1 = new Competition("Competition 1", tomorrow);
+//	    competition2 = new Competition("Competition 2", tomorrow);
+//		
+//	    Bsport.createCompetitor("zhao", "yi", "01/11/1111", MANAGER_PASSWORD);
+//		//System.out.println("jjjjjjjjjjjjjjjjjj");
+//		Bsport.createCompetitor("qian", "er","02/11/1111", MANAGER_PASSWORD);
+//		Bsport.createCompetitor("sun", "san","03/11/1111", MANAGER_PASSWORD);
+//		Bsport.createCompetitor("li", "si","04/11/1111", MANAGER_PASSWORD);
+//		Bsport.createCompetitor("zhou", "wu","05/11/1111", MANAGER_PASSWORD);
+		Bsport.createCompetitor(
+				new String("Durant"),
+				new String("Miguel"),
+				"05-11-1111",
+				MANAGER_PASSWORD);
+//		Bsport.createCompetitor("Team1", MANAGER_PASSWORD);
+//		//System.out.println("jjjjjjjjjjjjjjjjjj");
+//		Bsport.createCompetitor("Team2", MANAGER_PASSWORD);
+//		
+//
+//		
+//		ArrayList<Competitor> competitor1 = new ArrayList<Competitor>();
+//		competitor1 = new ArrayList<Competitor>(Arrays.asList(
+//				(Competitor) PlayerManager.findByName("yizhao")));
+//		
+//		
+//		Bsport.addCompetition("competition15", new MyCalendar(2017,12,5), competitor1, MANAGER_PASSWORD);
+//		
+//		Competitor competitor2 = (Competitor) PlayerManager.findByName("erqian");
+//		Bsport.addCompetitor("competition15",competitor2,MANAGER_PASSWORD);
+//		
+//		competitor3 = PlayerManager.findByName("sansun");
+//		competitor4 = PlayerManager.findByName("sili");
+//		competitor5 = PlayerManager.findByName("wuzhou");
+//			
 		
 	}
 	
