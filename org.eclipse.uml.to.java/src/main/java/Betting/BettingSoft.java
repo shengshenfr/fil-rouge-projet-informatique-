@@ -26,6 +26,7 @@ import utils.*;
 public class BettingSoft implements Betting {
 
 	
+	private static final String REGEX_USERNAME = "^[A-Za-z]{*}[A-Z][A-Za-z]{*}$";
 	private final String MANAGER_PASSWORD = "root";
 
 	//-----------------------Methods------------------------------\\
@@ -510,6 +511,14 @@ public class BettingSoft implements Betting {
 	public void creditSubscriber(String username, long numberTokens, String managerPwd)
 			throws AuthentificationException, ExistingSubscriberException, BadParametersException {
 			try{
+				//username can not be null
+				if(username==null||!(username.matches(REGEX_USERNAME))){
+					throw new BadParametersException("username is null");
+				}
+				//managerPWDcan not be null
+				if(managerPwd==null){
+					throw new BadParametersException("managerPWD is null");
+				}
 				// Authenticate manager
 				authenticateMngr(managerPwd);
 
@@ -542,6 +551,14 @@ public class BettingSoft implements Betting {
 	public void debitSubscriber(String username, long numberTokens, String managerPwd)
 			throws AuthentificationException, ExistingSubscriberException, SubscriberException, BadParametersException {
 		try{
+			//username can not be null
+			if(username==null||!(username.matches(REGEX_USERNAME))){
+				throw new BadParametersException("username is null");
+			}
+			//managerPWDcan not be null
+			if(managerPwd==null){
+				throw new BadParametersException("managerPWD is null");
+			}
 			// Authenticate manager
 			authenticateMngr(managerPwd);
 
