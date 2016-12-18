@@ -399,7 +399,11 @@ public class BettingSoft implements Betting {
 		}
 		catch(  CompetitionException|   MissingCompetitionException| SQLException e){
 			return null;
+		} catch (BadParametersException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		return null;
 	}
 
 	@Override
@@ -434,6 +438,9 @@ public class BettingSoft implements Betting {
 		catch(SQLException | MissingCompetitionException | CompetitionException e){
 			System.out.println(e);
 		
+		} catch (BadParametersException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return winners;
 	}
@@ -813,6 +820,9 @@ public class BettingSoft implements Betting {
 		catch (SQLException e){
 			e.printStackTrace();
 		} catch (MissingCompetitionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadParametersException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
