@@ -20,54 +20,61 @@ import exceptions.SubscriberException;
 import Individual.Subscriber;
 
 /**
- * Description of Bet.
+ * This is an abstract class describing a betting on a competition by a subscriber.
  * 
  * @author Remy
  */
 @SuppressWarnings("unused")
 abstract public class Bet {
 	/**
-	 * Description of the property amount.
+	 * The different types of bet available
+	 */
+	final public static int WINNER_BET = 0;
+	final public static int PODIUM_BET = 1;
+	final public static int DRAW_BET = 2;
+	
+	/**
+	 * The number of token the subscriber wants to bet
 	 */
 	private long amount = 0L;
 
 	/**
-	 * Description of the property subscribers.
+	 * The subscriber that initiated the bet
 	 */
 	private Subscriber betOwner;
 
 	/**
-	 * Description of the property betNextId.
+	 * The index of the bet, used for database sync
+	 */
+	private int id = 0;
+
+	/**
+	 * The counter for the bet index
 	 */
 	private static int nextId = 1;
 
 	/**
-	 * Description of the property idBet.
+	 * Contructor
+	 * @param amount the number of token that the subscriber wants to bet
+	 * @param betOwner the subscriber that initiated the bet
 	 */
-	private int id = 0;
-	
-	final public static int WINNER_BET = 0;
-	final public static int PODIUM_BET = 1;
-	final public static int DRAW_BET = 2;
-
-	/**
-	 * Returns amount.
-	 * @return amount 
-	 */
-	public long getAmount() {
-		return this.amount;
-	}
-
 	public Bet(long amount, Subscriber betOwner) {
 		this(amount, betOwner, nextId++);
 	}
 	
+	/**
+	 * Constructor
+	 * @param amount the number of token that the subscriber wants to bet
+	 * @param betOwner the subscriber that initiated the bet
+	 * @param id the index of the bet
+	 */
 	public Bet(long amount, Subscriber betOwner, int id) {
 		this.amount = amount;
 		this.betOwner = betOwner;
 		this.id = id;
 	}
 	
+	//TODO comments from here
 	static public DrawBet createDrawBet(int id, String ownerName, long amount, String competitionName) throws BadParametersException, MissingCompetitionException, CompetitionException, SubscriberException, ExistingCompetitorException {
 		Subscriber owner;
 		try {
@@ -125,34 +132,24 @@ abstract public class Bet {
 		bet.setId(id);
 		return bet;
 	}
+	
+	/**
+	 * @return the number of tokens bet by the owner 
+	 */
+	public long getAmount() {
+		return this.amount;
+	}
 
 	/**
-	 * Sets a value to attribute amount. 
-	 * @param newAmount 
+	 * Sets the number of tokens bet by the owner
+	 * @param the new amount
 	 */
 	public void setAmount(long newAmount) {
 		this.amount = newAmount;
 	}
 
-
 	/**
-	 * Sets a value to attribute subscribers. 
-	 * @param newSubscribers 
-	 */
-	public void setBetOwner(Subscriber betOwner) {
-		this.betOwner = betOwner;
-	}
-
-	/**
-	 * Returns betNextId.
-	 * @return betNextId 
-	 */
-	public static int getBetNextId() {
-		return nextId;
-	}
-
-	/**
-	 * Sets a value to attribute betNextId. 
+	 * Sets the value of the next bet index
 	 * @param newBetNextId 
 	 */
 	public static void setBetNextId(int newBetNextId) {
@@ -160,32 +157,36 @@ abstract public class Bet {
 	}
 
 	/**
-	 * Returns idBet.
-	 * @return idBet 
+	 * @return the index of the bet
 	 */
 	public int getId() {
 		return this.id;
 	}
 
 	/**
-	 * Sets a value to attribute idBet. 
-	 * @param newIdBet 
+	 * Sets the index of the bet 
+	 * @param the new index
 	 */
 	public void setId(int newId) {
 		this.id = newId;
 	}
 
+	/**
+	 * @return the subscriber that initiated the bet
+	 */
 	public Subscriber getBetOwner() {
 		return betOwner;
 	}
 	
-	public boolean isOver() {
-		return false;
-	}
+	/**
+	 * Returns a boolean that will tell you if the competition associated with the bet is already over or not
+	 */
+	public abstract boolean isOver();
 
-	public boolean isWon() {
-		return false;
-	}
+	/**
+	 * Returns a boolean that will tell you if the bet is won or not
+	 */
+	public abstract boolean isWon();
 	
 	public void cancel() throws CompetitionException {
 		try {
@@ -196,12 +197,21 @@ abstract public class Bet {
 		}
 	}
 	
+	
+	/**
+	 * Checks whether the competition associated with the bet is over yet or not
+	 * @throws CompetitionException
+	 */
 	public void checkCompetitionNotOver() throws CompetitionException {
 		if (this.isOver()) {
 			throw new CompetitionException("Competition is already over!");
 		}
 	}
 
+	/**
+	 * Distributes the gain to the bet owner if the bet is won
+	 * @param ratio the multiplicative factor for the gains
+	 */
 	public void settle(float ratio) {
 		if (!isWon())
 			return;
@@ -209,7 +219,6 @@ abstract public class Bet {
 		try {
 			this.betOwner.creditSubscriber((long)(this.amount * ratio));
 		} catch (BadParametersException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -3,12 +3,8 @@
  *******************************************************************************/
 package Bet;
 
-// Start of user code (user defined imports)
-
-// End of user code
-
 /**
- * Description of Enumeration.
+ * Enumeration of the various rank for the entries
  * 
  * @author Remy
  */
@@ -18,6 +14,11 @@ public enum Rank {
 	THIRD,
 	NOT_PODIUM;
 
+	/**
+	 * Returns the rank associated with a given index
+	 * @param i the given index
+	 * @return
+	 */
 	public static Rank getRankIndex(int i) {
 		switch(i) {
 		case 0:
@@ -31,6 +32,11 @@ public enum Rank {
 		}
 	}
 	
+	/**
+	 * Returns the index associated with the given rank
+	 * @param r the given rank
+	 * @return
+	 */
 	public static int getIndex(Rank r) {
 		switch(r) {
 		case FIRST:

@@ -29,44 +29,55 @@ import dbManager.EntryManager;
 @SuppressWarnings("unused")
 public class Competition {
 	/**
-	 * Description of the property settled.
+	 * Whether the competition is settled or not
 	 */
 	private boolean settled = false;
 
 	/**
-	 * Description of the property isDraw.
+	 * Whether the competition is a draw or not
 	 */
 	private boolean draw = false;
 
 	/**
-	 * Description of the property name.
+	 * The name of the competition
 	 */
 	private String name = null;
 
 	/**
-	 * Description of the property closingDate.
+	 * The date from which no longer bets should be acccepted
 	 */
 	private Calendar closingDate = null;
 
 	/**
-//	 * Description of the property competitors.
-//	 */
+	 * The participations related to this competition 
+	 */
 	private HashSet<Entry> entries = new HashSet<Entry>();
 	
+	/**
+	 * The draw bets related to this competition
+	 */
 	private HashSet<DrawBet> drawBets = new HashSet<DrawBet>();
 
 	/**
-	 * Description of the property startingDate.
+	 * The date of the creation
 	 */
 	private Calendar startingDate = null;
 	
+	/**
+	 * The total amount of token bet on this competition
+	 */
 	private long totalToken = 0L;
 	
+	/**
+	 * The amount of token from bets that are won, ordered by bet type
+	 */
 	private List<Long> winnerToken = new LinkedList<Long>();
 
 	/**
-	 * The constructor.
-	 * @throws BadParametersException 
+	 * Constructor
+	 * @param competitionName
+	 * @param closingDate
+	 * @throws BadParametersException
 	 */
 	public Competition(String competitionName, Calendar closingDate) throws BadParametersException {
 		if (competitionName == "") {
@@ -85,6 +96,13 @@ public class Competition {
 		}
 	}
 
+	/**
+	 * Constructor
+	 * @param competitionName
+	 * @param startingDate
+	 * @param closingDate
+	 * @throws BadParametersException
+	 */
 	public Competition(String competitionName, Calendar startingDate, Calendar closingDate) throws BadParametersException {
 		this(competitionName, closingDate);
 		this.startingDate = startingDate;
@@ -102,25 +120,26 @@ public class Competition {
 		return competition;
 	}
 	
+	/**
+	 * Saves the object to the database
+	 */
 	protected void save() {
 		try {
 			CompetitionManager.update(this);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			// TODO: raise Exception
 		}
 	}
 
 	/**
-	 * Returns settled.
-	 * @return settled 
+	 * @return whether the competition is already settled or not 
 	 */
 	public boolean isSettled() {
 		return this.settled;
 	}
 
 	/**
-	 * Sets a value to attribute settled. 
+	 * Sets whether the competition is settled or not
 	 * @param newSettled 
 	 */
 	public void setSettled(boolean newSettled) {
@@ -128,16 +147,15 @@ public class Competition {
 	}
 
 	/**
-	 * Returns isDraw.
-	 * @return isDraw 
+	 * @return whether the competition is a draw or not 
 	 */
 	public boolean isDraw() {
 		return this.draw;
 	}
 
 	/**
-	 * Sets a value to attribute isDraw. 
-	 * @param newIsDraw 
+	 * Sets whether the competition is a draw or not
+	 * @param is a draw
 	 */
 	public void setDraw(boolean newIsDraw) {
 		this.draw = newIsDraw;
@@ -145,12 +163,13 @@ public class Competition {
 	}
 
 	/**
-	 * Returns name.
-	 * @return name 
+	 * @return the name of the competition 
 	 */
 	public String getName() {
 		return this.name;
 	}
+	
+	//TODO comments from here
 
 	/**
 	 * Sets a value to attribute name. 
@@ -297,6 +316,9 @@ public class Competition {
 		}
 	}
 	
+	/**
+	 * Cancel the bet and refund the owner
+	 */
 	public void cancel() throws CompetitionException {
 		checkCompetitionNotOver();
 		

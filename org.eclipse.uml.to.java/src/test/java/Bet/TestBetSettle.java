@@ -91,7 +91,9 @@ public class TestBetSettle {
 		assert(podiumBet1.isWon());
 		assert(!podiumBet2.isWon());
 
-		assert(competition.getWinnerToken() == 6);
+		assert(competition.getWinnerToken(Bet.WINNER_BET) == 2);
+		assert(competition.getWinnerToken(Bet.PODIUM_BET) == 4);
+		assert(competition.getWinnerToken(Bet.DRAW_BET) == 0);
 	}
 	
 	@Test
@@ -113,7 +115,9 @@ public class TestBetSettle {
 		assert(podiumBet1.isWon());
 		assert(!podiumBet2.isWon());
 		
-		assert(competition.getWinnerToken() == 6);
+		assert(competition.getWinnerToken(Bet.WINNER_BET) == 2);
+		assert(competition.getWinnerToken(Bet.PODIUM_BET) == 4);
+		assert(competition.getWinnerToken(Bet.DRAW_BET) == 0);
 	}
 	
 	@Test
@@ -135,7 +139,9 @@ public class TestBetSettle {
 		assert(!podiumBet1.isWon());
 		assert(podiumBet2.isWon());
 		
-		assert(competition.getWinnerToken() == 8);
+		assert(competition.getWinnerToken(Bet.WINNER_BET) == 3);
+		assert(competition.getWinnerToken(Bet.PODIUM_BET) == 5);
+		assert(competition.getWinnerToken(Bet.DRAW_BET) == 0);
 	}
 	
 	@Test
@@ -150,7 +156,9 @@ public class TestBetSettle {
 		assert(!podiumBet1.isWon());
 		assert(!podiumBet2.isWon());
 		
-		assert(competition.getWinnerToken() == 1);
+		assert(competition.getWinnerToken(Bet.WINNER_BET) == 0);
+		assert(competition.getWinnerToken(Bet.PODIUM_BET) == 0);
+		assert(competition.getWinnerToken(Bet.DRAW_BET) == 1);
 	}
 	
 }

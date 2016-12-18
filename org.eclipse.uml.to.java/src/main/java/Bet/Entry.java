@@ -15,33 +15,54 @@ import dbManager.EntryManager;
 import dbManager.PlayerManager;
 
 /**
- * Description of Entry.
+ * An entry represents a participation of a competitor within a competition
  * 
  * @author Remy
  */
 public class Entry {
-	private int id = 0;
-
+	/**
+	 * The counter of the entry index 
+	 */
 	static private int nextId = 0;
 
 	/**
-	 * Description of the property podiumBets.
+	 * The index of the entry
+	 */
+	private int id = 0;
+
+	/**
+	 * The podium bets associated with this entry
 	 */
 	private HashSet<PodiumBet> podiumBets = new HashSet<PodiumBet>();
 
 	/**
-	 * Description of the property enumerations.
+	 * The winner bets associated with this entry
+	 */
+	private HashSet<WinnerBet> winnerBets = new HashSet<WinnerBet>();
+
+	/**
+	 * The rank obtained by the competitor once the results have been revealed.
 	 */
 	private Rank rank = null;
 
 	/**
-	 * Description of the property winnerBets.
+	 * The given competitor
 	 */
-	private HashSet<WinnerBet> winnerBets = new HashSet<WinnerBet>();
-
 	private Competitor competitor = null;
+	
+	/**
+	 * The Competition in which the competitor participates
+	 */
 	private Competition competition = null;
 
+	/**
+	 * Constructor
+	 * @param competition in which the competitor participates
+	 * @param competitor the competitor
+	 * @param id the index of the entry
+	 * @param rank the final rank of this participation
+	 * @throws BadParametersException
+	 */
 	public Entry(Competition competition, Competitor competitor, int id, Rank rank) throws BadParametersException {
 		if (competition == null) {
 			throw new BadParametersException("The competition cannot be null!");
@@ -60,8 +81,9 @@ public class Entry {
 	}
 
 	/**
-	 * The constructor.
-	 * 
+	 * Constructor
+	 * @param competition in which the competitor participates
+	 * @param competitor the competitor
 	 * @throws BadParametersException
 	 */
 	public Entry(Competition competition, Competitor competitor) throws BadParametersException {
@@ -76,21 +98,31 @@ public class Entry {
 		return new Entry(competition, competitor, id, rankObject);
 	}
 	
+	/**
+	 * Saves the object to the database
+	 */
 	protected void save() {
 		try {
 			EntryManager.update(this);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			// TODO: raise Exception
 		}
 	}
 	
+	/**
+	 * Checks whether the competition associated with this entry is already over or not
+	 * @throws CompetitionException
+	 */
 	public void checkCompetitionNotOver() throws CompetitionException {
 		if (this.competition.isOver()) {
 			throw new CompetitionException("Competition is already over!");
 		}
 	}
 	
+	/**
+	 * Cancel the participation and all the bets associated
+	 * @throws CompetitionException
+	 */
 	public void cancel() throws CompetitionException {
 		checkCompetitionNotOver();
 		
@@ -108,23 +140,22 @@ public class Entry {
 	}
 
 	/**
-	 * Returns podiumBets.
-	 * 
-	 * @return podiumBets
+	 * @return the podium bets done on this entry
 	 */
 	public HashSet<PodiumBet> getPodiumBets() {
 		return this.podiumBets;
 	}
 
 	/**
-	 * Returns winnerBets.
-	 * 
-	 * @return winnerBets
+	 * @return the winner bets done on this entry
 	 */
 	public HashSet<WinnerBet> getWinnerBets() {
 		return this.winnerBets;
 	}
 
+	/**
+	 * @return get all the bets done on this entry
+	 */
 	public HashSet<Bet> getBets() {
 		HashSet<Bet> bets = new HashSet<Bet>();
 		bets.addAll(podiumBets);
@@ -132,60 +163,101 @@ public class Entry {
 		return bets;
 	}
 
+	/**
+	 * @return the rank of the given entry
+	 */
 	public Rank getRank() {
 		return rank;
 	}
 
+	/**
+	 * Sets the rank of this entry
+	 * @param rank the new rank
+	 */
 	public void setRank(Rank rank) {
 		this.rank = rank;
 	}
 
+	/**
+	 * @return the competition where the competitor participates
+	 */
 	public Competition getCompetition() {
 		return competition;
 	}
 
+	/**
+	 * Sets the competition for this entry
+	 * @param competition
+	 * @throws CompetitionException
+	 */
 	public void setCompetition(Competition competition) throws CompetitionException {
 		this.competition = competition;
 	}
 
+	/**
+	 * @return the competitor concerned
+	 */
 	public Competitor getCompetitor() {
 		return competitor;
 	}
 
+	/**
+	 * Sets the competitor
+	 * @param competitor
+	 * @throws CompetitionException
+	 */
 	public void setCompetitor(Competitor competitor) throws CompetitionException {
 		this.competitor = competitor;
 	}
 
+	/**
+	 * Register the given podiumBet in the entry
+	 * @param podiumBet
+	 * @throws CompetitionException
+	 */
 	public void addBet(PodiumBet podiumBet) throws CompetitionException {
 		podiumBets.add(podiumBet);
 	}
 
+	/**
+	 * Unregister the given podiumBet from the entry
+	 * @param podiumBet
+	 * @throws CompetitionException
+	 */
 	public void removeBet(PodiumBet podiumBet) throws CompetitionException {
 		podiumBets.remove(podiumBet);
 	}
 
+	/**
+	 * Register the given winnerBet in the entry
+	 * @param winnerBet
+	 * @throws CompetitionException
+	 */
 	public void addBet(WinnerBet winnerBet) throws CompetitionException {
 		winnerBets.add(winnerBet);
 	}
 
+	/**
+	 * Unregister the given winnerBet from the entry
+	 * @param podiumBet
+	 * @throws CompetitionException
+	 */
 	public void removeBet(WinnerBet winnerBet) throws CompetitionException {
 		winnerBets.remove(winnerBet);
 	}
 
+	/**
+	 * @return the index of this entry
+	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 * Sets the index of this entry
+	 * @param id
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
-	public boolean equals(Entry entry2){
-		if((this.competition.equals(entry2.competition))&&(this.competitor.equals(entry2.competitor))){
-			return true;
-		}
-		else{
-			return false;
-		}
-	}
-
 }
