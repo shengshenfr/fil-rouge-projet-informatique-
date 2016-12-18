@@ -36,8 +36,8 @@ public class Subscriber extends Player {
      */
     private long balance = 0L;
     
-    private static int LONG_USERNAME = 6;
-    private static String REGEX_USERNAME = "^[0-9A-Za-z]{6}$";
+    private static int LONG_USERNAMEMIN = 6;
+    private static String REGEX_USERNAME = "^[A-Za-z]{*}[A-Z][A-Za-z]{*}$";
     private int LONG_PASSWORD = 8;
     private String REGEX_PASSWORD = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8}$";
     private String userName;
@@ -51,9 +51,18 @@ public class Subscriber extends Player {
     private String firstName;
     
     private String lastName;
-    public Subscriber(String username,String firstName,String lastName,Calendar borndate){
+    public Subscriber(String username,String firstName,String lastName,Calendar borndate) throws BadParametersException{
+    	System.out.println("creation d'un subscriber");
+        if(username==null||firstName==null||lastName==null||bornDate==null){
+            throw new BadParametersException("can't have null name or bornDate!!!");
+        }
+        if(username.length()!=6){
+            throw new BadParametersException("the length of username should be 6.");
+        }
+        if(!username.matches(REGEX_USERNAME)||!firstName.matches(REGEX_USERNAME)||!lastName.matches(REGEX_USERNAME)){
+            throw new BadParametersException("REGEX_NAME Wrong!");
+        }
     	
-    	//super(username, firstName, lastName, borndate);
     	this.userName = username;
     	this.firstName = firstName;
     	this.lastName = lastName;
@@ -67,16 +76,13 @@ public class Subscriber extends Player {
         if(username==null||firstname==null||lastname==null||bornDate==null){
             throw new BadParametersException("can't have null name or bornDate!!!");
         }
-        if(username.length()!=6){
-            throw new BadParametersException("the length of username should be 6.");
+        if(username.length()<LONG_USERNAMEMIN){
+            throw new BadParametersException("the length of username should be bigger than 6.");
         }
-        if(!username.matches(REGEX_USERNAME)){
+        if(!username.matches(REGEX_USERNAME)||!firstname.matches(REGEX_USERNAME)||!lastname.matches(REGEX_USERNAME)){
             throw new BadParametersException("REGEX_NAME Wrong!");
         }
-        if(username.length()==6&&username.matches(REGEX_USERNAME)){
-            this.userName = username;
-            System.out.println("Username is finish");
-        }
+
         this.firstName = firstname;
         this.lastName = lastname;
         this.bornDate = bornDate;
@@ -85,6 +91,32 @@ public class Subscriber extends Player {
     }
     
     public Subscriber(String username,String password, String firstname, String lastname, Calendar bornDate, long balance){
+    	System.out.println("creation d'un subscriber");
+        if(username==null||firstname==null||lastname==null||bornDate==null){
+            try {
+				throw new BadParametersException("can't have null name or bornDate!!!");
+			} catch (BadParametersException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+        if(username.length()!=6){
+            try {
+				throw new BadParametersException("the length of username should be 6.");
+			} catch (BadParametersException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+        if(!username.matches(REGEX_USERNAME)||!firstname.matches(REGEX_USERNAME)||!lastname.matches(REGEX_USERNAME)){
+            try {
+				throw new BadParametersException("REGEX_NAME Wrong!");
+			} catch (BadParametersException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+   
     	this.firstName = firstname;
         this.lastName = lastname;
         this.bornDate = bornDate;
@@ -185,7 +217,7 @@ public class Subscriber extends Player {
      * @return LONG_USERNAME
      */
     public static int getLONG_USERNAME() {
-        return LONG_USERNAME;
+        return LONG_USERNAMEMIN;
     }
     
     /**
@@ -193,7 +225,7 @@ public class Subscriber extends Player {
      * @param newLONG_USERNAME
      */
     public static void setLONG_USERNAME(int newLONG_USERNAME) {
-        LONG_USERNAME = newLONG_USERNAME;
+        LONG_USERNAMEMIN = newLONG_USERNAME;
     }
     
     /**
