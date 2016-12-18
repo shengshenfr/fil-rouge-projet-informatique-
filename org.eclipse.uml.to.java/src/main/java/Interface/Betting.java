@@ -1,4 +1,5 @@
 package Interface;
+import java.sql.SQLException;
 import java.util.*;
 
 import Bet.*;
@@ -599,10 +600,17 @@ public interface Betting {
 	 *             raised if the manager's password is incorrect.
 	 * @throws ExistingSubscriberException
 	 *             raised if username is not registered.
+	 * @throws BadParametersException 
+	 * @throws ExistingCompetitorException 
+	 * @throws SubscriberException 
+	 * @throws CompetitionException 
+	 * @throws SQLException 
+	 * @throws MissingSubscriberException 
+	 * @throws MissingCompetitionException 
 	 * 
 	 */
 	public long unsubscribe(String username, String managerPwd)
 			throws AuthentificationException, 
-			ExistingSubscriberException;
+			ExistingSubscriberException, BadParametersException, SQLException, CompetitionException, SubscriberException, ExistingCompetitorException, MissingSubscriberException, MissingCompetitionException;
 
 }

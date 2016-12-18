@@ -1146,9 +1146,9 @@ public class BettingSoft implements Betting {
 
 	@Override
 	public long unsubscribe(String username, String managerPwd)
-			throws AuthentificationException, ExistingSubscriberException {
+			throws AuthentificationException, ExistingSubscriberException, BadParametersException, SQLException, CompetitionException, SubscriberException, ExistingCompetitorException, MissingSubscriberException, MissingCompetitionException {
 
-		try{
+	
 			//username can not be null
 			if(username==null||!(username.matches(REGEX_USERNAME))){
 				throw new BadParametersException("username is null");
@@ -1187,28 +1187,5 @@ public class BettingSoft implements Betting {
 			
 			return number_balance;
 			
-	
-		}
-		
-		catch (MissingSubscriberException | SQLException e){
-		
-			return 0;
-		} catch (BadParametersException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CompetitionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SubscriberException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExistingCompetitorException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (MissingCompetitionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return 0;
 	}
 }
