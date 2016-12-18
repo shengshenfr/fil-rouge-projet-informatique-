@@ -27,7 +27,7 @@ public class BettingSoft implements Betting {
 
 	
 	private static final String REGEX_USERNAME = "^[A-Za-z]{*}$";
-	private final String MANAGER_PASSWORD = "root";
+	private final String MANAGER_PASSWORD = "Rootroot";
 
 	//-----------------------Methods------------------------------\\
 
@@ -157,7 +157,7 @@ public class BettingSoft implements Betting {
 			if (subscriber == null)
 				throw new ExistingSubscriberException("Subscriber  username = "+ username + " is not exist");
 
-
+			if(subscriber.authenticate(pwdSubs)){
 			//find competition
 			Competition c = CompetitionManager.findBycompetitionName(competition);
 			if (c == null)
@@ -170,14 +170,16 @@ public class BettingSoft implements Betting {
 				throw new CompetitionException("The competition is closed, you cannot add your bet");
 
 			//check if the competitors participate in this competition
-			if (!(!EntryManager.findAllByCompetition(competition).contains(winner)))
+			if (!(!EntryManager.existCompetitorInCompetition(c, (AbstractCompetitor)winner)))
 				throw new CompetitionException("The competitor 1 isn't in the competition!");
-			if (!(!EntryManager.findAllByCompetition(competition).contains(second)))
+			if (!(!EntryManager.existCompetitorInCompetition(c, (AbstractCompetitor)second)))
 				throw new CompetitionException("The competitor 2 isn't in the competition!");
-			if (!(!EntryManager.findAllByCompetition(competition).contains(third)))
+			if (!(!EntryManager.existCompetitorInCompetition(c, (AbstractCompetitor)third)))
 				throw new CompetitionException("The competitor 3 isn't in the competition!");
 		
-		
+			//check if subscriber has enough money
+			if (numberTokens>subscriber.getBalance())
+				throw new BadParametersException("you do not have enough money");
 
 			//All condition passed, create a bet
 		
@@ -190,6 +192,7 @@ public class BettingSoft implements Betting {
 
 			//Persist the bet
 			PodiumBetManager.persist(podium_bet);
+			}
 		}
 		catch ( ExistingSubscriberException | SQLException |MissingCompetitionException |MissingTokenException e){
 			System.out.println(e);
