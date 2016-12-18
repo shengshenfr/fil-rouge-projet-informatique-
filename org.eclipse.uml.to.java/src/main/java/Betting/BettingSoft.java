@@ -65,8 +65,7 @@ public class BettingSoft implements Betting {
 
 	public void addCompetition(String competition, Calendar closingDate, Collection<Competitor> competitors,
 			String managerPwd) throws AuthentificationException, BadParametersException, CompetitionException,
-			ExistingCompetitionException {
-		try{
+			ExistingCompetitionException, SQLException, MissingCompetitionException {
 			// Authenticate manager
 			authenticateMngr(managerPwd);
 			Competition comp = CompetitionManager.findBycompetitionName(competition);
@@ -100,16 +99,6 @@ public class BettingSoft implements Betting {
 				EntryManager.persist(entry);
 //				System.out.println("persist entry ok");
 			}
-		}
-		catch (MissingCompetitionException e) {
-			System.out.println("competition not added");
-			
-		} catch (SQLException e) {
-			System.out.println("sql");
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 	}
 
 

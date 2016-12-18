@@ -41,12 +41,14 @@ public interface Betting {
 	 *             not instantiated; (firstname, lastname, borndate or name if a
 	 *             team competitor) of one or more of the competitors is
 	 *             invalid.
+	 * @throws SQLException 
+	 * @throws MissingCompetitionException 
 	 */
 	public void addCompetition(String competition, Calendar closingDate, Collection<Competitor> competitors, String managerPwd )
 			throws AuthentificationException, 
 			BadParametersException,
 			CompetitionException,
-			ExistingCompetitionException;
+			ExistingCompetitionException, SQLException, MissingCompetitionException;
 	
 	/**
 	 * add a competitor to a competition.
