@@ -36,8 +36,9 @@ public class Subscriber extends Player {
      */
     private long balance = 0L;
     
-    private static int LONG_USERNAMEMIN = 6;
-    private static String REGEX_USERNAME = "^[A-Za-z]{*}[A-Z][A-Za-z]{*}$";
+    private static int LONG_USERNAMEMIN = 4;
+    private static String REGEX_USERNAME = "^[A-Za-z]{*}$";
+    private static String REGEX_NAME = "^[A-Z][A-Za-z]{*}$";
     private int LONG_PASSWORD = 8;
     private String REGEX_PASSWORD = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8}$";
     private String userName;
@@ -56,7 +57,7 @@ public class Subscriber extends Player {
         if(username==null||firstName==null||lastName==null||bornDate==null){
             throw new BadParametersException("can't have null name or bornDate!!!");
         }
-        if(username.length()!=6){
+        if(username.length()>LONG_USERNAMEMIN){
             throw new BadParametersException("the length of username should be 6.");
         }
         if(!username.matches(REGEX_USERNAME)||!firstName.matches(REGEX_USERNAME)||!lastName.matches(REGEX_USERNAME)){
@@ -76,7 +77,7 @@ public class Subscriber extends Player {
         if(username==null||firstname==null||lastname==null||bornDate==null){
             throw new BadParametersException("can't have null name or bornDate!!!");
         }
-        if(username.length()<LONG_USERNAMEMIN){
+        if(username.length()>LONG_USERNAMEMIN){
             throw new BadParametersException("the length of username should be bigger than 6.");
         }
         if(!username.matches(REGEX_USERNAME)||!firstname.matches(REGEX_USERNAME)||!lastname.matches(REGEX_USERNAME)){
@@ -100,7 +101,7 @@ public class Subscriber extends Player {
 				e.printStackTrace();
 			}
         }
-        if(username.length()!=6){
+        if(username.length()>LONG_USERNAMEMIN){
             try {
 				throw new BadParametersException("the length of username should be 6.");
 			} catch (BadParametersException e) {
