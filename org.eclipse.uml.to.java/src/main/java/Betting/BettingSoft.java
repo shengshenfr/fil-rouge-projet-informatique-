@@ -853,6 +853,10 @@ public class BettingSoft implements Betting {
 	
 	public List<List<String>> listSubscribers(String managerPwd) throws AuthentificationException {
 		try{
+			//managerPWDcan not be null
+			if(managerPwd==null){
+				throw new BadParametersException("managerPWD is null");
+			}
 			// Authenticate manager
 			authenticateMngr(managerPwd);
 
@@ -1104,6 +1108,10 @@ public class BettingSoft implements Betting {
 	public String subscribe(String lastName, String firstName, String username, String borndate, String managerPwd)
 			throws AuthentificationException, ExistingSubscriberException, SubscriberException, BadParametersException {
 		try{
+			//managerPWDcan not be null
+			if(managerPwd==null){
+				throw new BadParametersException("managerPWD is null");
+			}
 			// Authenticate manager
 			authenticateMngr(managerPwd);
 
